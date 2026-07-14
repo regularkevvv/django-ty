@@ -1,0 +1,13 @@
+# Reference-oracle environment only; none of these packages enter the django-ty wheel or candidate.
+Django==6.0.7
+asgiref==3.11.1
+ast_serialize==0.6.0
+django-stubs==6.0.6
+django-stubs-ext==6.0.6
+librt==0.13.0
+mypy==2.1.0
+mypy_extensions==1.1.0
+pathspec==1.1.1
+sqlparse==0.5.5
+types-PyYAML==6.0.12.20260518
+typing_extensions==4.16.0

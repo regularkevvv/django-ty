@@ -1,0 +1,9 @@
+[plugins]
+enabled = true
+
+[[plugins.plugin]]
+id = "django-ty"
+path = ".ty/plugins/django_ty.wasm"
+runtime = "wasm"
+manifest-path = ".ty/plugins/django-ty.plugin.json"
+trusted = true

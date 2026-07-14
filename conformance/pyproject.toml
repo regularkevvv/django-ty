@@ -1,0 +1,14 @@
+[project]
+name = "django-ty-conformance"
+version = "0.0.0"
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.ty.plugins]
+auto-discover = true
+
+[tool.ty.plugins.config.django-ty]
+django-settings-module = "conformance_project.settings"
+
+[tool.ty.terminal]
+error-on-warning = true

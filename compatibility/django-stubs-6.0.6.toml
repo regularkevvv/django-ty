@@ -1,0 +1,271 @@
+[baseline]
+upstream_name = "django-stubs"
+version = "6.0.6"
+commit = "c1d968a356955f9598da6536115ccae4ed802b44"
+repository = "https://github.com/typeddjango/django-stubs"
+upstream_stub_root = "django-stubs"
+vendored_stub_root = "python/django_ty/stubs/django"
+expected_stub_files = 704
+expected_public_symbols = 16569
+expected_static_tree_sha256 = "ddd7f5058ccd5cad6590adf121b033a7809b68bcd83ca14103d7ff070423aba6"
+expected_transformers = [
+    "auth",
+    "choices",
+    "fields",
+    "forms",
+    "functional",
+    "init_create",
+    "managers",
+    "manytomany",
+    "manytoone",
+    "meta",
+    "models",
+    "orm_lookups",
+    "querysets",
+    "request",
+    "save",
+    "settings",
+]
+
+[static_api]
+description = "The complete pinned static API is vendored inside django-ty."
+
+[scoring]
+semantic_target_percent = 95
+
+[conformance]
+python = "3.13"
+django = "6.0.7"
+mypy = "2.1.0"
+ty_extended = "0.59.0"
+ty_extended_commit = "384acfd51695dc5eb9e8af8c166da961a1095a40"
+django_ty = "0.1.1"
+minimum_cases_per_feature = 2
+
+[[feature]]
+id = "static-api.distribution"
+area = "Static Django API"
+surface = "static"
+upstream = ["django-stubs/**/*.pyi"]
+
+[[feature]]
+id = "models.subclass-transform"
+area = "Models and fields"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/models.py:process_model_class"]
+
+[[feature]]
+id = "models.default-primary-key"
+area = "Models and fields"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/models.py:AddDefaultPrimaryKey", "mypy_django_plugin/transformers/models.py:AddPrimaryKeyAlias"]
+
+[[feature]]
+id = "models.field-descriptors"
+area = "Models and fields"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/fields.py:set_descriptor_types_for_field"]
+
+[[feature]]
+id = "models.constructor-keywords"
+area = "Models and fields"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/init_create.py:typecheck_model_init"]
+
+[[feature]]
+id = "models.create-keywords"
+area = "Models and fields"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/init_create.py:typecheck_model_create", "mypy_django_plugin/transformers/init_create.py:typecheck_model_acreate"]
+
+[[feature]]
+id = "models.abstract-proxy-inheritance"
+area = "Models and fields"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/models.py:ModelClassInitializer"]
+
+[[feature]]
+id = "models.choices-enums"
+area = "Models and fields"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/choices.py:transform_into_proper_attr_type"]
+
+[[feature]]
+id = "models.custom-fields"
+area = "Models and fields"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/fields.py:transform_into_proper_return_type", "mypy_django_plugin/transformers/fields.py:determine_type_of_array_field"]
+
+[[feature]]
+id = "relations.foreign-key-one-to-one"
+area = "Relations"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/models.py:AddRelatedModelsId", "mypy_django_plugin/transformers/fields.py:fill_descriptor_types_for_related_field"]
+
+[[feature]]
+id = "relations.many-to-many"
+area = "Relations"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/manytomany.py:refine_many_to_many_related_manager", "mypy_django_plugin/transformers/models.py:ProcessManyToManyFields"]
+
+[[feature]]
+id = "relations.reverse-relations"
+area = "Relations"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/models.py:AddReverseLookups", "mypy_django_plugin/transformers/manytoone.py:refine_many_to_one_related_manager"]
+
+[[feature]]
+id = "relations.string-settings-targets"
+area = "Relations"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/django/context.py:model_class_fullnames_by_label"]
+
+[[feature]]
+id = "relations.related-query-name"
+area = "Relations"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/django/context.py:resolve_lookup_into_field"]
+
+[[feature]]
+id = "managers.default-manager"
+area = "Managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/models.py:AddDefaultManagerAttribute"]
+
+[[feature]]
+id = "managers.declared-manager"
+area = "Managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/models.py:AddManagers"]
+
+[[feature]]
+id = "managers.custom-queryset-methods"
+area = "Managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/managers.py:resolve_manager_method", "mypy_django_plugin/transformers/querysets.py:merge_annotations_from_custom_method"]
+
+[[feature]]
+id = "managers.from-queryset-as-manager"
+area = "Managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/managers.py:create_new_manager_class_from_from_queryset_method", "mypy_django_plugin/transformers/managers.py:add_as_manager_to_queryset_class"]
+
+[[feature]]
+id = "querysets.chain-preserving-methods"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/main.py:manager_and_queryset_method_hooks"]
+
+[[feature]]
+id = "querysets.scalar-return-methods"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/main.py:manager_and_queryset_method_hooks"]
+
+[[feature]]
+id = "querysets.async-return-methods"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/init_create.py:typecheck_model_acreate", "mypy_django_plugin/main.py:manager_and_queryset_method_hooks"]
+
+[[feature]]
+id = "querysets.values"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/querysets.py:extract_proper_type_queryset_values"]
+
+[[feature]]
+id = "querysets.values-list"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/querysets.py:extract_proper_type_queryset_values_list"]
+
+[[feature]]
+id = "querysets.annotate"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/querysets.py:extract_proper_type_queryset_annotate"]
+
+[[feature]]
+id = "querysets.prefetch-annotations"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/querysets.py:extract_prefetch_related_annotations", "mypy_django_plugin/transformers/querysets.py:specialize_prefetch_type"]
+
+[[feature]]
+id = "querysets.ordering-field-validation"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/querysets.py:validate_order_by", "mypy_django_plugin/transformers/querysets.py:validate_defer_only", "mypy_django_plugin/transformers/querysets.py:validate_select_related"]
+
+[[feature]]
+id = "querysets.bulk-operations"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/querysets.py:validate_bulk_create", "mypy_django_plugin/transformers/querysets.py:validate_bulk_update"]
+
+[[feature]]
+id = "lookups.field-traversal"
+area = "Query lookups"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/django/context.py:resolve_lookup_into_field"]
+
+[[feature]]
+id = "lookups.value-validation"
+area = "Query lookups"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/orm_lookups.py:typecheck_queryset_filter"]
+
+[[feature]]
+id = "lookups.creation-defaults"
+area = "Query lookups"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/orm_lookups.py:_typecheck_defaults_kwarg"]
+
+[[feature]]
+id = "lookups.selected-field-validation"
+area = "Query lookups"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/querysets.py:resolve_field_lookups"]
+
+[[feature]]
+id = "settings.project-settings-types"
+area = "Settings and metadata"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/settings.py:get_type_of_settings_attribute"]
+
+[[feature]]
+id = "metadata.get-field"
+area = "Settings and metadata"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/meta.py:return_proper_field_type_from_get_field"]
+
+[[feature]]
+id = "forms.model-forms"
+area = "Django extras"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/forms.py:transform_form_class"]
+
+[[feature]]
+id = "auth.user-model"
+area = "Django extras"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/auth.py:get_user_model", "mypy_django_plugin/transformers/models.py:set_auth_user_model_boolean_fields"]
+
+[[feature]]
+id = "models.save-update-fields"
+area = "Django extras"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/save.py:validate_save_update_fields"]
+
+[[feature]]
+id = "http.querydict-mutability"
+area = "Django extras"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/request.py:check_querydict_is_mutable"]
+
+[[feature]]
+id = "typing.lazy-string"
+area = "Django extras"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/functional.py:resolve_str_promise_attribute"]

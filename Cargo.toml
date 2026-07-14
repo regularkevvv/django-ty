@@ -1,0 +1,19 @@
+[package]
+name = "django-ty"
+version = "0.1.1"
+edition = "2024"
+rust-version = "1.94"
+description = "Django semantic plugin for ty"
+license = "MIT"
+repository = "https://github.com/regularkevvv/django-ty"
+authors = ["Kevin Castro <hola@kev.pe>"]
+readme = "README.md"
+keywords = ["django", "ty", "typing", "plugins"]
+categories = ["development-tools"]
+publish = false
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[dependencies]
+ty_plugin_sdk = "0.0.2"
