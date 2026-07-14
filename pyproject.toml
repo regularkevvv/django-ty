@@ -1,0 +1,41 @@
+[project]
+name = "django-ty"
+version = "0.1.1"
+requires-python = ">=3.10"
+dependencies = [
+    "Django>=5.0,<6.1",
+    "ty-extended>=0.59.0,<0.60.0",
+    "types-PyYAML>=6.0.12",
+    "typing-extensions>=4.11.0",
+]
+description = "Django semantic extension for ty-extended."
+readme = "README.md"
+authors = [{ name = "Kevin Castro", email = "hola@kev.pe" }]
+license = "MIT"
+keywords = ["django", "ty", "typing", "extensions"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Rust",
+    "Topic :: Software Development :: Quality Assurance",
+]
+
+[project.urls]
+Repository = "https://github.com/regularkevvv/django-ty"
+Releases = "https://github.com/regularkevvv/django-ty/releases"
+
+[build-system]
+requires = ["hatchling>=1.31,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["python/django_ty"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"python/django_ty/django_ty.wasm" = "django_ty/django_ty.wasm"
+"python/django_ty/ty-plugin.json" = "django_ty/ty-plugin.json"
+"THIRD_PARTY_NOTICES.md" = "django_ty/THIRD_PARTY_NOTICES.md"

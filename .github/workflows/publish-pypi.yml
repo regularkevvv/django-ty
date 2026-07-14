@@ -1,0 +1,31 @@
+name: Publish django-ty to PyPI
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  publish:
+    name: Upload django-ty to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 # v6.0.2
+        with:
+          path: django-ty
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: Install Rust target
+        run: rustup target add wasm32-unknown-unknown
+        working-directory: django-ty
+      - name: Build wheel
+        run: bash scripts/build-wheel.sh
+        working-directory: django-ty
+      - name: Publish to PyPI
+        run: uv publish dist/*
+        working-directory: django-ty

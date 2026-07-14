@@ -1,0 +1,5 @@
+Django==6.0.7
+asgiref==3.11.1
+sqlparse==0.5.5
+types-PyYAML==6.0.12.20260518
+typing_extensions==4.16.0
