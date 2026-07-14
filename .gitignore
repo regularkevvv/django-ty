@@ -1,0 +1,10 @@
+/target/
+/coverage/
+/dist/
+/build/
+/*.egg-info/
+/python/*.egg-info/
+/python/django_ty/*.wasm
+/python/django_ty/ty-plugin.json
+__pycache__/
+*.profraw

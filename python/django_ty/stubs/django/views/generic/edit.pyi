@@ -1,0 +1,84 @@
+from typing import Any, Generic, Literal
+
+from django.db import models
+from django.forms.forms import BaseForm
+from django.forms.models import BaseModelForm
+from django.http import HttpRequest, HttpResponse
+from django.utils.datastructures import _ListOrTuple
+from django.utils.functional import _StrOrPromise
+from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
+from django.views.generic.detail import BaseDetailView, SingleObjectMixin, SingleObjectTemplateResponseMixin
+from typing_extensions import TypeVar, override
+
+_FormT = TypeVar("_FormT", bound=BaseForm)
+_ModelFormT = TypeVar("_ModelFormT", bound=BaseModelForm)
+_M = TypeVar("_M", bound=models.Model)
+
+class FormMixin(ContextMixin, Generic[_FormT]):
+    initial: dict[str, Any]
+    form_class: type[_FormT] | None
+    success_url: _StrOrPromise | None = None
+    prefix: str | None
+    def get_initial(self) -> dict[str, Any]: ...
+    def get_prefix(self) -> str | None: ...
+    def get_form_class(self) -> type[_FormT]: ...
+    def get_form(self, form_class: type[_FormT] | None = ...) -> _FormT: ...
+    def get_form_kwargs(self) -> dict[str, Any]: ...
+    def get_success_url(self) -> str: ...
+    def form_valid(self, form: _FormT) -> HttpResponse: ...
+    def form_invalid(self, form: _FormT) -> HttpResponse: ...
+    @override
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]: ...
+
+class ModelFormMixin(FormMixin[_ModelFormT], SingleObjectMixin[_M], Generic[_M, _ModelFormT]):
+    fields: _ListOrTuple[str] | Literal["__all__"] | None
+    @override
+    def get_form_class(self) -> type[_ModelFormT]: ...
+    @override
+    def get_form_kwargs(self) -> dict[str, Any]: ...
+    @override
+    def get_success_url(self) -> str: ...
+    @override
+    def form_valid(self, form: _ModelFormT) -> HttpResponse: ...
+
+class ProcessFormView(View):
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse: ...
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse: ...
+    def put(self, *args: Any, **kwargs: Any) -> HttpResponse: ...
+
+class BaseFormView(FormMixin[_FormT], ProcessFormView): ...
+class FormView(TemplateResponseMixin, BaseFormView[_FormT]): ...
+
+class BaseCreateView(ModelFormMixin[_M, _ModelFormT], ProcessFormView):
+    object: _M | None
+    @override
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse: ...
+    @override
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse: ...
+
+class CreateView(SingleObjectTemplateResponseMixin, BaseCreateView[_M, _ModelFormT]):
+    template_name_suffix: str
+
+class BaseUpdateView(ModelFormMixin[_M, _ModelFormT], ProcessFormView):
+    object: _M
+    @override
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse: ...
+    @override
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse: ...
+
+class UpdateView(SingleObjectTemplateResponseMixin, BaseUpdateView[_M, _ModelFormT]):
+    template_name_suffix: str
+
+class DeletionMixin(Generic[_M]):
+    success_url: _StrOrPromise | None = None
+    object: _M
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse: ...
+    def delete(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse: ...
+    def get_success_url(self) -> str: ...
+
+class BaseDeleteView(DeletionMixin[_M], FormMixin[_FormT], BaseDetailView[_M], Generic[_M, _FormT]):
+    object: _M
+
+class DeleteView(SingleObjectTemplateResponseMixin, BaseDeleteView[_M, _FormT], Generic[_M, _FormT]):
+    object: _M
+    template_name_suffix: str

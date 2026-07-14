@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 # v6.0.2
+        with:
+          path: django-ty
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: Install Rust components
+        run: rustup component add rustfmt llvm-tools-preview && rustup target add wasm32-unknown-unknown
+        working-directory: django-ty
+      - name: Verify vendored Django compatibility map
+        run: uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --check
+        working-directory: django-ty
+      - name: Test compatibility tooling
+        run: uv run --no-project --python 3.11 python -m unittest tests/test_compatibility_value.py tests/test_evaluate_differential_conformance.py
+        working-directory: django-ty
+      - name: Verify differential conformance
+        run: bash scripts/differential-conformance.sh --check
+        working-directory: django-ty
+      - uses: taiki-e/install-action@16b05812d776ae1dfaabc8277e421fb6d2506419 # v2.82.7
+        with:
+          tool: cargo-llvm-cov
+      - name: Check formatting
+        run: cargo fmt --check
+        working-directory: django-ty
+      - name: Run unit tests
+        run: cargo test --locked
+        working-directory: django-ty
+      - name: Enforce line coverage
+        run: cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 98
+        working-directory: django-ty
+      - name: Verify wheel installation
+        run: bash scripts/e2e.sh
+        working-directory: django-ty

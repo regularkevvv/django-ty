@@ -1,0 +1,75 @@
+{
+  "id": "django-ty",
+  "name": "Django ty plugin",
+  "version": "0.1.0",
+  "protocol-version": { "major": 0, "minor": 1 },
+  "ty-compatibility": { "requirement": ">=0.0.0" },
+  "runtime": { "kind": "wasm", "artifact": ".ty/plugins/django_ty.wasm" },
+  "capabilities": {
+    "stub-overlays": true,
+    "class-transform": true,
+    "call-return": true,
+    "project-index": true,
+    "cross-symbol-contributions": true,
+    "settings-data": true,
+    "virtual-types": true
+  },
+  "claims": {
+    "classes": [
+      { "kind": "subclass-of", "base-qualified-name": "django.db.models.base.Model" },
+      { "kind": "subclass-of", "base-qualified-name": "django.db.models.Model" },
+      { "kind": "subclass-of", "base-qualified-name": "django.db.models.base.ModelBase.__call__" }
+    ],
+    "attributes": [
+      { "kind": "contribution-target", "owner-base-qualified-name": "django.db.models.base.Model", "scope": "instance" },
+      { "kind": "contribution-target", "owner-base-qualified-name": "django.db.models.Model", "scope": "instance" },
+      { "kind": "contribution-target", "owner-base-qualified-name": "django.db.models.base.ModelBase.__call__", "scope": "instance" }
+    ],
+    "methods": [
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "all" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "filter" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "exclude" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "get" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "create" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "get_or_create" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "first" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "count" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "exists" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "values" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "values_list" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.BaseManager", "method-name": "annotate" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "all" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "filter" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "exclude" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "get" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "create" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "get_or_create" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "first" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "count" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "exists" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "values" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "values_list" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.manager.Manager", "method-name": "annotate" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.query.QuerySet", "method-name": "filter" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.query.QuerySet", "method-name": "get" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.query.QuerySet", "method-name": "first" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.query.QuerySet", "method-name": "values" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.query.QuerySet", "method-name": "values_list" },
+      { "kind": "on-subclass-of", "base-qualified-name": "django.db.models.query.QuerySet", "method-name": "annotate" }
+    ],
+    "settings": [
+      { "module": "settings" },
+      { "module": "project.settings" }
+    ]
+  },
+  "stub-overlays": [
+    {
+      "module": "django.db.models.manager",
+      "path": "stubs/django/db/models/manager.pyi"
+    },
+    {
+      "module": "django.db.models.query",
+      "path": "stubs/django/db/models/query.pyi"
+    }
+  ]
+}
