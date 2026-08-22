@@ -23,8 +23,6 @@ if [ -z "$DJANGO_TY_WHEEL" ]; then
 fi
 
 cp -R "$ROOT/e2e/django5_fixture/." "$WORK_DIR/"
-rm -f "$WORK_DIR/ty.toml"
-rm -rf "$WORK_DIR/.ty"
 
 (
   cd "$WORK_DIR"
