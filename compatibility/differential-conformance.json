@@ -8,11 +8,11 @@
     "python": "3.13"
   },
   "candidate": {
-    "checker": "ty 0.59.0",
-    "django_ty": "0.1.1",
+    "checker": "ty 0.73.0",
+    "django_ty": "0.2.0",
     "django": "6.0.7",
-    "ty_extended": "0.59.0",
-    "ty_extended_commit": "384acfd51695dc5eb9e8af8c166da961a1095a40"
+    "ty_extended": "0.73.0",
+    "ty_extended_commit": "9bac5e4ca3de86e93a00403173f8b003d7d02ad6"
   },
   "corpus": {
     "sha256": "c708452c72d8b9d08167b230b2e417a75ef4083325b68e4370f4f1230dba3067",
@@ -402,9 +402,9 @@
           ],
           "candidate_diagnostics": [
             {
-              "column": 1,
+              "column": 15,
               "code": "invalid-assignment",
-              "message": "Invalid assignment to data descriptor attribute `code` on type `Book` with custom `__set__` method"
+              "message": "Invalid assignment to data descriptor attribute `code` on type `Book`: Expected `str`, found `Literal[42]`"
             }
           ]
         }

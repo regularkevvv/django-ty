@@ -1,8 +1,8 @@
 [package]
 name = "django-ty"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
-rust-version = "1.94"
+rust-version = "1.95"
 description = "Django semantic plugin for ty"
 license = "MIT"
 repository = "https://github.com/regularkevvv/django-ty"
@@ -16,4 +16,4 @@ publish = false
 crate-type = ["rlib", "cdylib"]
 
 [dependencies]
-ty_plugin_sdk = "0.0.2"
+ty_plugin_sdk = "0.0.4"
