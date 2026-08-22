@@ -16,5 +16,5 @@ value types, unknown lookup names, relation lookup traversal, `values()`, and
 Run it with:
 
 ```sh
-scripts/e2e_django5.sh
+scripts/e2e.sh
 ```
