@@ -1,3 +1,3 @@
-from __future__ import annotations
+"""Django semantic plugin package for ty-extended."""
 
-"""Django semantic extension package for ty-extended."""
+from __future__ import annotations
