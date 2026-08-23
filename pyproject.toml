@@ -8,11 +8,11 @@ dependencies = [
     "types-PyYAML>=6.0.12",
     "typing-extensions>=4.11.0",
 ]
-description = "Django semantic extension for ty-extended."
+description = "Django semantic plugin for ty-extended."
 readme = "README.md"
 authors = [{ name = "Kevin Castro", email = "hola@kev.pe" }]
 license = "MIT"
-keywords = ["django", "ty", "typing", "extensions"]
+keywords = ["django", "ty", "typing", "plugins"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
