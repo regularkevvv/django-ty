@@ -37,8 +37,8 @@ semantic_target_percent = 95
 python = "3.13"
 django = "6.0.7"
 mypy = "2.1.0"
-ty_extended = "0.73.0"
-ty_extended_commit = "9bac5e4ca3de86e93a00403173f8b003d7d02ad6"
+ty_extended = "0.84.0"
+ty_extended_commit = "05738e1075cde5e65ff2f35fd61f5b4f631d07c8"
 django_ty = "0.2.0"
 minimum_cases_per_feature = 2
 
