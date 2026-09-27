@@ -8,14 +8,14 @@
     "python": "3.13"
   },
   "candidate": {
-    "checker": "ty 0.73.0",
+    "checker": "ty 0.84.0",
     "django_ty": "0.2.0",
     "django": "6.0.7",
-    "ty_extended": "0.73.0",
-    "ty_extended_commit": "9bac5e4ca3de86e93a00403173f8b003d7d02ad6"
+    "ty_extended": "0.84.0",
+    "ty_extended_commit": "05738e1075cde5e65ff2f35fd61f5b4f631d07c8"
   },
   "corpus": {
-    "sha256": "c708452c72d8b9d08167b230b2e417a75ef4083325b68e4370f4f1230dba3067",
+    "sha256": "67064cb5f6aed887bc8df1a5b5c6edadb90aef17c1d14c41e2eaf47176fda73e",
     "features": 37,
     "assertions": 82
   },
@@ -546,7 +546,7 @@
         {
           "case": "settings-field-declaration",
           "path": "conformance_models/models.py",
-          "line": 59,
+          "line": 61,
           "reference": "accept",
           "candidate": "accept",
           "matches": true,
@@ -711,7 +711,7 @@
         {
           "case": "queryset-self-return",
           "path": "conformance_models/models.py",
-          "line": 88,
+          "line": 90,
           "reference": "accept",
           "candidate": "accept",
           "matches": true,
@@ -755,7 +755,7 @@
         {
           "case": "generated-manager-class",
           "path": "conformance_models/models.py",
-          "line": 105,
+          "line": 107,
           "reference": "accept",
           "candidate": "accept",
           "matches": true,
@@ -765,7 +765,7 @@
         {
           "case": "generated-queryset-self-return",
           "path": "conformance_models/models.py",
-          "line": 102,
+          "line": 104,
           "reference": "accept",
           "candidate": "accept",
           "matches": true,
