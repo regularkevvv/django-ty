@@ -49,7 +49,9 @@ class Book(models.Model):
     pages = models.IntegerField(null=True, default=None)
     published_at = models.DateTimeField(null=True, default=None)
     code = CodeField()
-    status = models.CharField(max_length=20, choices=Status, default=Status.DRAFT)
+    # ty >= 0.0.82 drops `type[E]` union members (astral-sh/ty#4597); keep
+    # `choices=Status` so the plugin sees the enum ref. Revert when fixed.
+    status = models.CharField(max_length=20, choices=Status, default=Status.DRAFT)  # ty: ignore[invalid-argument-type]
     author = models.ForeignKey(
         Author,
         on_delete=models.CASCADE,

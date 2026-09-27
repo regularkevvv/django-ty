@@ -24,7 +24,7 @@ impl Plugin for DjangoTyPlugin {
     fn manifest(&self) -> PluginManifest {
         let mut builder =
             ManifestBuilder::new("django-ty", "Django ty plugin", env!("CARGO_PKG_VERSION"))
-                .ty_compatibility(">=0.73.0,<0.74.0")
+                .ty_compatibility(">=0.84.0,<0.85.0")
                 .settings_module("settings")
                 .settings_module("project.settings")
                 .settings_module_from_config("django-settings-module")
