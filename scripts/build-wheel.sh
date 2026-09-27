@@ -24,4 +24,4 @@ cargo run \
   > "$ROOT/python/django_ty/ty-plugin.json"
 
 rm -rf "$DIST_DIR"
-uv build --no-sources --wheel --out-dir "$DIST_DIR" "$ROOT"
+uv build --no-sources --out-dir "$DIST_DIR" "$ROOT"
