@@ -136,7 +136,7 @@ def run(command: list[str], cwd: Path) -> tuple[int, str]:
 
 def parse_diagnostics(
     output: str, checker: str, project_root: Path
-) -> list[Diagnostic]:
+) -> tuple[list[Diagnostic], list[str]]:
     pattern = MYPY_RE if checker == "mypy" else TY_RE
     diagnostics: list[Diagnostic] = []
     unparsed: list[str] = []
@@ -152,16 +152,13 @@ def parse_diagnostics(
                     message=match["message"],
                 )
             )
-        elif checker == "mypy" and ": note:" in line:
+        elif checker == "mypy" and (": note:" in line or line.startswith("Success:")):
             continue
         elif checker == "ty" and re.fullmatch(r"Found \d+ diagnostics?", line):
             continue
         elif line.strip():
             unparsed.append(line)
-    if unparsed:
-        preview = "\n".join(unparsed[:10])
-        raise ConformanceError(f"could not parse {checker} output:\n{preview}")
-    return diagnostics
+    return diagnostics, unparsed
 
 
 def checker_version(executable: Path) -> str:
@@ -278,6 +275,13 @@ def status(percent: float) -> str:
     return "partial"
 
 
+def probe_versions(environment: Path, distributions: list[str]) -> dict[str, str]:
+    versions = {"Python": python_version(environment)}
+    for distribution in distributions:
+        versions[distribution] = distribution_version(environment, distribution)
+    return versions
+
+
 def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     compatibility_map = load_map()
     baseline = compatibility_map["baseline"]
@@ -313,33 +317,45 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         )
 
     reference_environment = args.mypy_bin.resolve().parent.parent
-    reference_versions = verify_environment(
-        "reference environment",
-        reference_environment,
-        conformance["python"],
-        {
-            "Django": conformance["django"],
-            "django-stubs": baseline["version"],
-            "mypy": conformance["mypy"],
-        },
-    )
-    candidate_versions = verify_environment(
-        "candidate environment",
-        args.ty_python,
-        conformance["python"],
-        {
-            "Django": conformance["django"],
-            "django-ty": conformance["django_ty"],
-            "ty-extended": conformance["ty_extended"],
-        },
-    )
+    if args.probe:
+        reference_versions = probe_versions(
+            reference_environment, ["Django", "django-stubs", "mypy"]
+        )
+        candidate_versions = probe_versions(
+            args.ty_python, ["Django", "django-ty", "ty-extended"]
+        )
+    else:
+        reference_versions = verify_environment(
+            "reference environment",
+            reference_environment,
+            conformance["python"],
+            {
+                "Django": conformance["django"],
+                "django-stubs": baseline["version"],
+                "mypy": conformance["mypy"],
+            },
+        )
+        candidate_versions = verify_environment(
+            "candidate environment",
+            args.ty_python,
+            conformance["python"],
+            {
+                "Django": conformance["django"],
+                "django-ty": conformance["django_ty"],
+                "ty-extended": conformance["ty_extended"],
+            },
+        )
     for forbidden_distribution in ("django-stubs", "django-stubs-ext", "mypy"):
         require_distribution_absent(args.ty_python, forbidden_distribution)
-    ty_version = normalize_ty_checker_version(
-        checker_version(args.ty_bin),
-        conformance["ty_extended"],
-        conformance["ty_extended_commit"],
-    )
+    reported_ty_version = checker_version(args.ty_bin)
+    if args.probe:
+        ty_version = reported_ty_version
+    else:
+        ty_version = normalize_ty_checker_version(
+            reported_ty_version,
+            conformance["ty_extended"],
+            conformance["ty_extended_commit"],
+        )
 
     with tempfile.TemporaryDirectory(prefix="django-ty-mypy-cache-") as cache_dir:
         mypy_command = [
@@ -375,16 +391,34 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     if ty_status not in {0, 1}:
         raise ConformanceError(f"ty failed with exit code {ty_status}:\n{ty_output}")
 
-    reference = parse_diagnostics(mypy_output, "mypy", PROJECT_ROOT)
-    candidate = parse_diagnostics(ty_output, "ty", PROJECT_ROOT)
+    reference, mypy_unparsed = parse_diagnostics(mypy_output, "mypy", PROJECT_ROOT)
+    candidate, ty_unparsed = parse_diagnostics(ty_output, "ty", PROJECT_ROOT)
+    unparsed_output = {"mypy": mypy_unparsed, "ty": ty_unparsed}
+    if not args.probe:
+        for checker, unparsed in unparsed_output.items():
+            if unparsed:
+                preview = "\n".join(unparsed[:10])
+                raise ConformanceError(
+                    f"could not parse {checker} output:\n{preview}"
+                )
     marker_by_location = {marker.key: marker for marker in markers}
+    unowned_diagnostics: dict[str, list[dict[str, Any]]] = {}
     for checker, diagnostics in (("mypy", reference), ("ty", candidate)):
         unowned = [
             diagnostic
             for diagnostic in diagnostics
             if (diagnostic.path, diagnostic.line) not in marker_by_location
         ]
-        if unowned:
+        if unowned and args.probe:
+            unowned_diagnostics[checker] = [
+                {
+                    "path": diagnostic.path,
+                    "line": diagnostic.line,
+                    **diagnostic.as_dict(),
+                }
+                for diagnostic in unowned
+            ]
+        elif unowned:
             rendered = "\n".join(
                 f"{diagnostic.path}:{diagnostic.line}:{diagnostic.column}: {diagnostic.message}"
                 for diagnostic in unowned
@@ -416,6 +450,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 "case": marker.case,
                 "path": marker.path,
                 "line": marker.line,
+                "expect": marker.expect,
                 "reference": "reject" if reference_rejected else "accept",
                 "candidate": "reject" if candidate_rejected else "accept",
                 "matches": reference_rejected == candidate_rejected,
@@ -429,7 +464,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 ],
             }
         )
-    if baseline_drift:
+    if baseline_drift and not args.probe:
         raise ConformanceError(
             "reference outcomes do not match the corpus contract:\n"
             + "\n".join(baseline_drift)
@@ -446,18 +481,26 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         matched_assertions += matched
         rate = percentage(matched, len(assertions))
         area_rates[feature["area"]].append(rate)
-        feature_results.append(
-            {
-                "id": feature_id,
-                "area": feature["area"],
-                "upstream": feature["upstream"],
-                "cases": len(assertions),
-                "matched": matched,
-                "percent": rate,
-                "status": status(rate),
-                "assertions": assertions,
-            }
-        )
+        feature_result: dict[str, Any] = {
+            "id": feature_id,
+            "area": feature["area"],
+            "upstream": feature["upstream"],
+            "cases": len(assertions),
+            "matched": matched,
+            "percent": rate,
+            "status": status(rate),
+            "assertions": assertions,
+        }
+        if args.probe:
+            contract_matched = sum(
+                (assertion["candidate"] == "reject") == (assertion["expect"] == "fail")
+                for assertion in assertions
+            )
+            feature_result["contract_matched"] = contract_matched
+            feature_result["contract_percent"] = percentage(
+                contract_matched, len(assertions)
+            )
+        feature_results.append(feature_result)
 
     feature_balanced = round(
         sum(feature["percent"] for feature in feature_results) / len(feature_results), 1
@@ -470,14 +513,30 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         }
         for area, rates in sorted(area_rates.items())
     ]
-    return {
+    reference_drift = [
+        {
+            "feature": marker.feature,
+            "case": marker.case,
+            "path": marker.path,
+            "line": marker.line,
+            "expect": marker.expect,
+            "reference": "reject" if reference_by_location[marker.key] else "accept",
+        }
+        for marker in markers
+        if bool(reference_by_location[marker.key]) != (marker.expect == "fail")
+    ]
+    result = {
         "schema_version": 1,
         "reference": {
             "checker": checker_version(args.mypy_bin),
             "django_stubs": reference_versions["django-stubs"],
-            "django_stubs_commit": baseline["commit"],
+            "django_stubs_commit": (
+                args.django_stubs_commit if args.probe else baseline["commit"]
+            ),
             "django": reference_versions["Django"],
-            "python": conformance["python"],
+            "python": reference_versions["Python"]
+            if args.probe
+            else conformance["python"],
         },
         "candidate": {
             "checker": ty_version,
@@ -502,6 +561,25 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "areas": area_results,
         "features": feature_results,
     }
+    if args.probe:
+        contract_matched_assertions = sum(
+            feature["contract_matched"] for feature in feature_results
+        )
+        result["scores"]["contract_feature_balanced_percent"] = round(
+            sum(feature["contract_percent"] for feature in feature_results)
+            / len(feature_results),
+            1,
+        )
+        result["scores"]["contract_assertion_percent"] = percentage(
+            contract_matched_assertions, len(markers)
+        )
+        result["scores"]["contract_matched_assertions"] = contract_matched_assertions
+        result["reference_drift"] = reference_drift
+        result["unowned_diagnostics"] = unowned_diagnostics
+        result["unparsed_output"] = {
+            checker: lines for checker, lines in unparsed_output.items() if lines
+        }
+    return result
 
 
 def main() -> int:
@@ -509,6 +587,26 @@ def main() -> int:
     parser.add_argument("--mypy-bin", type=Path, required=True)
     parser.add_argument("--ty-bin", type=Path, required=True)
     parser.add_argument("--ty-python", type=Path, required=True)
+    parser.add_argument(
+        "--result-path",
+        type=Path,
+        default=RESULT_PATH,
+        help="where --write stores the result and --check reads it",
+    )
+    parser.add_argument(
+        "--probe",
+        action="store_true",
+        help=(
+            "record actual environment versions instead of verifying the pinned "
+            "map, and capture reference drift and stray diagnostics instead of "
+            "failing"
+        ),
+    )
+    parser.add_argument(
+        "--django-stubs-commit",
+        default="",
+        help="upstream commit recorded in probe results (provenance only)",
+    )
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument(
         "--write", action="store_true", help="write the checked-in result"
@@ -517,6 +615,8 @@ def main() -> int:
         "--check", action="store_true", help="verify the checked-in result"
     )
     args = parser.parse_args()
+    if args.probe and args.check:
+        parser.error("--probe only supports --write; probe results are inputs to scripts/probe_django_versions.py")
 
     try:
         result = evaluate(args)
@@ -526,9 +626,10 @@ def main() -> int:
 
     rendered = json.dumps(result, indent=2, sort_keys=False) + "\n"
     if args.write:
-        RESULT_PATH.write_text(rendered, encoding="utf-8")
-    elif (
-        not RESULT_PATH.is_file() or RESULT_PATH.read_text(encoding="utf-8") != rendered
+        args.result_path.write_text(rendered, encoding="utf-8")
+    elif not args.probe and (
+        not args.result_path.is_file()
+        or args.result_path.read_text(encoding="utf-8") != rendered
     ):
         print(
             "Differential conformance result is out of date; rerun the pinned suite with --write.",
