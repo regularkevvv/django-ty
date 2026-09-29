@@ -418,6 +418,33 @@ fn manifest_declares_django_orm_capabilities() {
 }
 
 #[test]
+fn project_index_converges_on_wide_shallow_hierarchies() {
+    const BASE: &str = "library.models.Timestamped";
+
+    let mut classes = vec![model_class(
+        BASE,
+        vec![scalar_field("created_at", "DateTimeField")],
+    )];
+    for index in 0..2_500 {
+        classes.push(derived_model_class(
+            &format!("library.models.Model{index}"),
+            BASE,
+            vec![scalar_field("name", "CharField")],
+        ));
+    }
+
+    let PluginResponse::ProjectIndex(index) = build_index(classes) else {
+        panic!("expected project index");
+    };
+
+    let models = index.plugin_index["models"].as_object().unwrap();
+    assert_eq!(models.len(), 2_501);
+    let leaf = &models["library.models.Model2499"];
+    assert_eq!(leaf["fields"]["created_at"], "datetime.datetime");
+    assert_eq!(leaf["fields"]["name"], "str");
+}
+
+#[test]
 fn from_queryset_signature_accepts_custom_querysets_and_preserves_the_manager_class() {
     let receiver = ReceiverSummary {
         type_expr: TypeExpr::annotation(
