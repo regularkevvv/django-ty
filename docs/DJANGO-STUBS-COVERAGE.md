@@ -10,7 +10,7 @@ Static declaration baseline: [`django-stubs` 6.0.6](https://github.com/typeddjan
 - Vendored static-tree SHA-256: `ddd7f5058ccd5cad6590adf121b033a7809b68bcd83ca14103d7ff070423aba6`.
 - Dynamic feature-balanced parity: **100.0%** across 37 reference capabilities (37 supported, 0 partial, 0 unsupported).
 - Assertion conformance: **100.0%** (82 of 82 reference outcomes matched).
-- Candidate host: `django-ty` 0.3.0 on `ty-extended` 0.84.0 at `05738e1075cde5e65ff2f35fd61f5b4f631d07c8`.
+- Candidate host: `django-ty` 0.3.1 on `ty-extended` 0.84.0 at `05738e1075cde5e65ff2f35fd61f5b4f631d07c8`.
 - Target: **95%** dynamic semantic parity. The static score is deliberately separate and does not hide semantic gaps.
 
 Auxiliary `django-stubs-ext` utilities such as `WithAnnotations` are outside this Django-behavior inventory. The candidate wheel must not install or package `django-stubs`, `django-stubs-ext`, or mypy; generic `Annotated` transport remains a library-neutral ty-extended plugin capability.
