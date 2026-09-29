@@ -363,6 +363,9 @@ fn inherited_model_indexes(
             }
             next.insert((*name).to_string(), model_index);
         }
+        if next == resolved {
+            break;
+        }
         resolved = next;
     }
     resolved
