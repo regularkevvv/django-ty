@@ -40,6 +40,8 @@ cp -R "$ROOT/e2e/django5_fixture/." "$WORK_DIR/"
   test ! -e .ty
   uv run python -c 'import importlib.metadata as metadata, importlib.util, sys; names = {distribution.metadata["Name"].lower() for distribution in metadata.distributions() if distribution.metadata["Name"]}; assert "django-stubs" not in names; assert "django-stubs-ext" not in names; assert importlib.util.find_spec("django_stubs_ext") is None; assert metadata.version("ty-extended") == sys.argv[1]; assert metadata.version("Django").split(".")[:2] in (["5", "0"], ["5", "1"], ["5", "2"], ["6", "0"])' "$TY_EXTENDED_VERSION"
 
+  uv run python "$ROOT/scripts/check_querydict_runtime.py" "$WORK_DIR/.venv"
+
   uv run ty check accounts library commerce auditlog typechecks/positive.py typechecks/static_api.py
 
   set +e

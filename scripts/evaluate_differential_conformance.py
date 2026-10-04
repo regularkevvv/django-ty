@@ -161,6 +161,15 @@ def parse_diagnostics(
     return diagnostics, unparsed
 
 
+def require_reachable(checker: str, diagnostics: list[Diagnostic]) -> None:
+    for diagnostic in diagnostics:
+        if diagnostic.code == "unreachable":
+            raise ConformanceError(
+                f"{checker} skipped unreachable code at {diagnostic.path}:{diagnostic.line}; "
+                "isolate the assertion before scoring conformance"
+            )
+
+
 def checker_version(executable: Path) -> str:
     return_code, output = run([str(executable), "--version"], ROOT)
     if return_code != 0 or not output:
@@ -393,14 +402,14 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
 
     reference, mypy_unparsed = parse_diagnostics(mypy_output, "mypy", PROJECT_ROOT)
     candidate, ty_unparsed = parse_diagnostics(ty_output, "ty", PROJECT_ROOT)
+    require_reachable("mypy", reference)
+    require_reachable("ty", candidate)
     unparsed_output = {"mypy": mypy_unparsed, "ty": ty_unparsed}
     if not args.probe:
         for checker, unparsed in unparsed_output.items():
             if unparsed:
                 preview = "\n".join(unparsed[:10])
-                raise ConformanceError(
-                    f"could not parse {checker} output:\n{preview}"
-                )
+                raise ConformanceError(f"could not parse {checker} output:\n{preview}")
     marker_by_location = {marker.key: marker for marker in markers}
     unowned_diagnostics: dict[str, list[dict[str, Any]]] = {}
     for checker, diagnostics in (("mypy", reference), ("ty", candidate)):
@@ -616,7 +625,9 @@ def main() -> int:
     )
     args = parser.parse_args()
     if args.probe and args.check:
-        parser.error("--probe only supports --write; probe results are inputs to scripts/probe_django_versions.py")
+        parser.error(
+            "--probe only supports --write; probe results are inputs to scripts/probe_django_versions.py"
+        )
 
     try:
         result = evaluate(args)

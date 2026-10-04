@@ -24,15 +24,10 @@ MAP_PATH = ROOT / "compatibility" / "django-stubs-6.1.1.toml"
 DOCUMENT_PATH = ROOT / "docs" / "DJANGO-STUBS-COVERAGE.md"
 RESULT_PATH = ROOT / "compatibility" / "differential-conformance.json"
 TYPE_ALIAS_TYPES = (getattr(ast, "TypeAlias"),) if hasattr(ast, "TypeAlias") else ()
-TEMPLATES_SETTING_IMPORT = "from django_stubs_ext.settings import TemplatesSetting\n"
-TEMPLATES_SETTING_CLASS = """@type_check_only
-class TemplatesSetting(TypedDict):
-    BACKEND: str
-    NAME: NotRequired[str]
-    DIRS: NotRequired[list[str | _Path]]
-    APP_DIRS: NotRequired[bool]
-    OPTIONS: NotRequired[dict[str, Any]]
-"""
+try:
+    from .normalize_static_api import normalize_stub
+except ImportError:
+    from normalize_static_api import normalize_stub
 
 
 def load_map() -> dict[str, Any]:
@@ -88,24 +83,12 @@ def inventory(stub_root: Path) -> tuple[int, int]:
     return len(paths), len(symbols)
 
 
-def normalize_global_settings(source: str) -> str:
-    if TEMPLATES_SETTING_IMPORT not in source:
-        return source
-    source = source.replace(
-        "from collections.abc import Collection, Mapping, Sequence\n",
-        "from collections.abc import Collection, Mapping, Sequence\nfrom pathlib import Path as _Path\n",
-        1,
-    )
-    return source.replace(TEMPLATES_SETTING_IMPORT, TEMPLATES_SETTING_CLASS, 1)
-
-
 def static_tree_fingerprint(stub_root: Path) -> str:
     digest = hashlib.sha256()
     for path in sorted(stub_root.rglob("*.pyi")) + sorted(stub_root.rglob("py.typed")):
         digest.update(f"django/{path.relative_to(stub_root).as_posix()}\0".encode())
         content = path.read_text(encoding="utf-8")
-        if path.relative_to(stub_root).as_posix() == "conf/global_settings.pyi":
-            content = normalize_global_settings(content)
+        content = normalize_stub(path.relative_to(stub_root).as_posix(), content)
         digest.update(content.encode())
         digest.update(b"\0")
     return digest.hexdigest()
@@ -227,6 +210,8 @@ def document(
         "",
         "`django-ty` vendors the pinned declaration tree inside its wheel. It neither installs nor executes the upstream mypy plugin.",
         "",
+        "Reviewed adaptations inline TemplatesSetting and preserve the mutable GET/POST types of directly constructed HttpRequest objects. Framework request types stay immutable. The same transformations are applied during upstream fingerprint verification, and scripts/check_querydict_runtime.py compares seven assignment cases with the installed Django runtime.",
+        "",
         "## Measured Surface",
         "",
         f"- Static API: **100% available**: {stub_files} `.pyi` modules and {public_symbols} public symbols are packaged in the wheel.",
@@ -283,7 +268,7 @@ def document(
             "To additionally verify the vendored files against the pinned source checkout:",
             "",
             "```sh",
-            "uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --upstream-root /path/to/django-stubs-6.0.6 --check",
+            "uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --upstream-root /path/to/django-stubs-6.1.1 --check",
             "```",
             "",
             "The differential runner builds both environments, validates every declared reference outcome, rejects diagnostics outside assertion markers, and compares accept/reject behavior line by line. The documentation check verifies the vendored static tree, source inventory, checked result, and generated report.",

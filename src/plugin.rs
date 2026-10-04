@@ -39,6 +39,7 @@ impl Plugin for DjangoTyPlugin {
                     "stubs/django/db/models/manager.pyi",
                 )
                 .stub_overlay("django.db.models.query", "stubs/django/db/models/query.pyi")
+                .claim_call_return_method_on_subclass("django.apps.registry.Apps", "get_model")
                 .virtual_types();
         for base in MODEL_BASES {
             builder = builder
@@ -135,6 +136,9 @@ impl Plugin for DjangoTyPlugin {
     }
 
     fn adjust_call_return(&self, request: &CallRequest) -> PluginResponse {
+        if request.callee.expression == "django.apps.registry.Apps.get_model" {
+            return crate::apps::get_model(request);
+        }
         if request.callee.expression == "django.utils.translation.gettext_lazy" {
             return ty_plugin_sdk::dsl::call_return(annotation("str"));
         }

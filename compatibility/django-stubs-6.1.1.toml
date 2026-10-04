@@ -7,8 +7,9 @@ upstream_stub_root = "django-stubs"
 vendored_stub_root = "python/django_ty/stubs/django"
 expected_stub_files = 712
 expected_public_symbols = 16883
-expected_static_tree_sha256 = "28ececdbba257f5178e24fd148531826f3eaf0e970059e06b7adfb5e6b85a8f0"
+expected_static_tree_sha256 = "37e53b92feff7bff47836990f06d29737088c47a8421f168d502122c344a3949"
 expected_transformers = [
+    "apps",
     "auth",
     "choices",
     "fields",
@@ -269,3 +270,9 @@ id = "typing.lazy-string"
 area = "Django extras"
 surface = "dynamic"
 upstream = ["mypy_django_plugin/transformers/functional.py:resolve_str_promise_attribute"]
+
+[[feature]]
+id = "apps.model-registry"
+area = "Django extras"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/apps.py:resolve_model_for_get_model"]

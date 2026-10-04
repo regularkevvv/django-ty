@@ -3,6 +3,7 @@
 //! The crate intentionally depends only on `ty_plugin_sdk`. It is an external plugin package,
 //! not a checker patch, and all Django behavior is expressed through the public protocol hooks.
 
+mod apps;
 mod constants;
 mod diagnostics;
 mod fields;
