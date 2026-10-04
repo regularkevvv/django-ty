@@ -1,5 +1,6 @@
 from collections.abc import Collection, Iterable, Iterator, Mapping, MutableMapping, MutableSet
-from typing import Any, Generic, NoReturn, Protocol, Self, TypeAlias, overload, type_check_only
+from typing import Any, Generic, NoReturn, Protocol, TypeAlias, overload, type_check_only
+from typing_extensions import Self
 
 from _typeshed import Incomplete
 from typing_extensions import TypeVar, override

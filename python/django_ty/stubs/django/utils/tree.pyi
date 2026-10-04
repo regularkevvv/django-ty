@@ -1,5 +1,6 @@
 from collections.abc import Sequence
-from typing import Any, Self, TypeAlias
+from typing import Any, TypeAlias
+from typing_extensions import Self
 
 from django.db.models.sql.where import NothingNode
 from typing_extensions import override

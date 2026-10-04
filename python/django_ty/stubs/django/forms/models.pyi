@@ -1,5 +1,6 @@
 from collections.abc import Callable, Collection, Container, Iterator, Mapping, MutableMapping, Sequence
-from typing import Any, ClassVar, Generic, Literal, Self, TypeAlias, overload
+from typing import Any, ClassVar, Generic, Literal, TypeAlias, overload
+from typing_extensions import Self
 from uuid import UUID
 
 from django.db import models

@@ -1,5 +1,6 @@
 from decimal import Decimal
-from typing import Any, Self, TypeAlias
+from typing import Any, TypeAlias
+from typing_extensions import Self
 
 from typing_extensions import override
 

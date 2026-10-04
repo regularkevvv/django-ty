@@ -1,5 +1,6 @@
 import datetime as dt
-from typing import Any, ClassVar, Self
+from typing import Any, ClassVar
+from typing_extensions import Self
 
 from django.contrib.sessions.backends.base import SessionBase
 from django.db import models

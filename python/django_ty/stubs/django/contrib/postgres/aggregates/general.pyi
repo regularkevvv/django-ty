@@ -1,5 +1,6 @@
 from collections.abc import Sequence
-from typing import Any, ClassVar, Self
+from typing import Any, ClassVar
+from typing_extensions import Self
 
 from django.contrib.postgres.fields import ArrayField
 from django.db.backends.base.base import BaseDatabaseWrapper

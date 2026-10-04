@@ -1,6 +1,12 @@
 from collections.abc import Sequence
-from enum import StrEnum
-from typing import Any, ClassVar, Self
+import sys as _sys
+from enum import Enum as _Enum
+if _sys.version_info >= (3, 11):
+    from enum import StrEnum as StrEnum
+else:
+    class StrEnum(str, _Enum): ...
+from typing import Any, ClassVar
+from typing_extensions import Self
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.backends.base.schema import BaseDatabaseSchemaEditor

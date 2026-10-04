@@ -1,7 +1,13 @@
 import enum
 import sys
-from enum import EnumType, IntEnum, StrEnum
-from enum import property as enum_property
+from enum import IntEnum
+if sys.version_info >= (3, 11):
+    from enum import EnumType, StrEnum
+    from enum import property as enum_property
+else:
+    from enum import EnumMeta as EnumType
+    from builtins import property as enum_property
+    class StrEnum(str, enum.Enum): ...
 from typing import Any, Literal, overload, type_check_only
 
 from _typeshed import ConvertibleToInt

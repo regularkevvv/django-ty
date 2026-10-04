@@ -3,7 +3,8 @@ from collections.abc import Callable, Iterable
 from contextlib import AbstractContextManager
 from datetime import tzinfo
 from logging import Logger
-from typing import Any, Self, TypeAlias
+from typing import Any, TypeAlias
+from typing_extensions import Self
 
 from django.db.backends.base.client import BaseDatabaseClient
 from django.db.backends.base.creation import BaseDatabaseCreation

@@ -1,7 +1,8 @@
 from collections.abc import Callable, Sequence
 from contextlib import AbstractContextManager
 from types import TracebackType
-from typing import Any, Self, TypeAlias
+from typing import Any, TypeAlias
+from typing_extensions import Self
 
 from _typeshed import Self as MetaclassSelf  # noqa: TID251
 from django.test import LiveServerTestCase

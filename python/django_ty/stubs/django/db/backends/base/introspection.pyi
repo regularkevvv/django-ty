@@ -1,5 +1,6 @@
 from collections.abc import Iterable
-from typing import Any, Literal, NamedTuple, NotRequired, type_check_only
+from typing import Any, Literal, NamedTuple, type_check_only
+from typing_extensions import NotRequired
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.backends.utils import CursorWrapper

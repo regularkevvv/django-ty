@@ -1,6 +1,7 @@
 import datetime as dt
 from collections.abc import Iterable
-from typing import Any, ClassVar, Literal, Never, Self, TypeAlias
+from typing import Any, ClassVar, Literal, TypeAlias
+from typing_extensions import Never, Self
 
 from django.contrib.auth.base_user import AbstractBaseUser as AbstractBaseUser
 from django.contrib.auth.base_user import BaseUserManager as BaseUserManager

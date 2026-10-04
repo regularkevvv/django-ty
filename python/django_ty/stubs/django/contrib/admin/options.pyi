@@ -2,7 +2,8 @@ import enum
 import sys
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, ClassVar, Generic, Literal, Self, TypeAlias, cast, type_check_only
+from typing import Any, ClassVar, Generic, Literal, TypeAlias, cast, type_check_only
+from typing_extensions import Self
 
 from django import forms
 from django.contrib.admin.filters import FieldListFilter, ListFilter

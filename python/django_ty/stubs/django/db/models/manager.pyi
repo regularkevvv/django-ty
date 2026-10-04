@@ -1,6 +1,7 @@
 import datetime
 from collections.abc import AsyncIterator, Collection, Iterable, Iterator, Mapping, Sequence
-from typing import Any, Generic, Literal, NoReturn, Self, overload
+from typing import Any, Generic, Literal, NoReturn, overload
+from typing_extensions import Self
 
 from django.core.checks.messages import CheckMessage
 from django.db.models.base import Model

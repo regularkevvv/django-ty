@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 from enum import Enum
-from typing import Any, Self, cast, overload
+from typing import Any, cast, overload
+from typing_extensions import Self
 
 from django.core.checks import CheckMessage
 from django.db.backends.base.base import BaseDatabaseWrapper

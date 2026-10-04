@@ -1,5 +1,6 @@
 from collections.abc import Sequence
-from typing import ClassVar, Self
+from typing import ClassVar
+from typing_extensions import Self
 
 from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 from django.db.migrations.operations.base import Operation

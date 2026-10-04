@@ -1,5 +1,6 @@
 from collections.abc import Callable, Iterable, Mapping
-from typing import Any, Generic, Never, Self, overload, type_check_only
+from typing import Any, Generic, overload, type_check_only
+from typing_extensions import Never, Self
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.base import Model

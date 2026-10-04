@@ -1,6 +1,7 @@
 from collections.abc import Callable, Iterable
 from enum import Enum
-from typing import Any, Self
+from typing import Any
+from typing_extensions import Self
 
 from django.db.migrations.graph import MigrationGraph
 from django.db.migrations.migration import Migration

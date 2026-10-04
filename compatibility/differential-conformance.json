@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "reference": {
-    "checker": "mypy 2.3.1 (compiled: yes)",
+    "checker": "mypy 2.3.1",
     "django_stubs": "6.1.1",
     "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
     "django": "6.0.7",
     "python": "3.13"
   },
   "candidate": {
-    "checker": "ty 0.84.0",
+    "checker": "ty 0.84.2",
     "django_ty": "0.3.1",
     "django": "6.0.7",
-    "ty_extended": "0.84.0",
-    "ty_extended_commit": "05738e1075cde5e65ff2f35fd61f5b4f631d07c8"
+    "ty_extended": "0.84.2",
+    "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
   },
   "corpus": {
-    "sha256": "7a873c0a7ffcc5863b0afc7bfbdf0aff6f6aa26fdb8017751f71f82af50d01be",
+    "sha256": "10b5b77946f735fca9f02f4c31d66afaccee4606ead445023866981f9bbb486e",
     "features": 38,
     "assertions": 86
   },

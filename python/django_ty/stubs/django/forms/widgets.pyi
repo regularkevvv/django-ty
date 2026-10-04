@@ -1,7 +1,8 @@
 import datetime
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from re import Pattern
-from typing import Any, Literal, Protocol, Self, TypeAlias, type_check_only
+from typing import Any, Literal, Protocol, TypeAlias, type_check_only
+from typing_extensions import Self
 
 from _typeshed import Self as MetaclassSelf  # noqa: TID251
 from django.core.files.base import File

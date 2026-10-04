@@ -1,4 +1,5 @@
-from typing import Any, Literal, Self, overload
+from typing import Any, Literal, overload
+from typing_extensions import Self
 
 from django.contrib.gis.gdal import CoordTransform, SpatialReference
 from django.contrib.gis.gdal.geometries import OGRGeometry

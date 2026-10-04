@@ -1,4 +1,5 @@
-from typing import Any, ClassVar, Self
+from typing import Any, ClassVar
+from typing_extensions import Self
 
 from django.contrib.gis.db import models
 from django.contrib.gis.db.backends.base.models import SpatialRefSysMixin

@@ -1,6 +1,7 @@
 from collections.abc import Iterable, Sequence
 from types import TracebackType
-from typing import Any, Self
+from typing import Any
+from typing_extensions import Self
 
 from typing_extensions import override
 

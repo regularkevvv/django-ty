@@ -59,7 +59,7 @@ validated less.
 
 ```sh
 uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --check
-uv run --no-project --python 3.11 python -m unittest tests/test_compatibility_value.py tests/test_evaluate_differential_conformance.py
+uv run --no-project --python 3.11 python -m unittest discover -s tests
 bash scripts/differential-conformance.sh --check
 uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check
 cargo test --locked

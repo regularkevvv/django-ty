@@ -1,7 +1,8 @@
 from collections.abc import Collection, Mapping, Sequence
 from pathlib import Path as _Path
 from re import Pattern
-from typing import Any, Literal, NotRequired, Protocol, TypeAlias, TypedDict, type_check_only
+from typing import Any, Literal, Protocol, TypeAlias, TypedDict, type_check_only
+from typing_extensions import NotRequired
 
 from django.utils.functional import _StrOrPromise
 

@@ -1,5 +1,6 @@
 from collections.abc import Callable, Iterable, Sequence
-from typing import Any, Generic, Literal, Self, overload
+from typing import Any, Generic, Literal, overload
+from typing_extensions import Self
 from uuid import UUID
 
 from django import forms

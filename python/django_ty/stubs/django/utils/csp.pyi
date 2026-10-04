@@ -1,5 +1,10 @@
 from collections.abc import Collection, Mapping
-from enum import StrEnum as _StrEnum
+import sys as _sys
+from enum import Enum as _Enum
+if _sys.version_info >= (3, 11):
+    from enum import StrEnum as _StrEnum
+else:
+    class _StrEnum(str, _Enum): ...
 
 from django.forms import Media
 from django.template import Context

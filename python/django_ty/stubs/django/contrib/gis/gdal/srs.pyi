@@ -1,5 +1,6 @@
 from enum import IntEnum
-from typing import Any, AnyStr, Self, cast
+from typing import Any, AnyStr, cast
+from typing_extensions import Self
 
 from django.contrib.gis.gdal.base import GDALBase
 

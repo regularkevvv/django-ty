@@ -1,5 +1,6 @@
 import re
-from typing import Any, ClassVar, Self, TypeAlias
+from typing import Any, ClassVar, TypeAlias
+from typing_extensions import Self
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.models import Expression, Field, FloatField, TextField

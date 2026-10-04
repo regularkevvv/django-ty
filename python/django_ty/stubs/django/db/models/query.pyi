@@ -1,7 +1,8 @@
 import datetime
 from collections.abc import AsyncIterator, Collection, Iterable, Iterator, Mapping, Sequence, Sized
 from types import TracebackType
-from typing import Any, Generic, Literal, NamedTuple, Self, TypeAlias, overload, type_check_only
+from typing import Any, Generic, Literal, NamedTuple, TypeAlias, overload, type_check_only
+from typing_extensions import Self
 
 from django.db.backends.utils import _ExecuteQuery
 from django.db.models import Manager

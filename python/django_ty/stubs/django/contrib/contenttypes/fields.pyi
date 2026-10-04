@@ -1,5 +1,6 @@
 from collections.abc import Callable, Sequence
-from typing import Any, Self, overload
+from typing import Any, overload
+from typing_extensions import Self
 
 from django.contrib.contenttypes.models import ContentType
 from django.core.checks.messages import CheckMessage

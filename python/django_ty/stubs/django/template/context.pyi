@@ -1,7 +1,8 @@
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import AbstractContextManager
 from types import TracebackType
-from typing import Any, Self, TypeAlias
+from typing import Any, TypeAlias
+from typing_extensions import Self
 
 from django.http.request import HttpRequest
 from django.template.base import Node, Origin, Template

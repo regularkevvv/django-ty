@@ -24,10 +24,13 @@ jobs:
         run: uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --check
         working-directory: django-ty
       - name: Test compatibility tooling
-        run: uv run --no-project --python 3.11 python -m unittest tests/test_compatibility_value.py tests/test_evaluate_differential_conformance.py
+        run: uv run --no-project --python 3.11 python -m unittest discover -s tests
         working-directory: django-ty
       - name: Verify differential conformance
         run: bash scripts/differential-conformance.sh --check
+        working-directory: django-ty
+      - name: Verify Django and Python compatibility matrix
+        run: uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check
         working-directory: django-ty
       - uses: taiki-e/install-action@16b05812d776ae1dfaabc8277e421fb6d2506419 # v2.82.7
         with:

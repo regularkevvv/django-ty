@@ -44,6 +44,10 @@ for name, expression in cases.items():
         outcomes[name] = "accept"
 print(json.dumps(outcomes))
 """
+    actual_python = subprocess.check_output(
+        [str(python), "--version"], text=True
+    ).split()[1]
+    actual_python = ".".join(actual_python.split(".")[:2])
     actual = json.loads(
         subprocess.check_output([str(python), "-c", runtime], text=True)
     )
@@ -74,6 +78,8 @@ print(json.dumps(outcomes))
                     str(root),
                     "--python",
                     str(environment),
+                    "--python-version",
+                    actual_python,
                     "--output-format",
                     "concise",
                     "--color",

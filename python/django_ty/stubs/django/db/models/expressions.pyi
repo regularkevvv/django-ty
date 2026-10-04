@@ -2,7 +2,8 @@ import datetime
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from decimal import Decimal
 from enum import Enum
-from typing import Any, ClassVar, Generic, Literal, Never, Self, TypeAlias
+from typing import Any, ClassVar, Generic, Literal, TypeAlias
+from typing_extensions import Never, Self
 
 from django.core.exceptions import FieldError
 from django.db.backends.base.base import BaseDatabaseWrapper

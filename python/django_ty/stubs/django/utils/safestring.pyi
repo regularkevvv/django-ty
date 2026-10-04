@@ -1,5 +1,6 @@
 from collections.abc import Callable
-from typing import Any, Self, TypeAlias, overload
+from typing import Any, TypeAlias, overload
+from typing_extensions import Self
 
 from django.utils.functional import _StrOrPromise
 from typing_extensions import TypeVar, override

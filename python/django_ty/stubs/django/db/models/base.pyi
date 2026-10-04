@@ -1,5 +1,6 @@
 from collections.abc import Collection, Iterable, Sequence
-from typing import Any, ClassVar, Final, Literal, Self, overload
+from typing import Any, ClassVar, Final, Literal, overload
+from typing_extensions import Self
 from weakref import ReferenceType
 
 from django.core.checks.messages import CheckMessage

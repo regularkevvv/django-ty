@@ -1,6 +1,7 @@
 from collections.abc import Callable, Iterator
 from types import TracebackType
-from typing import IO, AnyStr, Self, type_check_only
+from typing import IO, AnyStr, type_check_only
+from typing_extensions import Self
 
 from django.core.files.utils import FileProxyMixin
 from django.utils.functional import cached_property

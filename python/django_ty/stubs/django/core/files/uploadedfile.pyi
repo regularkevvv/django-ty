@@ -1,4 +1,5 @@
-from typing import IO, Any, Self
+from typing import IO, Any
+from typing_extensions import Self
 
 from django.core.files.base import File
 from django.utils.functional import cached_property

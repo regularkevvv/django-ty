@@ -3,7 +3,8 @@ import json
 from collections.abc import Callable, Collection, Iterable, Iterator, Sequence
 from decimal import Decimal
 from re import Pattern
-from typing import Any, ClassVar, Protocol, Self, TypeAlias, type_check_only
+from typing import Any, ClassVar, Protocol, TypeAlias, type_check_only
+from typing_extensions import Self
 from uuid import UUID
 
 from django.core.files import File

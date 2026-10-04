@@ -1,4 +1,5 @@
-from typing import Any, Literal, Self, type_check_only
+from typing import Any, Literal, type_check_only
+from typing_extensions import Self
 
 from django.utils.functional import LazyObject
 from typing_extensions import override

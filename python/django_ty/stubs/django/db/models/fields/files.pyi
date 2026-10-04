@@ -1,5 +1,6 @@
 from collections.abc import Callable, Iterable
-from typing import Any, Protocol, Self, overload, type_check_only
+from typing import Any, Protocol, overload, type_check_only
+from typing_extensions import Self
 
 from _typeshed import StrPath
 from django.core.files.base import File

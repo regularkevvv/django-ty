@@ -4,18 +4,20 @@ Static declaration baseline: [`django-stubs` 6.1.1](https://github.com/typeddjan
 
 `django-ty` vendors the pinned declaration tree inside its wheel. It neither installs nor executes the upstream mypy plugin.
 
-Reviewed adaptations inline TemplatesSetting and preserve the mutable GET/POST types of directly constructed HttpRequest objects. Framework request types stay immutable. The same transformations are applied during upstream fingerprint verification, and scripts/check_querydict_runtime.py compares seven assignment cases with the installed Django runtime.
+Reviewed adaptations inline TemplatesSetting and preserve the mutable GET/POST types of directly constructed HttpRequest objects. Framework request types stay immutable. Typing imports use typing_extensions, and enum declarations have Python 3.10 fallbacks. The same transformations are applied during upstream fingerprint verification, and scripts/check_querydict_runtime.py compares seven assignment cases with the installed Django runtime.
 
 ## Measured Surface
 
-- Static API: **100% available**: 712 `.pyi` modules and 16883 public symbols are packaged in the wheel.
-- Vendored static-tree SHA-256: `37e53b92feff7bff47836990f06d29737088c47a8421f168d502122c344a3949`.
+- Static API: **100% available**: 712 `.pyi` modules and 16879 public symbols are packaged in the wheel.
+- Vendored static-tree SHA-256: `7fba47e3ecdef02cedafb0f555ce3db732aaf4ef7ec8fe469a297ea70e9c542d`.
 - Dynamic feature-balanced parity: **100.0%** across 38 reference capabilities (38 supported, 0 partial, 0 unsupported).
 - Assertion conformance: **100.0%** (86 of 86 reference outcomes matched).
-- Candidate host: `django-ty` 0.3.1 on `ty-extended` 0.84.0 at `05738e1075cde5e65ff2f35fd61f5b4f631d07c8`.
+- Candidate host: `django-ty` 0.3.1 on `ty-extended` 0.84.2 at `0c1c84c1340ab818faa328a32a48048ebf06d105`.
 - Target: **95%** dynamic semantic parity. The static score is deliberately separate and does not hide semantic gaps.
 
 Auxiliary `django-stubs-ext` utilities such as `WithAnnotations` are outside this Django-behavior inventory. The candidate wheel must not install or package `django-stubs`, `django-stubs-ext`, or mypy; generic `Annotated` transport remains a library-neutral ty-extended plugin capability.
+
+Literal apps.get_model lookups currently resolve conventional app labels. Custom AppConfig labels and dynamically computed registry names are outside the measured surface.
 
 ## Methodology
 
