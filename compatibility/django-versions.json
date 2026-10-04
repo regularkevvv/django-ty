@@ -7,9 +7,9 @@
     "3.13",
     "3.14"
   ],
-  "declared_range": ">=5.0,<6.1",
+  "declared_range": ">=5.0,<6.2",
   "candidate": {
-    "django_ty": "0.3.1",
+    "django_ty": "0.3.2",
     "ty_extended": "0.84.2",
     "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
   },
@@ -32,7 +32,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.0.14",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -585,7 +585,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.0.14",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -1138,7 +1138,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.0.14",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -1691,7 +1691,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.1.15",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -2218,7 +2218,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.1.15",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -2745,7 +2745,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.1.15",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -3272,7 +3272,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.1.15",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -3799,7 +3799,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.2.17",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -4310,7 +4310,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.2.17",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -4821,7 +4821,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.2.17",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -5332,7 +5332,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.2.17",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -5843,7 +5843,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "5.2.17",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -6354,7 +6354,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "6.0.7",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -6809,7 +6809,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "6.0.7",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -7264,7 +7264,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "6.0.7",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -7708,8 +7708,8 @@
     },
     {
       "django": "6.1.1",
-      "declared": false,
-      "note": "Above the declared `Django<6.1` ceiling; probed with --no-deps.",
+      "declared": true,
+      "note": "Inside the declared range; pinned conformance baseline.",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.1.1",
@@ -7719,7 +7719,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "6.1.1",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -8130,8 +8130,8 @@
     },
     {
       "django": "6.1.1",
-      "declared": false,
-      "note": "Above the declared `Django<6.1` ceiling; probed with --no-deps.",
+      "declared": true,
+      "note": "Inside the declared range; pinned conformance baseline.",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.1.1",
@@ -8141,7 +8141,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "6.1.1",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
@@ -8552,8 +8552,8 @@
     },
     {
       "django": "6.1.1",
-      "declared": false,
-      "note": "Above the declared `Django<6.1` ceiling; probed with --no-deps.",
+      "declared": true,
+      "note": "Inside the declared range; pinned conformance baseline.",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.1.1",
@@ -8563,7 +8563,7 @@
       },
       "candidate": {
         "checker": "ty 0.84.2",
-        "django_ty": "0.3.1",
+        "django_ty": "0.3.2",
         "django": "6.1.1",
         "ty_extended": "0.84.2",
         "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"

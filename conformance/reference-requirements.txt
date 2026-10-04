@@ -1,5 +1,5 @@
 # Reference-oracle environment only; none of these packages enter the django-ty wheel or candidate.
-Django==6.0.7
+Django==6.1.1
 asgiref==3.11.1
 ast_serialize==0.6.0
 django-stubs==6.1.1

@@ -7,7 +7,7 @@
 # static tree packaged in the wheel.
 #
 # `declared = true` means the Django version satisfies the wheel's
-# `Django>=5.0,<6.1` dependency. Rows outside the range still run: the
+# `Django>=5.0,<6.2` dependency. Rows outside the range still run: the
 # candidate wheel is installed with `--no-deps` so the probe measures what the
 # plugin actually does there instead of what the resolver allows.
 #
@@ -60,5 +60,5 @@ python = ["3.12", "3.13", "3.14"]
 mypy = "2.3.1"
 django_stubs = "6.1.1"
 django_stubs_commit = "c7816bcf4cb8ec8706acb5b671ca62131b345ef7"
-declared = false
-note = "Above the declared `Django<6.1` ceiling; probed with --no-deps."
+declared = true
+note = "Inside the declared range; pinned conformance baseline."
