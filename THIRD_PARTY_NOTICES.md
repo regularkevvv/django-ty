@@ -1,7 +1,7 @@
 # Third-Party Notices
 
-`django-ty` vendors the Django static declaration tree from django-stubs 6.0.6,
-commit `c1d968a356955f9598da6536115ccae4ed802b44`.
+`django-ty` vendors the Django static declaration tree from django-stubs 6.1.1,
+commit `c7816bcf4cb8ec8706acb5b671ca62131b345ef7`.
 
 No code from `mypy_django_plugin` is included or executed by `django-ty`.
 

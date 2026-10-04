@@ -3,8 +3,9 @@ import unittest
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from contextlib import AbstractContextManager
 from types import TracebackType
-from typing import Any, Literal, overload
+from typing import Any, Literal, Self, overload
 
+from _typeshed import Unused
 from django.core.exceptions import ImproperlyConfigured
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import ThreadedWSGIServer, WSGIRequestHandler
@@ -21,7 +22,7 @@ from django.test.client import AsyncClient, Client
 from django.test.html import Element
 from django.test.utils import CaptureQueriesContext, ContextList
 from django.utils.functional import _StrOrPromise, classproperty
-from typing_extensions import Self, override
+from typing_extensions import override
 
 def to_list(value: Any) -> list[Any]: ...
 def assert_and_parse_html(self: Any, html: str, user_msg: str, msg: str) -> Element: ...
@@ -55,7 +56,7 @@ class _DatabaseFailure:
     wrapped: Any
     message: str
     def __init__(self, wrapped: Any, message: str) -> None: ...
-    def __call__(self) -> None: ...
+    def __call__(self, *args: Unused, **kwargs: Unused) -> None: ...
 
 class SimpleTestCase(unittest.TestCase):
     client_class: type[Client]
@@ -110,22 +111,54 @@ class SimpleTestCase(unittest.TestCase):
     ) -> None: ...
     def assertFormSetError(
         self,
-        formset: BaseFormSet,
+        formset: BaseFormSet[Any],
         form_index: int | None,
         field: str | None,
         errors: list[str] | str,
         msg_prefix: str = "",
     ) -> None: ...
+    # with self.assertTemplateUsed("template.html"): ...
+    @overload
     def assertTemplateUsed(
         self,
-        response: HttpResponseBase | str | None = None,
+        response: str,
+        template_name: None = None,
+        msg_prefix: str = "",
+        count: int | None = None,
+    ) -> _AssertTemplateUsedContext: ...
+    # with self.assertTemplateUsed(template_name="template.html"): ...
+    @overload
+    def assertTemplateUsed(
+        self,
+        response: None = None,
         template_name: str | None = None,
         msg_prefix: str = "",
         count: int | None = None,
-    ) -> _AssertTemplateUsedContext | None: ...
+    ) -> _AssertTemplateUsedContext: ...
+    # self.assertTemplateUsed(response, "template.html")
+    @overload
+    def assertTemplateUsed(
+        self,
+        response: HttpResponseBase,
+        template_name: str | None = None,
+        msg_prefix: str = "",
+        count: int | None = None,
+    ) -> None: ...
+    # with self.assertTemplateNotUsed("template.html"): ...
+    @overload
     def assertTemplateNotUsed(
-        self, response: HttpResponseBase | str | None = None, template_name: str | None = None, msg_prefix: str = ""
-    ) -> _AssertTemplateNotUsedContext | None: ...
+        self, response: str, template_name: None = None, msg_prefix: str = ""
+    ) -> _AssertTemplateNotUsedContext: ...
+    # with self.assertTemplateNotUsed(template_name="template.html"): ...
+    @overload
+    def assertTemplateNotUsed(
+        self, response: None = None, template_name: str | None = None, msg_prefix: str = ""
+    ) -> _AssertTemplateNotUsedContext: ...
+    # self.assertTemplateNotUsed(response, "template.html")
+    @overload
+    def assertTemplateNotUsed(
+        self, response: HttpResponseBase, template_name: str | None = None, msg_prefix: str = ""
+    ) -> None: ...
     def assertRaisesMessage(
         self, expected_exception: type[Exception], expected_message: str, *args: Any, **kwargs: Any
     ) -> Any: ...
@@ -167,7 +200,7 @@ class TransactionTestCase(SimpleTestCase):
     serialized_rollback: bool
     def assertQuerySetEqual(
         self,
-        qs: Iterator[Any] | list[Model] | QuerySet | RawQuerySet,
+        qs: Iterator[Any] | list[Model] | QuerySet[Any] | RawQuerySet[Any],
         values: Iterable[Any],
         transform: Callable[[Model], Any] | type[str] | None = None,
         ordered: bool = True,

@@ -1,6 +1,6 @@
 import json
 from collections.abc import Callable
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Self
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.models import Model, lookups
@@ -9,7 +9,7 @@ from django.db.models.fields import TextField
 from django.db.models.lookups import FieldGetDbPrepValueMixin, PostgresOperatorLookup, Transform
 from django.db.models.sql.compiler import SQLCompiler, _AsSqlType
 from django.utils.functional import _StrOrPromise
-from typing_extensions import Self, TypeVar, override
+from typing_extensions import TypeVar, override
 
 from . import Field
 from .mixins import CheckFieldDefaultMixin
@@ -35,8 +35,6 @@ class JSONField(CheckFieldDefaultMixin, Field[_ST, _GT]):
     def get_transform(self, name: str) -> type[Transform] | KeyTransformFactory: ...  # type: ignore[override]
     @override
     def value_to_string(self, obj: Model) -> Any: ...
-    @override
-    def formfield(self, **kwargs: Any) -> Any: ...  # type: ignore[override]
 
 class DataContains(FieldGetDbPrepValueMixin, PostgresOperatorLookup): ...
 class ContainedBy(FieldGetDbPrepValueMixin, PostgresOperatorLookup): ...
@@ -69,9 +67,11 @@ class HasKeyOrArrayIndex(HasKey):
 class JSONExact(lookups.Exact): ...
 
 class CaseInsensitiveMixin:
+    # `process_lhs` drops `lhs` from `Lookup.process_lhs`, matching runtime.
+    def process_lhs(self, compiler: SQLCompiler, connection: BaseDatabaseWrapper) -> _AsSqlType: ...
     def process_rhs(self, compiler: SQLCompiler, connection: BaseDatabaseWrapper) -> _AsSqlType: ...
 
-class JSONIContains(CaseInsensitiveMixin, lookups.IContains): ...
+class JSONIContains(CaseInsensitiveMixin, lookups.IContains): ...  # type: ignore[misc]
 
 class KeyTransform(Transform):
     key_name: str
@@ -90,7 +90,7 @@ class KeyTransform(Transform):
 class KeyTextTransform(KeyTransform):
     postgres_operator: str
     postgres_nested_operator: str
-    output_field: ClassVar[TextField]
+    output_field: ClassVar[TextField[Any, Any]]
     @override
     def as_mysql(self, compiler: SQLCompiler, connection: BaseDatabaseWrapper) -> _AsSqlType: ...
     @classmethod
@@ -106,14 +106,20 @@ class KeyTransformIsNull(lookups.IsNull):
 
 class KeyTransformIn(lookups.In): ...
 class KeyTransformExact(JSONExact): ...
-class KeyTransformIExact(CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IExact): ...
-class KeyTransformIContains(CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IContains): ...
+class KeyTransformIExact(CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IExact): ...  # type: ignore[misc]
+class KeyTransformIContains(  # type: ignore[misc]
+    CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IContains
+): ...
 class KeyTransformStartsWith(KeyTransformTextLookupMixin, lookups.StartsWith): ...
-class KeyTransformIStartsWith(CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IStartsWith): ...
+class KeyTransformIStartsWith(  # type: ignore[misc]
+    CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IStartsWith
+): ...
 class KeyTransformEndsWith(KeyTransformTextLookupMixin, lookups.EndsWith): ...
-class KeyTransformIEndsWith(CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IEndsWith): ...
+class KeyTransformIEndsWith(  # type: ignore[misc]
+    CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IEndsWith
+): ...
 class KeyTransformRegex(KeyTransformTextLookupMixin, lookups.Regex): ...
-class KeyTransformIRegex(CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IRegex): ...
+class KeyTransformIRegex(CaseInsensitiveMixin, KeyTransformTextLookupMixin, lookups.IRegex): ...  # type: ignore[misc]
 
 class KeyTransformNumericLookupMixin:
     def process_rhs(self, compiler: SQLCompiler, connection: BaseDatabaseWrapper) -> _AsSqlType: ...

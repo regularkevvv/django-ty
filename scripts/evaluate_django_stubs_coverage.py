@@ -20,7 +20,7 @@ except ModuleNotFoundError:
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MAP_PATH = ROOT / "compatibility" / "django-stubs-6.0.6.toml"
+MAP_PATH = ROOT / "compatibility" / "django-stubs-6.1.1.toml"
 DOCUMENT_PATH = ROOT / "docs" / "DJANGO-STUBS-COVERAGE.md"
 RESULT_PATH = ROOT / "compatibility" / "differential-conformance.json"
 TYPE_ALIAS_TYPES = (getattr(ast, "TypeAlias"),) if hasattr(ast, "TypeAlias") else ()

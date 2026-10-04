@@ -41,7 +41,7 @@ model fields, forward and reverse relations, model-specific managers, queryset
 result types, `values()`, `values_list()`, basic `annotate()`, and literal lookup
 validation.
 
-The measured feature parity is **100.0%** against pinned `mypy` 2.1.0 with
+The measured feature parity is **100.0%** against pinned `mypy` 2.3.1 with
 `django-stubs` 6.0.6: all **82 of 82** in-scope reference outcomes match. The exact
 behavior is in the
 [compatibility map](https://github.com/regularkevvv/django-ty/blob/main/docs/DJANGO-STUBS-COVERAGE.md).
@@ -70,7 +70,7 @@ bash scripts/e2e.sh
 To refresh the vendored static API from the reviewed pinned checkout:
 
 ```sh
-uv run --no-project --python 3.11 python scripts/vendor_django_static_api.py --upstream-root /path/to/django-stubs-6.0.6
+uv run --no-project --python 3.11 python scripts/vendor_django_static_api.py --upstream-root /path/to/django-stubs-6.1.1
 bash scripts/differential-conformance.sh --write
 uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --write --check
 ```

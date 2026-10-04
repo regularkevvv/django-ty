@@ -23,7 +23,7 @@ except ModuleNotFoundError:
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = ROOT / "conformance"
-MAP_PATH = ROOT / "compatibility" / "django-stubs-6.0.6.toml"
+MAP_PATH = ROOT / "compatibility" / "django-stubs-6.1.1.toml"
 RESULT_PATH = ROOT / "compatibility" / "differential-conformance.json"
 CHECK_PATHS = ("conformance_project", "conformance_models", "cases")
 MARKER_RE = re.compile(

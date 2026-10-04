@@ -1,13 +1,13 @@
 [baseline]
 upstream_name = "django-stubs"
-version = "6.0.6"
-commit = "c1d968a356955f9598da6536115ccae4ed802b44"
+version = "6.1.1"
+commit = "c7816bcf4cb8ec8706acb5b671ca62131b345ef7"
 repository = "https://github.com/typeddjango/django-stubs"
 upstream_stub_root = "django-stubs"
 vendored_stub_root = "python/django_ty/stubs/django"
-expected_stub_files = 704
-expected_public_symbols = 16569
-expected_static_tree_sha256 = "ddd7f5058ccd5cad6590adf121b033a7809b68bcd83ca14103d7ff070423aba6"
+expected_stub_files = 712
+expected_public_symbols = 16883
+expected_static_tree_sha256 = "28ececdbba257f5178e24fd148531826f3eaf0e970059e06b7adfb5e6b85a8f0"
 expected_transformers = [
     "auth",
     "choices",
@@ -36,7 +36,7 @@ semantic_target_percent = 95
 [conformance]
 python = "3.13"
 django = "6.0.7"
-mypy = "2.1.0"
+mypy = "2.3.1"
 ty_extended = "0.84.0"
 ty_extended_commit = "05738e1075cde5e65ff2f35fd61f5b4f631d07c8"
 django_ty = "0.3.1"

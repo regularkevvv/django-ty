@@ -4,7 +4,7 @@
 Each matrix row in compatibility/django-versions.toml spins up two
 environments: a reference oracle (mypy plus the django-stubs release paired
 with that Django line) and the candidate (the django-ty wheel on ty-extended,
-which always evaluates the vendored django-stubs 6.0.6 static tree). The
+which always evaluates the vendored django-stubs 6.1.1 static tree). The
 shared differential conformance corpus then runs under both checkers and the
 accept/reject outcomes are compared assertion by assertion.
 """
@@ -31,7 +31,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MATRIX_PATH = ROOT / "compatibility" / "django-versions.toml"
 RESULTS_PATH = ROOT / "compatibility" / "django-versions.json"
 DOCUMENT_PATH = ROOT / "docs" / "DJANGO-VERSIONS.md"
-MAP_PATH = ROOT / "compatibility" / "django-stubs-6.0.6.toml"
+MAP_PATH = ROOT / "compatibility" / "django-stubs-6.1.1.toml"
 PYPROJECT_PATH = ROOT / "pyproject.toml"
 EVALUATOR = ROOT / "scripts" / "evaluate_differential_conformance.py"
 DEFAULT_WORK_DIR = Path("/tmp/django-ty-version-probes")
@@ -220,7 +220,7 @@ def render_document(results: dict[str, Any]) -> str:
         "Each row runs the differential conformance corpus "
         f"({results['corpus']['features']} capabilities, {results['corpus']['assertions']} assertions) twice: "
         "once with the version-appropriate reference oracle (mypy plus the django-stubs release paired with that Django line) "
-        "and once with the candidate, which evaluates against the vendored django-stubs 6.0.6 static tree packaged in the wheel regardless of the installed Django version.",
+        "and once with the candidate, which evaluates against the vendored django-stubs 6.1.1 static tree packaged in the wheel regardless of the installed Django version.",
         "",
         "## Matrix",
         "",

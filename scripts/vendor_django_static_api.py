@@ -15,7 +15,7 @@ except ModuleNotFoundError:
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MAP_PATH = ROOT / "compatibility" / "django-stubs-6.0.6.toml"
+MAP_PATH = ROOT / "compatibility" / "django-stubs-6.1.1.toml"
 TEMPLATES_SETTING_IMPORT = "from django_stubs_ext.settings import TemplatesSetting\n"
 TEMPLATES_SETTING_CLASS = """@type_check_only
 class TemplatesSetting(TypedDict):
