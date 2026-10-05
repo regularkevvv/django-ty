@@ -734,8 +734,8 @@ fn reverse_contribution(
 
 pub fn default_model_fields() -> Vec<FieldPatch> {
     vec![
-        optional_builtin_id_field("id", annotation("int")),
-        optional_builtin_id_field("pk", annotation("int")),
+        optional_builtin_id_field("id", annotation("int | None")),
+        optional_builtin_id_field("pk", annotation("int | None")),
     ]
 }
 

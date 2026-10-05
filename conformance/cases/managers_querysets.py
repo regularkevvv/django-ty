@@ -52,5 +52,5 @@ assert_type(Book.objects.prefetch_related("tags").get(), Book)  # conformance: q
 Book.objects.order_by("missing")  # conformance: querysets.ordering-field-validation/order-by-invalid expect=fail
 Book.objects.only("missing")  # conformance: querysets.ordering-field-validation/only-invalid expect=fail
 
-Book.objects.bulk_update([Book()], ["missing"])  # conformance: querysets.bulk-operations/bulk-update-invalid-field expect=fail
+Book.objects.bulk_update([Book(pk=1)], ["missing"])  # conformance: querysets.bulk-operations/bulk-update-invalid-field expect=fail
 Book.objects.bulk_create([Tag()])  # conformance: querysets.bulk-operations/bulk-create-wrong-model expect=fail

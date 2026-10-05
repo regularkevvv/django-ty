@@ -9,7 +9,8 @@ class StaticApiAdaptationsTest(unittest.TestCase):
     def test_fresh_request_constructor_preserves_mutable_querydicts(self) -> None:
         source = 'class HttpRequest:\n    def __init__(self) -> None: ...\n\n_Z = TypeVar("_Z")\n'
         adapted = normalize_stub("http/request.pyi", source)
-        self.assertIn("def __new__(cls) -> _MutableHttpRequest", adapted)
+        self.assertIn("def __init__(self) -> None", adapted)
+        self.assertNotIn("def __new__", adapted)
         self.assertIn("class _MutableHttpRequest(HttpRequest)", adapted)
         self.assertIn("GET: QueryDict", adapted)
         self.assertIn("POST: QueryDict", adapted)

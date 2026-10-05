@@ -1,5 +1,234 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "authority": {
+    "name": "Django official documentation",
+    "policy": "Documentation defines expected behavior; installed Django validates reviewed disagreements. Mypy and django-stubs are comparison tools."
+  },
+  "django_runtime": {
+    "cases": {
+      "async-callable-create": {
+        "observed": "45",
+        "passed": true
+      },
+      "async-callable-invalid": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "async-callable-update": {
+        "observed": "49",
+        "passed": true
+      },
+      "bulk-create-wrong-model": {
+        "exception": "AttributeError",
+        "passed": true
+      },
+      "bulk-update-invalid-field": {
+        "exception": "FieldDoesNotExist",
+        "passed": true
+      },
+      "callable-create-default": {
+        "observed": "43",
+        "passed": true
+      },
+      "callable-create-defaults": {
+        "observed": "(True, 48)",
+        "passed": true
+      },
+      "callable-existing-defaults": {
+        "observed": "(False, 45)",
+        "passed": true
+      },
+      "callable-invalid-result": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "callable-update-default": {
+        "observed": "44",
+        "passed": true
+      },
+      "constructor-id": {
+        "observed": "1",
+        "passed": true
+      },
+      "constructor-null-pk": {
+        "observed": "True",
+        "passed": true
+      },
+      "constructor-pk": {
+        "observed": "1",
+        "passed": true
+      },
+      "constructor-relation-id": {
+        "observed": "1",
+        "passed": true
+      },
+      "copied-chain-method": {
+        "observed": "True",
+        "passed": true
+      },
+      "copied-scalar-method": {
+        "observed": "1",
+        "passed": true
+      },
+      "custom-request-attribute": {
+        "observed": "hello",
+        "passed": true
+      },
+      "custom-request-type": {
+        "observed": "True",
+        "passed": true
+      },
+      "date-lookup": {
+        "observed": "False",
+        "passed": true
+      },
+      "day-lookup": {
+        "observed": "False",
+        "passed": true
+      },
+      "fresh-request-get": {
+        "observed": "1",
+        "passed": true
+      },
+      "fresh-request-post": {
+        "observed": "1",
+        "passed": true
+      },
+      "get-or-create-default": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "heterogeneous-callables": {
+        "observed": "('MixedBook', 47)",
+        "passed": true
+      },
+      "integer-in-wrong-container": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "integer-wrong-type": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "invalid-create-defaults": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "invalid-existing-defaults": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "mixed-literal-callable": {
+        "observed": "('Mixed', 46)",
+        "passed": true
+      },
+      "month-lookup": {
+        "observed": "False",
+        "passed": true
+      },
+      "named-callable-create": {
+        "observed": "45",
+        "passed": true
+      },
+      "named-callable-invalid": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "null-exact-lookup": {
+        "observed": "False",
+        "passed": true
+      },
+      "only-invalid": {
+        "exception": "FieldDoesNotExist",
+        "passed": true
+      },
+      "order-by-invalid": {
+        "exception": "FieldError",
+        "passed": true
+      },
+      "prefetch-list": {
+        "observed": "True",
+        "passed": true
+      },
+      "registry-case-insensitive": {
+        "observed": "True",
+        "passed": true
+      },
+      "registry-keywords": {
+        "observed": "True",
+        "passed": true
+      },
+      "registry-qualified": {
+        "observed": "True",
+        "passed": true
+      },
+      "registry-wrong-model": {
+        "observed": "False",
+        "passed": true
+      },
+      "save-invalid-field": {
+        "exception": "ValueError",
+        "passed": true
+      },
+      "save-valid-field": {
+        "observed": "D",
+        "passed": true
+      },
+      "string-in-lookup": {
+        "observed": "['D']",
+        "passed": true
+      },
+      "string-integer-in": {
+        "observed": "0",
+        "passed": true
+      },
+      "string-integer-invalid": {
+        "exception": "ValueError",
+        "passed": true
+      },
+      "string-integer-range": {
+        "observed": "0",
+        "passed": true
+      },
+      "string-range-lookup": {
+        "observed": "['D']",
+        "passed": true
+      },
+      "typed-callable-create": {
+        "observed": "45",
+        "passed": true
+      },
+      "typed-callable-invalid": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "unknown-related-field": {
+        "exception": "FieldError",
+        "passed": true
+      },
+      "unsaved-auto-id": {
+        "observed": "True",
+        "passed": true
+      },
+      "unsaved-auto-pk": {
+        "observed": "True",
+        "passed": true
+      },
+      "unsaved-relation-id": {
+        "observed": "True",
+        "passed": true
+      },
+      "update-or-create-default": {
+        "exception": "TypeError",
+        "passed": true
+      },
+      "year-lookup": {
+        "observed": "False",
+        "passed": true
+      }
+    },
+    "django": "6.1.1"
+  },
   "reference": {
     "checker": "mypy 2.3.1",
     "django_stubs": "6.1.1",
@@ -9,27 +238,32 @@
   },
   "candidate": {
     "checker": "ty 0.84.2",
-    "django_ty": "0.4.0",
+    "django_ty": "0.5.0",
     "django": "6.1.1",
     "ty_extended": "0.84.2",
     "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
   },
   "corpus": {
-    "sha256": "10b5b77946f735fca9f02f4c31d66afaccee4606ead445023866981f9bbb486e",
+    "sha256": "ed065f938ca6cf893c5074e032d3aac25bcb818ee4091446b321c82a6990f3e5",
     "features": 38,
-    "assertions": 86
+    "assertions": 119,
+    "documentation_contract_sha256": "b822a4c3fba9c1d5b79f80730d8e46da7b29d74a1379fe9246d7b70662628bb7",
+    "runtime_proof_sha256": "5f786d6bd04ec9dc02c3f150e7f6be0c20b515d52e5f19284e528c344d3beb4a"
   },
   "scores": {
-    "feature_balanced_percent": 100.0,
-    "assertion_conformance_percent": 100.0,
-    "matched_assertions": 86,
-    "total_assertions": 86
+    "feature_balanced_percent": 92.7,
+    "assertion_conformance_percent": 86.6,
+    "matched_assertions": 103,
+    "total_assertions": 119,
+    "contract_feature_balanced_percent": 100.0,
+    "contract_assertion_percent": 100.0,
+    "contract_matched_assertions": 119
   },
   "areas": [
     {
       "area": "Django extras",
       "features": 6,
-      "percent": 100.0
+      "percent": 94.5
     },
     {
       "area": "Managers",
@@ -39,12 +273,12 @@
     {
       "area": "Models and fields",
       "features": 8,
-      "percent": 100.0
+      "percent": 87.5
     },
     {
       "area": "Query lookups",
       "features": 4,
-      "percent": 100.0
+      "percent": 72.2
     },
     {
       "area": "Querysets and managers",
@@ -54,7 +288,7 @@
     {
       "area": "Relations",
       "features": 5,
-      "percent": 100.0
+      "percent": 93.3
     },
     {
       "area": "Settings and metadata",
@@ -69,6 +303,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/models.py:process_model_class"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -96,7 +331,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "models.default-primary-key",
@@ -105,20 +342,27 @@
         "mypy_django_plugin/transformers/models.py:AddDefaultPrimaryKey",
         "mypy_django_plugin/transformers/models.py:AddPrimaryKeyAlias"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
       "cases": 2,
-      "matched": 2,
-      "percent": 100.0,
-      "status": "supported",
+      "matched": 0,
+      "percent": 0.0,
+      "status": "unsupported",
       "assertions": [
         {
           "case": "default-id",
           "path": "cases/models_fields.py",
           "line": 11,
           "expect": "pass",
-          "reference": "accept",
+          "reference": "reject",
           "candidate": "accept",
-          "matches": true,
-          "reference_diagnostics": [],
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
           "candidate_diagnostics": []
         },
         {
@@ -126,13 +370,21 @@
           "path": "cases/models_fields.py",
           "line": 12,
           "expect": "pass",
-          "reference": "accept",
+          "reference": "reject",
           "candidate": "accept",
-          "matches": true,
-          "reference_diagnostics": [],
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "models.field-descriptors",
@@ -140,6 +392,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/fields.py:set_descriptor_types_for_field"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/",
       "cases": 3,
       "matched": 3,
       "percent": 100.0,
@@ -190,7 +443,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 3,
+      "contract_percent": 100.0
     },
     {
       "id": "models.constructor-keywords",
@@ -198,11 +453,23 @@
       "upstream": [
         "mypy_django_plugin/transformers/init_create.py:typecheck_model_init"
       ],
-      "cases": 3,
-      "matched": 3,
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "cases": 7,
+      "matched": 7,
       "percent": 100.0,
       "status": "supported",
       "assertions": [
+        {
+          "case": "id-keyword",
+          "path": "cases/models_fields.py",
+          "line": 35,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
         {
           "case": "invalid-keyword-type",
           "path": "cases/models_fields.py",
@@ -225,6 +492,39 @@
               "message": "Argument is incorrect: Expected `str`, found `list[str]`"
             }
           ]
+        },
+        {
+          "case": "nullable-pk-keyword",
+          "path": "cases/models_fields.py",
+          "line": 37,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "pk-alias",
+          "path": "cases/models_fields.py",
+          "line": 34,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "relation-id-keyword",
+          "path": "cases/models_fields.py",
+          "line": 36,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
         },
         {
           "case": "unknown-keyword",
@@ -260,7 +560,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 7,
+      "contract_percent": 100.0
     },
     {
       "id": "models.create-keywords",
@@ -269,6 +571,7 @@
         "mypy_django_plugin/transformers/init_create.py:typecheck_model_create",
         "mypy_django_plugin/transformers/init_create.py:typecheck_model_acreate"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#create",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -308,7 +611,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "models.abstract-proxy-inheritance",
@@ -316,6 +621,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/models.py:ModelClassInitializer"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/#model-inheritance",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -343,7 +649,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "models.choices-enums",
@@ -351,6 +659,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/choices.py:transform_into_proper_attr_type"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#enumeration-types",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -378,7 +687,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "models.custom-fields",
@@ -387,6 +698,7 @@
         "mypy_django_plugin/transformers/fields.py:transform_into_proper_return_type",
         "mypy_django_plugin/transformers/fields.py:determine_type_of_array_field"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/howto/custom-model-fields/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -426,7 +738,9 @@
             }
           ]
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "relations.foreign-key-one-to-one",
@@ -435,20 +749,27 @@
         "mypy_django_plugin/transformers/models.py:AddRelatedModelsId",
         "mypy_django_plugin/transformers/fields.py:fill_descriptor_types_for_related_field"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
       "cases": 3,
-      "matched": 3,
-      "percent": 100.0,
-      "status": "supported",
+      "matched": 2,
+      "percent": 66.7,
+      "status": "partial",
       "assertions": [
         {
           "case": "foreign-key-id",
           "path": "cases/relations.py",
           "line": 7,
           "expect": "pass",
-          "reference": "accept",
+          "reference": "reject",
           "candidate": "accept",
-          "matches": true,
-          "reference_diagnostics": [],
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
           "candidate_diagnostics": []
         },
         {
@@ -473,7 +794,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 3,
+      "contract_percent": 100.0
     },
     {
       "id": "relations.many-to-many",
@@ -482,6 +805,7 @@
         "mypy_django_plugin/transformers/manytomany.py:refine_many_to_many_related_manager",
         "mypy_django_plugin/transformers/models.py:ProcessManyToManyFields"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -509,7 +833,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "relations.reverse-relations",
@@ -518,6 +844,7 @@
         "mypy_django_plugin/transformers/models.py:AddReverseLookups",
         "mypy_django_plugin/transformers/manytoone.py:refine_many_to_one_related_manager"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -545,7 +872,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "relations.string-settings-targets",
@@ -553,6 +882,7 @@
       "upstream": [
         "mypy_django_plugin/django/context.py:model_class_fullnames_by_label"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
       "cases": 3,
       "matched": 3,
       "percent": 100.0,
@@ -572,7 +902,7 @@
         {
           "case": "settings-field-declaration",
           "path": "conformance_models/models.py",
-          "line": 61,
+          "line": 62,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -591,7 +921,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 3,
+      "contract_percent": 100.0
     },
     {
       "id": "relations.related-query-name",
@@ -599,6 +931,7 @@
       "upstream": [
         "mypy_django_plugin/django/context.py:resolve_lookup_into_field"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -638,7 +971,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "managers.default-manager",
@@ -646,6 +981,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/models.py:AddDefaultManagerAttribute"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -673,7 +1009,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "managers.declared-manager",
@@ -681,6 +1019,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/models.py:AddManagers"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -708,7 +1047,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "managers.custom-queryset-methods",
@@ -717,6 +1058,7 @@
         "mypy_django_plugin/transformers/managers.py:resolve_manager_method",
         "mypy_django_plugin/transformers/querysets.py:merge_annotations_from_custom_method"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
       "cases": 3,
       "matched": 3,
       "percent": 100.0,
@@ -747,7 +1089,7 @@
         {
           "case": "queryset-self-return",
           "path": "conformance_models/models.py",
-          "line": 90,
+          "line": 91,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -755,7 +1097,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 3,
+      "contract_percent": 100.0
     },
     {
       "id": "managers.from-queryset-as-manager",
@@ -764,6 +1108,7 @@
         "mypy_django_plugin/transformers/managers.py:create_new_manager_class_from_from_queryset_method",
         "mypy_django_plugin/transformers/managers.py:add_as_manager_to_queryset_class"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
       "cases": 4,
       "matched": 4,
       "percent": 100.0,
@@ -794,7 +1139,7 @@
         {
           "case": "generated-manager-class",
           "path": "conformance_models/models.py",
-          "line": 107,
+          "line": 108,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -805,7 +1150,7 @@
         {
           "case": "generated-queryset-self-return",
           "path": "conformance_models/models.py",
-          "line": 104,
+          "line": 105,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -813,7 +1158,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 4,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.chain-preserving-methods",
@@ -821,6 +1168,7 @@
       "upstream": [
         "mypy_django_plugin/main.py:manager_and_queryset_method_hooks"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -848,7 +1196,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.scalar-return-methods",
@@ -856,6 +1206,7 @@
       "upstream": [
         "mypy_django_plugin/main.py:manager_and_queryset_method_hooks"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
       "cases": 3,
       "matched": 3,
       "percent": 100.0,
@@ -894,7 +1245,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 3,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.async-return-methods",
@@ -903,6 +1256,7 @@
         "mypy_django_plugin/transformers/init_create.py:typecheck_model_acreate",
         "mypy_django_plugin/main.py:manager_and_queryset_method_hooks"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -930,7 +1284,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.values",
@@ -938,6 +1294,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/querysets.py:extract_proper_type_queryset_values"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -965,7 +1322,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.values-list",
@@ -973,6 +1332,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/querysets.py:extract_proper_type_queryset_values_list"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1000,7 +1360,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.annotate",
@@ -1008,6 +1370,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/querysets.py:extract_proper_type_queryset_annotate"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1035,7 +1398,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.prefetch-annotations",
@@ -1044,6 +1409,7 @@
         "mypy_django_plugin/transformers/querysets.py:extract_prefetch_related_annotations",
         "mypy_django_plugin/transformers/querysets.py:specialize_prefetch_type"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#prefetch-related",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1071,7 +1437,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.ordering-field-validation",
@@ -1081,6 +1449,7 @@
         "mypy_django_plugin/transformers/querysets.py:validate_defer_only",
         "mypy_django_plugin/transformers/querysets.py:validate_select_related"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#order-by",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1132,7 +1501,9 @@
             }
           ]
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "querysets.bulk-operations",
@@ -1141,6 +1512,7 @@
         "mypy_django_plugin/transformers/querysets.py:validate_bulk_create",
         "mypy_django_plugin/transformers/querysets.py:validate_bulk_update"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#bulk-update",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1192,7 +1564,9 @@
             }
           ]
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "lookups.field-traversal",
@@ -1200,15 +1574,16 @@
       "upstream": [
         "mypy_django_plugin/django/context.py:resolve_lookup_into_field"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
       "cases": 2,
-      "matched": 2,
-      "percent": 100.0,
-      "status": "supported",
+      "matched": 1,
+      "percent": 50.0,
+      "status": "partial",
       "assertions": [
         {
           "case": "related-text-path",
           "path": "cases/lookups.py",
-          "line": 4,
+          "line": 7,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1219,18 +1594,12 @@
         {
           "case": "unknown-related-field",
           "path": "cases/lookups.py",
-          "line": 5,
+          "line": 8,
           "expect": "fail",
-          "reference": "reject",
+          "reference": "accept",
           "candidate": "reject",
-          "matches": true,
-          "reference_diagnostics": [
-            {
-              "column": 1,
-              "code": "misc",
-              "message": "Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")"
-            }
-          ],
+          "matches": false,
+          "reference_diagnostics": [],
           "candidate_diagnostics": [
             {
               "column": 1,
@@ -1239,7 +1608,9 @@
             }
           ]
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "lookups.value-validation",
@@ -1247,15 +1618,38 @@
       "upstream": [
         "mypy_django_plugin/transformers/orm_lookups.py:typecheck_queryset_filter"
       ],
-      "cases": 2,
-      "matched": 2,
-      "percent": 100.0,
-      "status": "supported",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#field-lookups",
+      "cases": 12,
+      "matched": 11,
+      "percent": 91.7,
+      "status": "partial",
       "assertions": [
+        {
+          "case": "date-lookup",
+          "path": "cases/lookups.py",
+          "line": 29,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "day-lookup",
+          "path": "cases/lookups.py",
+          "line": 28,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
         {
           "case": "integer-exact-wrong-type",
           "path": "cases/lookups.py",
-          "line": 7,
+          "line": 10,
           "expect": "fail",
           "reference": "reject",
           "candidate": "reject",
@@ -1278,7 +1672,7 @@
         {
           "case": "integer-in-wrong-container",
           "path": "cases/lookups.py",
-          "line": 8,
+          "line": 11,
           "expect": "fail",
           "reference": "reject",
           "candidate": "reject",
@@ -1297,8 +1691,104 @@
               "message": "Invalid Django lookup value for `age__in` on `conformance_models.models.Author.age`; expected `int | None`: django-ty.invalid-lookup-value"
             }
           ]
+        },
+        {
+          "case": "month-lookup",
+          "path": "cases/lookups.py",
+          "line": 27,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "null-exact-lookup",
+          "path": "cases/lookups.py",
+          "line": 25,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "string-in-lookup",
+          "path": "cases/lookups.py",
+          "line": 19,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "string-integer-in",
+          "path": "cases/lookups.py",
+          "line": 31,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 32,
+          "expect": "fail",
+          "reference": "accept",
+          "candidate": "reject",
+          "matches": false,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": [
+            {
+              "column": 1,
+              "code": "plugin-configuration",
+              "message": "Invalid Django lookup value for `age__in` on `conformance_models.models.Author.age`; expected `int | None`: django-ty.invalid-lookup-value"
+            }
+          ]
+        },
+        {
+          "case": "string-integer-range",
+          "path": "cases/lookups.py",
+          "line": 33,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "string-range-lookup",
+          "path": "cases/lookups.py",
+          "line": 20,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "year-lookup",
+          "path": "cases/lookups.py",
+          "line": 26,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 12,
+      "contract_percent": 100.0
     },
     {
       "id": "lookups.creation-defaults",
@@ -1306,15 +1796,147 @@
       "upstream": [
         "mypy_django_plugin/transformers/orm_lookups.py:_typecheck_defaults_kwarg"
       ],
-      "cases": 2,
-      "matched": 2,
-      "percent": 100.0,
-      "status": "supported",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "cases": 17,
+      "matched": 8,
+      "percent": 47.1,
+      "status": "partial",
       "assertions": [
+        {
+          "case": "async-callable-create",
+          "path": "cases/lookups.py",
+          "line": 58,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 11,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "async-callable-invalid",
+          "path": "cases/lookups.py",
+          "line": 60,
+          "expect": "fail",
+          "reference": "reject",
+          "candidate": "reject",
+          "matches": true,
+          "reference_diagnostics": [
+            {
+              "column": 11,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": [
+            {
+              "column": 11,
+              "code": "plugin-configuration",
+              "message": "Invalid Django lookup value for `age` on `conformance_models.models.Author.age`; expected `int | None`: django-ty.invalid-lookup-value"
+            }
+          ]
+        },
+        {
+          "case": "async-callable-update",
+          "path": "cases/lookups.py",
+          "line": 59,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 11,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "callable-create-default",
+          "path": "cases/lookups.py",
+          "line": 21,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "callable-create-defaults",
+          "path": "cases/lookups.py",
+          "line": 53,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "callable-invalid-result",
+          "path": "cases/lookups.py",
+          "line": 24,
+          "expect": "fail",
+          "reference": "reject",
+          "candidate": "reject",
+          "matches": true,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": [
+            {
+              "column": 1,
+              "code": "plugin-configuration",
+              "message": "Invalid Django lookup value for `age` on `conformance_models.models.Author.age`; expected `int | None`: django-ty.invalid-lookup-value"
+            }
+          ]
+        },
+        {
+          "case": "callable-update-default",
+          "path": "cases/lookups.py",
+          "line": 22,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
         {
           "case": "get-or-create-default",
           "path": "cases/lookups.py",
-          "line": 10,
+          "line": 13,
           "expect": "fail",
           "reference": "reject",
           "candidate": "reject",
@@ -1335,9 +1957,179 @@
           ]
         },
         {
+          "case": "heterogeneous-callables",
+          "path": "cases/lookups.py",
+          "line": 52,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"title\" of \"Book\" (got \"Callable[[], str]\", expected \"str | int | Combinable\")"
+            },
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"pages\" of \"Book\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "invalid-create-defaults",
+          "path": "cases/lookups.py",
+          "line": 54,
+          "expect": "fail",
+          "reference": "reject",
+          "candidate": "reject",
+          "matches": true,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            },
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": [
+            {
+              "column": 1,
+              "code": "plugin-configuration",
+              "message": "Invalid Django lookup value for `age` on `conformance_models.models.Author.age`; expected `int | None`: django-ty.invalid-lookup-value"
+            }
+          ]
+        },
+        {
+          "case": "invalid-existing-defaults",
+          "path": "cases/lookups.py",
+          "line": 50,
+          "expect": "fail",
+          "reference": "reject",
+          "candidate": "reject",
+          "matches": true,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": [
+            {
+              "column": 1,
+              "code": "plugin-configuration",
+              "message": "Invalid Django lookup value for `age` on `conformance_models.models.Author.age`; expected `int | None`: django-ty.invalid-lookup-value"
+            }
+          ]
+        },
+        {
+          "case": "mixed-literal-callable",
+          "path": "cases/lookups.py",
+          "line": 51,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "named-callable-create",
+          "path": "cases/lookups.py",
+          "line": 46,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "named-callable-invalid",
+          "path": "cases/lookups.py",
+          "line": 48,
+          "expect": "fail",
+          "reference": "reject",
+          "candidate": "reject",
+          "matches": true,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": [
+            {
+              "column": 1,
+              "code": "plugin-configuration",
+              "message": "Invalid Django lookup value for `age` on `conformance_models.models.Author.age`; expected `int | None`: django-ty.invalid-lookup-value"
+            }
+          ]
+        },
+        {
+          "case": "typed-callable-create",
+          "path": "cases/lookups.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "typed-callable-invalid",
+          "path": "cases/lookups.py",
+          "line": 49,
+          "expect": "fail",
+          "reference": "reject",
+          "candidate": "reject",
+          "matches": true,
+          "reference_diagnostics": [
+            {
+              "column": 1,
+              "code": "misc",
+              "message": "Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")"
+            }
+          ],
+          "candidate_diagnostics": [
+            {
+              "column": 1,
+              "code": "plugin-configuration",
+              "message": "Invalid Django lookup value for `age` on `conformance_models.models.Author.age`; expected `int | None`: django-ty.invalid-lookup-value"
+            }
+          ]
+        },
+        {
           "case": "update-or-create-default",
           "path": "cases/lookups.py",
-          "line": 11,
+          "line": 14,
           "expect": "fail",
           "reference": "reject",
           "candidate": "reject",
@@ -1357,7 +2149,9 @@
             }
           ]
         }
-      ]
+      ],
+      "contract_matched": 17,
+      "contract_percent": 100.0
     },
     {
       "id": "lookups.selected-field-validation",
@@ -1365,6 +2159,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/querysets.py:resolve_field_lookups"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1373,7 +2168,7 @@
         {
           "case": "values-list-unknown",
           "path": "cases/lookups.py",
-          "line": 14,
+          "line": 17,
           "expect": "fail",
           "reference": "reject",
           "candidate": "reject",
@@ -1396,7 +2191,7 @@
         {
           "case": "values-unknown",
           "path": "cases/lookups.py",
-          "line": 13,
+          "line": 16,
           "expect": "fail",
           "reference": "reject",
           "candidate": "reject",
@@ -1416,7 +2211,9 @@
             }
           ]
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "settings.project-settings-types",
@@ -1424,6 +2221,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/settings.py:get_type_of_settings_attribute"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/settings/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1451,7 +2249,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "metadata.get-field",
@@ -1459,6 +2259,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/meta.py:return_proper_field_type_from_get_field"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1498,7 +2299,9 @@
             }
           ]
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "forms.model-forms",
@@ -1506,6 +2309,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/forms.py:transform_form_class"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/forms/modelforms/",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1533,7 +2337,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "auth.user-model",
@@ -1542,6 +2348,7 @@
         "mypy_django_plugin/transformers/auth.py:get_user_model",
         "mypy_django_plugin/transformers/models.py:set_auth_user_model_boolean_fields"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/auth/customizing/#referencing-the-user-model",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1561,7 +2368,7 @@
         {
           "case": "request-user",
           "path": "cases/extras.py",
-          "line": 23,
+          "line": 24,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1569,7 +2376,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "models.save-update-fields",
@@ -1577,6 +2386,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/save.py:validate_save_update_fields"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#specifying-which-fields-to-save",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1585,7 +2395,7 @@
         {
           "case": "save-invalid-field",
           "path": "cases/extras.py",
-          "line": 25,
+          "line": 26,
           "expect": "fail",
           "reference": "reject",
           "candidate": "reject",
@@ -1608,7 +2418,7 @@
         {
           "case": "save-valid-field",
           "path": "cases/extras.py",
-          "line": 26,
+          "line": 27,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1616,7 +2426,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "http.querydict-mutability",
@@ -1624,15 +2436,72 @@
       "upstream": [
         "mypy_django_plugin/transformers/request.py:check_querydict_is_mutable"
       ],
-      "cases": 2,
-      "matched": 2,
-      "percent": 100.0,
-      "status": "supported",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+      "cases": 6,
+      "matched": 4,
+      "percent": 66.7,
+      "status": "partial",
       "assertions": [
+        {
+          "case": "custom-request-attribute",
+          "path": "cases/extras.py",
+          "line": 55,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "custom-request-type",
+          "path": "cases/extras.py",
+          "line": 54,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "fresh-get-write",
+          "path": "cases/extras.py",
+          "line": 43,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "misc",
+              "message": "This QueryDict is immutable."
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "fresh-post-write",
+          "path": "cases/extras.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "misc",
+              "message": "This QueryDict is immutable."
+            }
+          ],
+          "candidate_diagnostics": []
+        },
         {
           "case": "immutable-querydict-write",
           "path": "cases/extras.py",
-          "line": 42,
+          "line": 39,
           "expect": "fail",
           "reference": "reject",
           "candidate": "reject",
@@ -1655,7 +2524,7 @@
         {
           "case": "mutable-copy-write",
           "path": "cases/extras.py",
-          "line": 34,
+          "line": 31,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1663,7 +2532,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 6,
+      "contract_percent": 100.0
     },
     {
       "id": "typing.lazy-string",
@@ -1671,6 +2542,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/functional.py:resolve_str_promise_attribute"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/i18n/translation/#lazy-translation",
       "cases": 2,
       "matched": 2,
       "percent": 100.0,
@@ -1679,7 +2551,7 @@
         {
           "case": "string-list-method",
           "path": "cases/extras.py",
-          "line": 39,
+          "line": 36,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1690,7 +2562,7 @@
         {
           "case": "string-method",
           "path": "cases/extras.py",
-          "line": 38,
+          "line": 35,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1698,7 +2570,9 @@
           "reference_diagnostics": [],
           "candidate_diagnostics": []
         }
-      ]
+      ],
+      "contract_matched": 2,
+      "contract_percent": 100.0
     },
     {
       "id": "apps.model-registry",
@@ -1706,6 +2580,7 @@
       "upstream": [
         "mypy_django_plugin/transformers/apps.py:resolve_model_for_get_model"
       ],
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
       "cases": 4,
       "matched": 4,
       "percent": 100.0,
@@ -1767,7 +2642,193 @@
             }
           ]
         }
-      ]
+      ],
+      "contract_matched": 4,
+      "contract_percent": 100.0
     }
-  ]
+  ],
+  "reference_drift": [
+    {
+      "feature": "http.querydict-mutability",
+      "case": "fresh-get-write",
+      "path": "cases/extras.py",
+      "line": 43,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+      "runtime_proof": "fresh-request-get",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/http/request.py"
+    },
+    {
+      "feature": "http.querydict-mutability",
+      "case": "fresh-post-write",
+      "path": "cases/extras.py",
+      "line": 47,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+      "runtime_proof": "fresh-request-post",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/http/request.py"
+    },
+    {
+      "feature": "lookups.field-traversal",
+      "case": "unknown-related-field",
+      "path": "cases/lookups.py",
+      "line": 8,
+      "expect": "fail",
+      "reference": "accept",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+      "runtime_proof": "unknown-related-field"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "callable-create-default",
+      "path": "cases/lookups.py",
+      "line": 21,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "runtime_proof": "callable-create-default"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "callable-update-default",
+      "path": "cases/lookups.py",
+      "line": 22,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update-or-create",
+      "runtime_proof": "callable-update-default"
+    },
+    {
+      "feature": "lookups.value-validation",
+      "case": "string-integer-invalid",
+      "path": "cases/lookups.py",
+      "line": 32,
+      "expect": "fail",
+      "reference": "accept",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#in",
+      "runtime_proof": "string-integer-invalid",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/fields/__init__.py"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "named-callable-create",
+      "path": "cases/lookups.py",
+      "line": 46,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "runtime_proof": "named-callable-create"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "typed-callable-create",
+      "path": "cases/lookups.py",
+      "line": 47,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "runtime_proof": "typed-callable-create"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "mixed-literal-callable",
+      "path": "cases/lookups.py",
+      "line": 51,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "runtime_proof": "mixed-literal-callable"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "heterogeneous-callables",
+      "path": "cases/lookups.py",
+      "line": 52,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "runtime_proof": "heterogeneous-callables"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "callable-create-defaults",
+      "path": "cases/lookups.py",
+      "line": 53,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "runtime_proof": "callable-create-defaults"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "async-callable-create",
+      "path": "cases/lookups.py",
+      "line": 58,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "runtime_proof": "async-callable-create"
+    },
+    {
+      "feature": "lookups.creation-defaults",
+      "case": "async-callable-update",
+      "path": "cases/lookups.py",
+      "line": 59,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "implementation-defect-or-incomplete-validation",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+      "runtime_proof": "async-callable-update"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "default-id",
+      "path": "cases/models_fields.py",
+      "line": 11,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+      "runtime_proof": "unsaved-auto-id"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "default-pk",
+      "path": "cases/models_fields.py",
+      "line": 12,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+      "runtime_proof": "unsaved-auto-pk"
+    },
+    {
+      "feature": "relations.foreign-key-one-to-one",
+      "case": "foreign-key-id",
+      "path": "cases/relations.py",
+      "line": 7,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+      "runtime_proof": "unsaved-relation-id",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    }
+  ],
+  "unowned_diagnostics": {},
+  "unparsed_output": {}
 }

@@ -30,6 +30,7 @@ impl Plugin for DjangoTyPlugin {
                 .settings_module_from_config("django-settings-module")
                 .claim_instance_contribution_target("django.conf.LazySettings")
                 .claim_instance_contribution_target("django.http.request.HttpRequest")
+                .claim_call_return("django.http.request.HttpRequest")
                 .claim_call_return("django.contrib.auth.get_user_model")
                 .claim_call_return("django.contrib.auth.__init__.get_user_model")
                 .claim_call_signature_method(BASE_MANAGER_BASE, "from_queryset")
@@ -136,6 +137,11 @@ impl Plugin for DjangoTyPlugin {
     }
 
     fn adjust_call_return(&self, request: &CallRequest) -> PluginResponse {
+        if request.callee.expression == "django.http.request.HttpRequest" {
+            return ty_plugin_sdk::dsl::call_return(annotation(
+                "django.http.request._MutableHttpRequest",
+            ));
+        }
         if request.callee.expression == "django.apps.registry.Apps.get_model" {
             return crate::apps::get_model(request);
         }

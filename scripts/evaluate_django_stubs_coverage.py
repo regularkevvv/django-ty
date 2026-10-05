@@ -190,6 +190,55 @@ def check_result(
         "matched_assertions"
     ):
         errors.append("differential score totals do not match feature results")
+    contract_matched = sum(
+        feature.get("contract_matched", 0) for feature in result.get("features", [])
+    )
+    if contract_matched != scores.get("contract_matched_assertions"):
+        errors.append("official-contract score totals do not match feature results")
+    if contract_matched != total or total == 0:
+        errors.append("official Django contracts are not fully satisfied")
+    try:
+        from .django_official_contracts import load_contracts, documentation_url
+        from .evaluate_differential_conformance import corpus_digest, PROJECT_ROOT
+    except ImportError:
+        from django_official_contracts import load_contracts, documentation_url
+        from evaluate_differential_conformance import corpus_digest, PROJECT_ROOT
+    contracts = load_contracts()
+    if result.get("authority") != contracts["authority"]:
+        errors.append("result does not use the current official Django authority")
+    corpus = result.get("corpus", {})
+    for key, current in (
+        ("sha256", corpus_digest(PROJECT_ROOT)),
+        (
+            "documentation_contract_sha256",
+            hashlib.sha256(
+                (ROOT / "compatibility/django-official-contracts.toml").read_bytes()
+            ).hexdigest(),
+        ),
+        (
+            "runtime_proof_sha256",
+            hashlib.sha256(
+                (ROOT / "scripts/check_django_runtime_contracts.py").read_bytes()
+            ).hexdigest(),
+        ),
+    ):
+        if corpus.get(key) != current:
+            errors.append(f"official-contract evidence is stale: {key}")
+    runtime = result.get("django_runtime", {})
+    if runtime.get("django") != candidate.get("django") or any(
+        runtime.get("cases", {}).get(review["proof"], {}).get("passed") is not True
+        for review in contracts["review"].values()
+    ):
+        errors.append(
+            "official Django runtime evidence is missing or from another version"
+        )
+    for feature in result.get("features", []):
+        if feature.get("documentation") != documentation_url(
+            candidate["django"], feature["id"], contracts
+        ):
+            errors.append(
+                f"incorrect official documentation reference: {feature['id']}"
+            )
     return errors
 
 
@@ -202,7 +251,14 @@ def document(
     target_percent: float,
 ) -> str:
     scores = result["scores"]
-    counts = Counter(feature["status"] for feature in result["features"])
+    counts = Counter(
+        "supported"
+        if feature["contract_percent"] == 100
+        else "partial"
+        if feature["contract_percent"]
+        else "unsupported"
+        for feature in result["features"]
+    )
     lines = [
         "# Django Compatibility Map",
         "",
@@ -210,16 +266,16 @@ def document(
         "",
         "`django-ty` vendors the pinned declaration tree inside its wheel. It neither installs nor executes the upstream mypy plugin.",
         "",
-        "Reviewed adaptations inline TemplatesSetting and preserve the mutable GET/POST types of directly constructed HttpRequest objects. Framework request types stay immutable. Typing imports use typing_extensions, and enum declarations have Python 3.10 fallbacks. The same transformations are applied during upstream fingerprint verification, and scripts/check_querydict_runtime.py compares seven assignment cases with the installed Django runtime.",
+        "Reviewed adaptations inline TemplatesSetting and add a mutable request helper used only by the exact HttpRequest constructor hook. Custom subclasses retain their identity; framework request types stay immutable. Typing imports use typing_extensions, and enum declarations have Python 3.10 fallbacks. The same transformations are applied during upstream fingerprint verification, and scripts/check_querydict_runtime.py compares nine assignment cases with the installed Django runtime.",
         "",
         "## Measured Surface",
         "",
-        f"- Static API: **100% available**: {stub_files} `.pyi` modules and {public_symbols} public symbols are packaged in the wheel.",
+        f"- Vendored static declaration inventory: {stub_files} `.pyi` modules and {public_symbols} public symbols are packaged in the wheel.",
         f"- Vendored static-tree SHA-256: `{fingerprint}`.",
-        f"- Dynamic feature-balanced parity: **{scores['feature_balanced_percent']:.1f}%** across {result['corpus']['features']} reference capabilities ({counts['supported']} supported, {counts['partial']} partial, {counts['unsupported']} unsupported).",
-        f"- Assertion conformance: **{scores['assertion_conformance_percent']:.1f}%** ({scores['matched_assertions']} of {scores['total_assertions']} reference outcomes matched).",
+        f"- Documented feature contract coverage: **{scores['contract_feature_balanced_percent']:.1f}%** across {result['corpus']['features']} reviewed capabilities ({counts['supported']} supported, {counts['partial']} partial, {counts['unsupported']} unsupported).",
+        f"- Assertion conformance: **{scores['contract_assertion_percent']:.1f}%** ({scores['contract_matched_assertions']} of {scores['total_assertions']} documented expectations matched).",
         f"- Candidate host: `django-ty` {result['candidate']['django_ty']} on `ty-extended` {result['candidate']['ty_extended']} at `{result['candidate']['ty_extended_commit']}`.",
-        f"- Target: **{target_percent}%** dynamic semantic parity. The static score is deliberately separate and does not hide semantic gaps.",
+        f"- Target: **{target_percent}%** documented contract coverage. The static score is deliberately separate and does not hide semantic gaps.",
         "",
         "Auxiliary `django-stubs-ext` utilities such as `WithAnnotations` are outside this Django-behavior inventory. The candidate wheel must not install or package `django-stubs`, `django-stubs-ext`, or mypy; generic `Annotated` transport remains a library-neutral ty-extended plugin capability.",
         "",
@@ -227,20 +283,20 @@ def document(
         "",
         "## Methodology",
         "",
-        "The inventory maps every transformer module in the pinned django-stubs plugin to reviewed capabilities. Each capability has at least two line-level assertions in one shared Django project.",
+        "The inventory maps every transformer module in the pinned django-stubs plugin to reviewed capabilities with version-specific official Django documentation references. Each capability has at least two line-level assertions in one shared Django project.",
         "",
-        "Pinned mypy plus django-stubs is the reference oracle. Every assertion declares whether the reference must accept or reject it; disagreement invalidates the corpus. ty then checks the identical files. A match means both checkers made the same accept/reject decision on that assertion line. Diagnostics on unmarked lines invalidate the run instead of affecting the score indirectly.",
+        "Django's official documentation defines each assertion's expected behavior. The installed Django runtime independently checks reviewed differences, and ty checks the corresponding static assertions. Mypy plus django-stubs is a comparator. A new unexplained disagreement or missing runtime proof invalidates the run; agreeing with mypy cannot override documented Django behavior.",
         "",
-        "Feature-balanced parity gives every capability equal weight. Assertion conformance reports the raw matched assertions. Diagnostic wording is retained as evidence but is not compared, because the checkers use different rule names and messages.",
+        "Feature-balanced contract coverage gives every capability equal weight. Assertion conformance reports the raw candidate matches. Mypy agreement is retained separately as comparison evidence. These scores cover this corpus and its documented assumptions, not every Django API or project configuration.",
         "",
         "## Dynamic Coverage",
         "",
-        "| Area | Capabilities | Feature-balanced parity |",
+        "| Area | Capabilities | Contract coverage |",
         "| --- | ---: | ---: |",
     ]
     for area in result["areas"]:
         lines.append(
-            f"| {area['area']} | {area['features']} | {area['percent']:.1f}% |"
+            f"| {area['area']} | {area['features']} | {sum(feature['contract_percent'] for feature in result['features'] if feature['area'] == area['area']) / area['features']:.1f}% |"
         )
 
     lines.extend(
@@ -248,14 +304,13 @@ def document(
             "",
             "## Feature Matrix",
             "",
-            "| Area | Capability | Cases matched | Parity | Status | Upstream reference |",
-            "| --- | --- | ---: | ---: | --- | --- |",
+            "| Area | Capability | Contract cases | Contract coverage | Mypy agreement | Official Django documentation |",
+            "| --- | --- | ---: | ---: | ---: | --- |",
         ]
     )
     for feature in result["features"]:
-        upstream = "<br>".join(feature["upstream"])
         lines.append(
-            f"| {feature['area']} | `{feature['id']}` | {feature['matched']}/{feature['cases']} | {feature['percent']:.1f}% | {feature['status']} | `{upstream}` |"
+            f"| {feature['area']} | `{feature['id']}` | {feature['contract_matched']}/{feature['cases']} | {feature['contract_percent']:.1f}% | {feature['percent']:.1f}% | [Django documentation]({feature['documentation']}) |"
         )
     lines.extend(
         [
@@ -273,7 +328,7 @@ def document(
             "uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --upstream-root /path/to/django-stubs-6.1.1 --check",
             "```",
             "",
-            "The differential runner builds both environments, validates every declared reference outcome, rejects diagnostics outside assertion markers, and compares accept/reject behavior line by line. The documentation check verifies the vendored static tree, source inventory, checked result, and generated report.",
+            "The differential runner builds both environments, validates every declared official-documentation outcome and runtime proof, rejects diagnostics outside assertion markers, and compares accept/reject behavior line by line. The documentation check verifies the vendored static tree, source inventory, checked result, and generated report.",
             "",
         ]
     )
@@ -382,7 +437,9 @@ def main() -> int:
                 )
 
     errors.extend(check_transformer_coverage(baseline, features, upstream_root))
-    semantic_percent = result.get("scores", {}).get("feature_balanced_percent", 0.0)
+    semantic_percent = result.get("scores", {}).get(
+        "contract_feature_balanced_percent", 0.0
+    )
     output = ""
     if result:
         output = document(
@@ -422,7 +479,7 @@ def main() -> int:
     print(
         output
         if not args.check
-        else f"Django compatibility map passed: {semantic_percent:.1f}% semantic parity"
+        else f"Django compatibility map passed: {semantic_percent:.1f}% official-contract coverage"
     )
     return 0
 

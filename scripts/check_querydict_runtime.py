@@ -13,13 +13,15 @@ from pathlib import Path
 CASES = {
     "fresh-get": "HttpRequest().GET",
     "fresh-post": "HttpRequest().POST",
+    "asgi-get": 'ASGIRequest({"type": "http", "method": "GET", "path": "/", "headers": [], "query_string": b""}, BytesIO()).GET',
+    "asgi-post": 'ASGIRequest({"type": "http", "method": "POST", "path": "/", "headers": [], "query_string": b""}, BytesIO()).POST',
     "framework-get": 'RequestFactory().get("/").GET',
     "framework-post": 'RequestFactory().post("/").POST',
     "default-querydict": 'QueryDict("page=0")',
     "explicit-mutable": 'QueryDict("page=0", mutable=True)',
     "mutable-copy": 'RequestFactory().get("/").GET.copy()',
 }
-IMPORTS = "from django.http import HttpRequest, QueryDict\nfrom django.test import RequestFactory\n"
+IMPORTS = "from io import BytesIO\nfrom django.core.handlers.asgi import ASGIRequest\nfrom django.http import HttpRequest, QueryDict\nfrom django.test import RequestFactory\n"
 
 
 def check(environment: Path) -> dict[str, str]:
@@ -53,7 +55,14 @@ print(json.dumps(outcomes))
     )
     expected = {
         name: "reject"
-        if name in {"framework-get", "framework-post", "default-querydict"}
+        if name
+        in {
+            "framework-get",
+            "framework-post",
+            "asgi-get",
+            "asgi-post",
+            "default-querydict",
+        }
         else "accept"
         for name in CASES
     }

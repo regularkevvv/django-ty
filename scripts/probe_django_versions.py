@@ -50,13 +50,49 @@ def declared_django_requirement() -> str:
 
 def check_declared_flags(probes: list[dict[str, Any]], requirement: str) -> None:
     bounds = dict(re.findall(r"(>=|<)\s*([0-9.]+)", requirement))
-    version = lambda text: tuple(int(part) for part in text.split("."))
+
+    def version(text: str) -> tuple[int, ...]:
+        return tuple(int(part) for part in text.split("."))
+
     for probe in probes:
         if (
             version(bounds[">="]) <= version(probe["django"]) < version(bounds["<"])
         ) != probe["declared"]:
             raise RuntimeError(
                 f"matrix declaration for {probe['django']} disagrees with Django{requirement}"
+            )
+
+
+def check_reference_support(
+    probes: list[dict[str, Any]], support: dict[str, Any]
+) -> None:
+    def version(text: str) -> tuple[int, ...]:
+        return tuple(int(part) for part in text.split("."))
+
+    for probe in probes:
+        minor = ".".join(probe["django"].split(".")[:2])
+        declared = support["reference"].get(probe["django_stubs"])
+        if declared is None or probe["django_stubs_commit"] != declared["commit"]:
+            raise RuntimeError("unreviewed comparator release or source commit")
+        for python in probe["python"]:
+            if python not in support["django_python"].get(minor, []):
+                raise RuntimeError(
+                    f"unsupported Django/Python pair: {probe['django']} / {python}"
+                )
+            if python not in declared["python"]:
+                raise RuntimeError(
+                    f"unsupported comparator Python version: {probe['django_stubs']} / {python}"
+                )
+        if version(probe["mypy"]) < version(declared["mypy_min"]) or (
+            declared.get("mypy_max_exclusive")
+            and version(probe["mypy"]) >= version(declared["mypy_max_exclusive"])
+        ):
+            raise RuntimeError(
+                f"unsupported mypy/comparator pair: {probe['mypy']} / {probe['django_stubs']}"
+            )
+        if minor not in declared["django_full"] + declared["django_partial"]:
+            raise RuntimeError(
+                "comparator does not declare support for this Django line"
             )
 
 
@@ -149,8 +185,19 @@ def run_probe(
         ]
     )
     result = json.loads(output.read_text())
+    support = load_toml(ROOT / "compatibility/reference-support.toml")["reference"][
+        probe["django_stubs"]
+    ]
+    result["reference"]["django_support"] = (
+        "full" if minor in support["django_full"] else "partial"
+    )
+    result["reference"]["support_source"] = support["source"]
     if (
         result["reference"]["python"] != python
+        or result["reference"]["django"] != probe["django"]
+        or result["reference"]["django_stubs"] != probe["django_stubs"]
+        or result["reference"]["checker"] != f"mypy {probe['mypy']}"
+        or result["candidate"]["django_ty"] != pinned["conformance"]["django_ty"]
         or result["candidate"]["django"] != probe["django"]
         or result["candidate"]["ty_extended"] != pinned["conformance"]["ty_extended"]
     ):
@@ -176,7 +223,7 @@ def run_probe(
         )
     )
     print(
-        f"Django {probe['django']} / Python {python}: {result['scores']['contract_matched_assertions']}/{result['scores']['total_assertions']} contract assertions and 7 runtime cases passed",
+        f"Django {probe['django']} / Python {python}: {result['scores']['contract_matched_assertions']}/{result['scores']['total_assertions']} contract assertions and independent Django runtime proofs passed",
         file=sys.stderr,
         flush=True,
     )
@@ -190,6 +237,14 @@ def aggregate(
     pinned: dict[str, Any],
     requirement: str,
 ) -> dict[str, Any]:
+    if not results or len(results) != len(probes):
+        raise RuntimeError("each matrix pair must have a completed result")
+    if any(result["corpus"] != results[0]["corpus"] for result in results[1:]):
+        raise RuntimeError(
+            "matrix results use different corpus or runtime proof revisions"
+        )
+    if any(result["authority"] != results[0]["authority"] for result in results[1:]):
+        raise RuntimeError("matrix results use different semantic authorities")
     feature_keys = (
         "id",
         "area",
@@ -197,11 +252,13 @@ def aggregate(
         "matched",
         "percent",
         "status",
+        "documentation",
         "contract_matched",
         "contract_percent",
     )
     return {
-        "schema_version": 2,
+        "schema_version": 3,
+        "authority": results[0]["authority"],
         "matrix_python": matrix["python"],
         "declared_range": requirement,
         "candidate": {
@@ -224,6 +281,7 @@ def aggregate(
                         "unowned_diagnostics",
                         "unparsed_output",
                         "querydict_runtime",
+                        "django_runtime",
                     )
                 },
                 "features": [
@@ -246,13 +304,13 @@ def render_document(results: dict[str, Any]) -> str:
         f"Candidate: `django-ty` {candidate['django_ty']} on `ty-extended` {candidate['ty_extended']} (`{candidate['ty_extended_commit']}`).",
         f"Declared install range: `Django{results['declared_range']}`, Python `>=3.10`.",
         "",
-        "Each row checks the shared corpus against the version-matched mypy/django-stubs oracle and the installed wheel. Python combinations follow [Django's compatibility table](https://docs.djangoproject.com/en/6.1/faq/install/#what-python-version-can-i-use-with-django). Seven QueryDict assignment cases are also compared independently with each installed Django runtime.",
+        "Each row checks the installed wheel against expectations reviewed from Django's official documentation. The mypy/django-stubs run uses reviewed supported combinations as a comparison, and every reviewed disagreement must have a successful independent Django runtime proof. Python combinations follow [Django's compatibility table](https://docs.djangoproject.com/en/6.1/faq/install/#what-python-version-can-i-use-with-django). Nine QueryDict assignment cases are also compared independently with each installed Django runtime.",
         "",
         "The wheel serves one reviewed django-stubs 6.1.1 static tree. These results cover the listed corpus and runtime cases, not every version-specific API addition or removal.",
         "",
         "## Matrix",
         "",
-        "| Django | Python | Reference oracle | In declared range | Contract parity | Oracle parity | Runtime cases | Stray diagnostics |",
+        "| Django | Python | Mypy comparison | In declared range | Contract parity | Mypy agreement | Django runtime proofs | Stray diagnostics |",
         "| --- | --- | --- | --- | ---: | ---: | ---: | ---: |",
     ]
     for probe in results["probes"]:
@@ -260,11 +318,11 @@ def render_document(results: dict[str, Any]) -> str:
         reference = probe["reference"]
         stray = sum(len(items) for items in probe["unowned_diagnostics"].values())
         lines.append(
-            f"| {probe['django']} | {reference['python']} | django-stubs {reference['django_stubs']} + {reference['checker']} | {'yes' if probe['declared'] else 'no'} | {scores['contract_feature_balanced_percent']:.1f}% ({scores['contract_matched_assertions']}/{scores['total_assertions']}) | {scores['feature_balanced_percent']:.1f}% ({scores['matched_assertions']}/{scores['total_assertions']}) | {len(probe['querydict_runtime'])}/7 | {stray} |"
+            f"| {probe['django']} | {reference['python']} | django-stubs {reference['django_stubs']} + {reference['checker']} ({reference['django_support']} Django support) | {'yes' if probe['declared'] else 'no'} | {scores['contract_feature_balanced_percent']:.1f}% ({scores['contract_matched_assertions']}/{scores['total_assertions']}) | {scores['feature_balanced_percent']:.1f}% ({scores['matched_assertions']}/{scores['total_assertions']}) | {len(probe['django_runtime']['cases'])} + {len(probe['querydict_runtime'])} QueryDict | {stray} |"
         )
     lines += [
         "",
-        "Contract parity compares the candidate with the corpus expectations. Oracle parity compares it with the version-matched reference. Older oracles may accept invalid code or reject valid code. The findings below record the exact differences; unreachable code and candidate diagnostics outside assertions fail the run.",
+        "Contract parity measures agreement with the documented expectations. Mypy agreement measures checker-to-checker similarity. Differences can reflect deliberate typing policies, inference gaps, value-content limits, or validation defects. Partial support is identified according to the pinned upstream release README. The findings below link each reviewed difference to version-specific official documentation and an executed runtime proof. New unexplained differences, missing proofs, unreachable assertions, and candidate diagnostics outside assertions fail the run.",
         "",
         "## Capability Grid",
         "",
@@ -310,7 +368,12 @@ def render_document(results: dict[str, Any]) -> str:
                     continue
                 seen.add(identity)
                 lines.append(
-                    f"  - `{drift['path']}:{drift['line']}` `{drift['feature']}/{drift['case']}`: contract expects {drift['expect']}, oracle {drift['reference']}s; candidate matches the contract"
+                    f"  - `{drift['path']}:{drift['line']}` `{drift['feature']}/{drift['case']}`: contract expects {drift['expect']}, mypy {drift['reference']}s ({drift['classification']}); [official Django documentation]({drift['documentation']}), runtime proof `{drift['runtime_proof']}`"
+                    + (
+                        f", [Django source]({drift['django_source']})"
+                        if "django_source" in drift
+                        else ""
+                    )
                 )
             for checker, diagnostics in probe["unowned_diagnostics"].items():
                 for diagnostic in diagnostics:
@@ -360,6 +423,9 @@ def main() -> int:
     matrix = load_toml(MATRIX_PATH)["matrix"]
     requirement = declared_django_requirement()
     check_declared_flags(matrix["probe"], requirement)
+    check_reference_support(
+        matrix["probe"], load_toml(ROOT / "compatibility/reference-support.toml")
+    )
     probes = [
         {**probe, "python": python}
         for probe in matrix["probe"]

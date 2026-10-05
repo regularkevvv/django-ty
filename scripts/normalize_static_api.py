@@ -40,11 +40,11 @@ def normalize_stub(relative_path: str, source: str) -> str:
             raise ValueError(
                 "upstream HttpRequest layout changed; review the mutable constructor adaptation"
             )
+        # Constructor mutability belongs to the exact-class call hook. Changing
+        # __new__ here would also replace the type of every request subclass.
         source = source.replace(
-            "    def __init__(self) -> None: ...\n",
-            "    def __new__(cls) -> _MutableHttpRequest: ...\n",
-            1,
-        ).replace('_Z = TypeVar("_Z")', MUTABLE_REQUEST + '_Z = TypeVar("_Z")', 1)
+            '_Z = TypeVar("_Z")', MUTABLE_REQUEST + '_Z = TypeVar("_Z")', 1
+        )
     if relative_path == "db/models/enums.pyi":
         source = source.replace(
             "from enum import EnumType, IntEnum, StrEnum\nfrom enum import property as enum_property\n",

@@ -1,0 +1,99 @@
+[authority]
+name = "Django official documentation"
+policy = "Documentation defines expected behavior; installed Django validates reviewed disagreements. Mypy and django-stubs are comparison tools."
+
+[feature_docs]
+"models.subclass-transform" = "topics/db/models/"
+"models.default-primary-key" = "ref/models/instances/#auto-incrementing-primary-keys"
+"models.field-descriptors" = "ref/models/fields/"
+"models.constructor-keywords" = "ref/models/instances/"
+"models.create-keywords" = "ref/models/querysets/#create"
+"models.abstract-proxy-inheritance" = "topics/db/models/#model-inheritance"
+"models.choices-enums" = "ref/models/fields/#enumeration-types"
+"models.custom-fields" = "howto/custom-model-fields/"
+"relations.foreign-key-one-to-one" = "topics/db/queries/#lookups-that-span-relationships"
+"relations.many-to-many" = "topics/db/queries/#lookups-that-span-relationships"
+"relations.reverse-relations" = "topics/db/queries/#lookups-that-span-relationships"
+"relations.string-settings-targets" = "topics/db/queries/#lookups-that-span-relationships"
+"relations.related-query-name" = "topics/db/queries/#lookups-that-span-relationships"
+"managers.default-manager" = "topics/db/managers/"
+"managers.declared-manager" = "topics/db/managers/"
+"managers.custom-queryset-methods" = "topics/db/managers/"
+"managers.from-queryset-as-manager" = "topics/db/managers/"
+"querysets.chain-preserving-methods" = "ref/models/querysets/"
+"querysets.scalar-return-methods" = "ref/models/querysets/"
+"querysets.async-return-methods" = "ref/models/querysets/"
+"querysets.values" = "ref/models/querysets/"
+"querysets.values-list" = "ref/models/querysets/"
+"querysets.annotate" = "ref/models/querysets/"
+"querysets.prefetch-annotations" = "ref/models/querysets/#prefetch-related"
+"querysets.ordering-field-validation" = "ref/models/querysets/#order-by"
+"querysets.bulk-operations" = "ref/models/querysets/#bulk-update"
+"lookups.field-traversal" = "ref/models/querysets/"
+"lookups.value-validation" = "ref/models/querysets/#field-lookups"
+"lookups.creation-defaults" = "ref/models/querysets/#get-or-create"
+"lookups.selected-field-validation" = "ref/models/querysets/#values"
+"settings.project-settings-types" = "topics/settings/"
+"metadata.get-field" = "ref/models/meta/"
+"forms.model-forms" = "topics/forms/modelforms/"
+"auth.user-model" = "topics/auth/customizing/#referencing-the-user-model"
+"models.save-update-fields" = "ref/models/instances/#specifying-which-fields-to-save"
+"http.querydict-mutability" = "ref/request-response/#querydict-objects"
+"typing.lazy-string" = "topics/i18n/translation/#lazy-translation"
+"apps.model-registry" = "ref/applications/#django.apps.apps.get_model"
+
+[review]
+"apps.model-registry/qualified-reference" = { proof = "registry-qualified", expect = "pass", classification = "historical-feature-gap" }
+"apps.model-registry/case-insensitive-reference" = { proof = "registry-case-insensitive", expect = "pass", classification = "historical-feature-gap" }
+"apps.model-registry/keyword-reference" = { proof = "registry-keywords", expect = "pass", classification = "historical-feature-gap" }
+"apps.model-registry/wrong-model" = { proof = "registry-wrong-model", expect = "fail", classification = "historical-feature-gap" }
+"models.save-update-fields/save-invalid-field" = { proof = "save-invalid-field", expect = "fail", classification = "historical-feature-gap" }
+"models.save-update-fields/save-valid-field" = { proof = "save-valid-field", expect = "pass", classification = "additional-literal-validation" }
+"lookups.field-traversal/unknown-related-field" = { proof = "unknown-related-field", expect = "fail", classification = "implementation-defect-or-incomplete-validation", candidate_diagnostic = "django-ty.unknown-lookup" }
+"lookups.value-validation/integer-exact-wrong-type" = { proof = "integer-wrong-type", expect = "fail", classification = "additional-literal-validation" }
+"lookups.value-validation/integer-in-wrong-container" = { proof = "integer-in-wrong-container", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/get-or-create-default" = { proof = "get-or-create-default", expect = "fail", classification = "historical-feature-gap" }
+"lookups.creation-defaults/update-or-create-default" = { proof = "update-or-create-default", expect = "fail", documentation = "ref/models/querysets/#update-or-create", classification = "historical-feature-gap" }
+"managers.custom-queryset-methods/copied-chain-method" = { proof = "copied-chain-method", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"managers.custom-queryset-methods/copied-scalar-method" = { proof = "copied-scalar-method", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"querysets.prefetch-annotations/to-attr-list" = { proof = "prefetch-list", expect = "pass", classification = "historical-feature-gap" }
+"querysets.ordering-field-validation/order-by-invalid" = { proof = "order-by-invalid", expect = "fail", classification = "historical-feature-gap" }
+"querysets.ordering-field-validation/only-invalid" = { proof = "only-invalid", expect = "fail", documentation = "ref/models/querysets/#only", classification = "historical-feature-gap" }
+"querysets.bulk-operations/bulk-update-invalid-field" = { proof = "bulk-update-invalid-field", expect = "fail", classification = "historical-feature-gap" }
+"querysets.bulk-operations/bulk-create-wrong-model" = { proof = "bulk-create-wrong-model", expect = "fail", documentation = "ref/models/querysets/#bulk-create", classification = "additional-literal-validation" }
+"http.querydict-mutability/fresh-get-write" = { proof = "fresh-request-get", expect = "pass", source = "django/http/request.py", classification = "deliberate-policy-or-limit" }
+"http.querydict-mutability/fresh-post-write" = { proof = "fresh-request-post", expect = "pass", source = "django/http/request.py", classification = "deliberate-policy-or-limit" }
+"lookups.value-validation/string-in-lookup" = { proof = "string-in-lookup", expect = "pass", documentation = "ref/models/querysets/#in", classification = "additional-literal-validation" }
+"lookups.value-validation/string-range-lookup" = { proof = "string-range-lookup", expect = "pass", documentation = "ref/models/querysets/#range", classification = "additional-literal-validation" }
+"lookups.creation-defaults/callable-create-default" = { proof = "callable-create-default", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/callable-update-default" = { proof = "callable-update-default", expect = "pass", documentation = "ref/models/querysets/#update-or-create", classification = "implementation-defect-or-incomplete-validation" }
+"models.default-primary-key/default-id" = { proof = "unsaved-auto-id", expect = "pass", classification = "deliberate-policy-or-limit" }
+"models.default-primary-key/default-pk" = { proof = "unsaved-auto-pk", expect = "pass", classification = "deliberate-policy-or-limit" }
+"models.constructor-keywords/pk-alias" = { proof = "constructor-pk", expect = "pass", source = "django/db/models/base.py", classification = "additional-literal-validation" }
+"models.constructor-keywords/id-keyword" = { proof = "constructor-id", expect = "pass", source = "django/db/models/base.py", classification = "additional-literal-validation" }
+"models.constructor-keywords/relation-id-keyword" = { proof = "constructor-relation-id", expect = "pass", source = "django/db/models/base.py", classification = "additional-literal-validation" }
+"models.constructor-keywords/nullable-pk-keyword" = { proof = "constructor-null-pk", expect = "pass", source = "django/db/models/base.py", classification = "additional-literal-validation" }
+"lookups.creation-defaults/callable-invalid-result" = { proof = "callable-invalid-result", expect = "fail", classification = "historical-feature-gap" }
+"lookups.value-validation/null-exact-lookup" = { proof = "null-exact-lookup", expect = "pass", documentation = "ref/models/querysets/#exact", classification = "additional-literal-validation" }
+"lookups.value-validation/year-lookup" = { proof = "year-lookup", expect = "pass", documentation = "ref/models/querysets/#year", classification = "additional-literal-validation" }
+"lookups.value-validation/month-lookup" = { proof = "month-lookup", expect = "pass", documentation = "ref/models/querysets/#month", classification = "additional-literal-validation" }
+"lookups.value-validation/day-lookup" = { proof = "day-lookup", expect = "pass", documentation = "ref/models/querysets/#day", classification = "additional-literal-validation" }
+"lookups.value-validation/date-lookup" = { proof = "date-lookup", expect = "pass", documentation = "ref/models/querysets/#date", classification = "additional-literal-validation" }
+"relations.foreign-key-one-to-one/foreign-key-id" = { proof = "unsaved-relation-id", expect = "pass", documentation = "ref/models/instances/#creating-objects", source = "django/db/models/base.py", classification = "deliberate-policy-or-limit" }
+"lookups.value-validation/string-integer-in" = { proof = "string-integer-in", expect = "pass", documentation = "ref/models/querysets/#in", source = "django/db/models/fields/__init__.py", classification = "additional-literal-validation" }
+"lookups.value-validation/string-integer-invalid" = { proof = "string-integer-invalid", expect = "fail", documentation = "ref/models/querysets/#in", source = "django/db/models/fields/__init__.py", classification = "deliberate-policy-or-limit" }
+"lookups.value-validation/string-integer-range" = { proof = "string-integer-range", expect = "pass", documentation = "ref/models/querysets/#range", source = "django/db/models/fields/__init__.py", classification = "additional-literal-validation" }
+"http.querydict-mutability/custom-request-type" = { proof = "custom-request-type", expect = "pass", classification = "deliberate-policy-or-limit", source = "django/http/request.py" }
+"http.querydict-mutability/custom-request-attribute" = { proof = "custom-request-attribute", expect = "pass", classification = "deliberate-policy-or-limit", source = "django/http/request.py" }
+"lookups.creation-defaults/named-callable-create" = { proof = "named-callable-create", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/typed-callable-create" = { proof = "typed-callable-create", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/named-callable-invalid" = { proof = "named-callable-invalid", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/mixed-literal-callable" = { proof = "mixed-literal-callable", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/heterogeneous-callables" = { proof = "heterogeneous-callables", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/callable-create-defaults" = { proof = "callable-create-defaults", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/invalid-create-defaults" = { proof = "invalid-create-defaults", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/async-callable-create" = { proof = "async-callable-create", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/async-callable-update" = { proof = "async-callable-update", expect = "pass", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/typed-callable-invalid" = { proof = "typed-callable-invalid", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/invalid-existing-defaults" = { proof = "invalid-existing-defaults", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }
+"lookups.creation-defaults/async-callable-invalid" = { proof = "async-callable-invalid", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }

@@ -49,5 +49,48 @@ class ReachabilityTest(unittest.TestCase):
             require_reachable("mypy", [diagnostic])
 
 
+class DiagnosticReasonTest(unittest.TestCase):
+    def test_invalid_lookup_requires_the_path_error(self):
+        from scripts.evaluate_differential_conformance import (
+            Marker,
+            Diagnostic,
+            require_expected_diagnostic,
+            ConformanceError,
+        )
+
+        marker = Marker(
+            "lookups.field-traversal",
+            "unknown-related-field",
+            "cases/lookups.py",
+            8,
+            "fail",
+        )
+        contracts = {
+            "review": {
+                "lookups.field-traversal/unknown-related-field": {
+                    "candidate_diagnostic": "django-ty.unknown-lookup"
+                }
+            }
+        }
+        path_error = Diagnostic(
+            marker.path,
+            marker.line,
+            1,
+            "plugin-configuration",
+            "django-ty.unknown-lookup",
+        )
+        value_error = Diagnostic(
+            marker.path,
+            marker.line,
+            1,
+            "plugin-configuration",
+            "django-ty.invalid-lookup-value",
+        )
+        require_expected_diagnostic(marker, [path_error], contracts)
+        for wrong in ([], [value_error], [path_error, value_error]):
+            with self.subTest(wrong=wrong), self.assertRaises(ConformanceError):
+                require_expected_diagnostic(marker, wrong, contracts)
+
+
 if __name__ == "__main__":
     unittest.main()

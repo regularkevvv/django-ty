@@ -7,8 +7,8 @@ use ty_plugin_sdk::serde_json::{Value, json};
 use crate::constants::{FIELD_NAME_METHODS, LOOKUP_METHODS, QUERYSET_RETURNING_METHODS};
 use crate::diagnostics::{invalid_lookup_value, unknown_lookup};
 use crate::types::{
-    annotation, queryset_type, type_snapshot, values_list_row_virtual_type_name,
-    values_row_virtual_type_name,
+    annotation, canonical_type_expression, queryset_type, type_snapshot,
+    values_list_row_virtual_type_name, values_row_virtual_type_name,
 };
 
 pub fn adjust_queryset_return(request: &CallRequest, method_name: &str) -> PluginResponse {
@@ -588,7 +588,11 @@ fn validate_defaults_argument(
     let value_type = argument
         .type_expr
         .as_ref()
-        .and_then(|ty| mapping_value_type(&ty.expression));
+        .and_then(|ty| mapping_value_type(&canonical_type_expression(ty)));
+    let resolves_callables = value_type
+        .as_ref()
+        .is_some_and(|ty| ty.contains("->") || ty.contains("Callable[") || ty.contains("type["));
+    let value_type = value_type.map(|ty| callable_default_result(&ty));
     entries
         .iter()
         .filter_map(|entry| {
@@ -599,7 +603,16 @@ fn validate_defaults_argument(
                 name: Some(field_name.clone()),
                 kind: ArgumentKind::Keyword,
                 type_expr: value_type.clone().map(TypeExpr::annotation),
-                value: entry.value.clone(),
+                value: match entry.value {
+                    LiteralValue::SymbolRef(_)
+                    | LiteralValue::EnumRef(_)
+                    | LiteralValue::ClassRef(_)
+                        if resolves_callables =>
+                    {
+                        LiteralValue::Unknown
+                    }
+                    _ => entry.value.clone(),
+                },
                 source: argument.source.clone(),
             };
             validate_model_field_argument(model_name, request, &nested)
@@ -607,10 +620,115 @@ fn validate_defaults_argument(
         .collect()
 }
 
+// The protocol provides one aggregate dictionary value type. Preserve all possible
+// resolved result types so heterogeneous defaults do not inherit the last callable's type.
+fn callable_default_result(expression: &str) -> String {
+    let expression = unparenthesized(expression.trim());
+    let members = top_level_parts(expression, '|');
+    if members.len() > 1 {
+        return members
+            .into_iter()
+            .map(callable_default_result)
+            .collect::<Vec<_>>()
+            .join(" | ");
+    }
+    for origin in ["typing.Callable", "collections.abc.Callable", "Callable"] {
+        if let Some(arguments) = generic_arguments(expression, origin) {
+            return arguments.get(1).copied().unwrap_or("Unknown").to_string();
+        }
+    }
+    if let Some(inner) = expression
+        .strip_prefix("type[")
+        .and_then(|inner| inner.strip_suffix(']'))
+    {
+        return inner.to_string();
+    }
+    // Arrow signatures supplied by ty can contain nested callable return types.
+    let mut depth = 0_i32;
+    for (index, character) in expression.char_indices() {
+        match character {
+            '(' | '[' | '{' => depth += 1,
+            ')' | ']' | '}' => depth -= 1,
+            '-' if depth == 0 && expression[index..].starts_with("->") => {
+                return expression[index + 2..].trim().to_string();
+            }
+            _ => {}
+        }
+    }
+    if expression.contains("Callable[") {
+        "Unknown".to_string()
+    } else {
+        expression.to_string()
+    }
+}
+
+fn unparenthesized(expression: &str) -> &str {
+    let mut result = expression;
+    while result.starts_with('(') && result.ends_with(')') {
+        let mut depth = 0_i32;
+        let enclosed = result.char_indices().all(|(index, character)| {
+            match character {
+                '(' => depth += 1,
+                ')' => depth -= 1,
+                _ => {}
+            }
+            depth != 0 || index + 1 == result.len()
+        });
+        if !enclosed {
+            break;
+        }
+        result = result[1..result.len() - 1].trim();
+    }
+    result
+}
+
+fn top_level_parts(expression: &str, delimiter: char) -> Vec<&str> {
+    let mut parts = Vec::new();
+    let mut start = 0;
+    let mut depth = 0_i32;
+    let mut quote = None;
+    let mut escaped = false;
+    for (index, character) in expression.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if quote.is_some() {
+            if character == '\\' {
+                escaped = true;
+            } else if Some(character) == quote {
+                quote = None;
+            }
+            continue;
+        }
+        match character {
+            '\'' | '"' => quote = Some(character),
+            '(' | '[' | '{' => depth += 1,
+            ')' | ']' | '}' => depth -= 1,
+            _ if character == delimiter && depth == 0 => {
+                parts.push(expression[start..index].trim());
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    parts.push(expression[start..].trim());
+    parts
+}
+
 fn mapping_value_type(expression: &str) -> Option<String> {
-    let arguments = expression.split_once('[')?.1.strip_suffix(']')?;
-    let (_, value) = arguments.split_once(',')?;
-    Some(value.trim().to_string())
+    [
+        "dict",
+        "builtins.dict",
+        "typing.Mapping",
+        "collections.abc.Mapping",
+        "Mapping",
+    ]
+    .into_iter()
+    .find_map(|origin| {
+        generic_arguments(expression, origin)
+            .and_then(|args| args.get(1).map(|value| value.to_string()))
+    })
 }
 
 fn validate_field_name_argument(
@@ -815,6 +933,7 @@ fn lookup_value_is_compatible(
             LiteralValue::List { items } | LiteralValue::Tuple { items } => items
                 .iter()
                 .all(|item| literal_value_matches_field_type(field_type, item)),
+            LiteralValue::Str { value } => string_lookup_items_match(field_type, value),
             LiteralValue::Unknown => true,
             _ => false,
         }
@@ -824,6 +943,9 @@ fn lookup_value_is_compatible(
                 items
                     .iter()
                     .all(|item| literal_value_matches_field_type(field_type, item))
+            }
+            LiteralValue::Str { value } => {
+                value.chars().count() == 2 && string_lookup_items_match(field_type, value)
             }
             LiteralValue::Unknown => true,
             _ => false,
@@ -844,25 +966,69 @@ fn lookup_value_is_compatible(
                 argument.value,
                 LiteralValue::Str { .. } | LiteralValue::Unknown
             )
+    } else if matches!(lookup, "year" | "month" | "day") {
+        argument_value_matches_field_type("int", argument)
+    } else if lookup == "date" {
+        argument_value_matches_field_type("datetime.date | datetime.datetime | str", argument)
+    } else if matches!(lookup, "exact" | "iexact") && matches!(argument.value, LiteralValue::None) {
+        true
     } else {
         argument_value_matches_field_type(field_type, argument)
     }
+}
+
+// Strings are iterables of characters; integer lookup preparation accepts digit characters.
+fn string_lookup_items_match(field_type: &str, value: &str) -> bool {
+    value.chars().all(|character| {
+        field_type_allows(field_type, "str")
+            || (field_type_allows(field_type, "int")
+                && (character.is_ascii_digit() || !character.is_ascii()))
+    })
 }
 
 fn argument_value_matches_field_type(field_type: &str, argument: &ArgumentSummary) -> bool {
     if !matches!(argument.value, LiteralValue::Unknown) {
         return literal_value_matches_field_type(field_type, &argument.value);
     }
-    argument
-        .type_expr
-        .as_ref()
-        .is_none_or(|actual| type_expr_may_match_field_type(field_type, &actual.expression))
+    argument.type_expr.as_ref().is_none_or(|actual| {
+        let qualified = match actual.snapshot.as_deref() {
+            Some(TypeSnapshot::Nominal { qualified_name, .. }) => qualified_name.clone(),
+            _ => canonical_type_expression(actual),
+        };
+        type_expr_may_match_field_type(field_type, &qualified)
+    })
 }
 
 fn type_expr_may_match_field_type(field_type: &str, actual_type: &str) -> bool {
+    let actual_type = unparenthesized(actual_type.trim());
+    let members = top_level_parts(actual_type, '|');
+    if members.len() > 1 {
+        return members
+            .into_iter()
+            .any(|member| type_expr_may_match_field_type(field_type, member));
+    }
+    let actual_type = actual_type.strip_prefix("builtins.").unwrap_or(actual_type);
     if matches!(actual_type, "Any" | "typing.Any" | "Unknown" | "object") {
         return true;
     }
+    let literal_type;
+    let actual_type = if let Some(literal) = actual_type
+        .strip_prefix("Literal[")
+        .and_then(|value| value.strip_suffix(']'))
+    {
+        literal_type = if literal.starts_with('\"') || literal.starts_with('\'') {
+            "str"
+        } else if matches!(literal, "True" | "False") {
+            "bool"
+        } else if literal.parse::<i64>().is_ok() {
+            "int"
+        } else {
+            actual_type
+        };
+        literal_type
+    } else {
+        actual_type
+    };
     let expected = field_type.split('|').map(str::trim).collect::<Vec<_>>();
     let actual = actual_type.split('|').map(str::trim).collect::<Vec<_>>();
     if actual
@@ -1151,6 +1317,101 @@ mod tests {
         assert!(!literal_value_matches_field_type(
             "str",
             &LiteralValue::List { items: Vec::new() }
+        ));
+    }
+
+    #[test]
+    fn documented_lookup_and_default_forms_use_their_result_types() {
+        for (field, lookup, value, accepted) in [
+            ("str", "in", "abc", true),
+            ("int", "in", "", true),
+            ("int", "in", "abc", false),
+            ("int", "in", "123", true),
+            ("int", "in", "١٢", true),
+            ("str", "range", "az", true),
+            ("str", "range", "a", false),
+            ("int", "range", "az", false),
+            ("int", "range", "19", true),
+        ] {
+            assert_eq!(
+                lookup_value_is_compatible(
+                    field,
+                    Some(lookup),
+                    &argument(
+                        None,
+                        ArgumentKind::Keyword,
+                        LiteralValue::Str {
+                            value: value.to_string()
+                        },
+                        None
+                    )
+                ),
+                accepted
+            );
+        }
+        for (expression, expected) in [
+            ("() -> Literal[43]", "Literal[43]"),
+            ("(() -> str)", "str"),
+            ("type[int]", "int"),
+            ("typing.Callable[[], int]", "int"),
+            (
+                "collections.abc.Callable[[], tuple[int, str]]",
+                "tuple[int, str]",
+            ),
+            ("Callable[[]]", "Unknown"),
+            ("((() -> int))", "int"),
+            ("(() -> str) | (() -> int)", "str | int"),
+            ("str | (() -> Literal[43])", "str | Literal[43]"),
+            ("() -> (() -> int)", "(() -> int)"),
+            (r#"Literal["a|b"]"#, r#"Literal["a|b"]"#),
+            ("Literal['a|b']", "Literal['a|b']"),
+            ("Literal['a\\\"b']", "Literal['a\\\"b']"),
+            ("Callable[", "Unknown"),
+            ("int", "int"),
+        ] {
+            assert_eq!(callable_default_result(expression), expected);
+        }
+        for (expected, actual, accepted) in [
+            ("int", "Literal[43]", true),
+            ("int", "Literal[\"bad\"]", false),
+            ("str", "Literal['ok']", true),
+            ("bool", "Literal[True]", true),
+            ("int", "builtins.int", true),
+            ("int", "Literal[unknown]", false),
+        ] {
+            assert_eq!(type_expr_may_match_field_type(expected, actual), accepted);
+        }
+        for lookup in ["year", "month", "day"] {
+            assert!(lookup_value_is_compatible(
+                "datetime.datetime",
+                Some(lookup),
+                &argument(
+                    None,
+                    ArgumentKind::Keyword,
+                    LiteralValue::Int { value: 2026 },
+                    None
+                )
+            ));
+        }
+        let mut date = argument(
+            None,
+            ArgumentKind::Keyword,
+            LiteralValue::Unknown,
+            Some("date"),
+        );
+        date.type_expr.as_mut().unwrap().snapshot = Some(Box::new(TypeSnapshot::Nominal {
+            qualified_name: "datetime.date".to_string(),
+            arguments: vec![],
+        }));
+        assert!(lookup_value_is_compatible(
+            "datetime.datetime",
+            Some("date"),
+            &date
+        ));
+        assert!(lookup_value_is_compatible(
+            "str",
+            Some("exact"),
+            &argument(None, ArgumentKind::Keyword, LiteralValue::None, None)
         ));
     }
 

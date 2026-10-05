@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use ty_plugin_sdk::dsl;
 use ty_plugin_sdk::protocol::{
     ArgumentKind, ArgumentSummary, AssignedValueSummary, CallValueSummary, FieldPatch,
-    FieldSummary, LiteralValue, MemberAccessPatch, MemberPatchMode, Parameter, SymbolRef, TypeExpr,
+    FieldSummary, LiteralValue, MemberAccessPatch, MemberPatchMode, SymbolRef, TypeExpr,
 };
 
 use crate::settings::SettingsIndex;
@@ -57,13 +57,15 @@ impl DjangoField {
             return None;
         }
         let ty = nullable("int", self.nullable);
+        let mut parameter = dsl::keyword_only(format!("{}_id", self.name), ty.clone());
+        parameter.required = false;
         Some(FieldPatch {
             name: format!("{}_id", self.name),
             mode: MemberPatchMode::ReplaceExisting,
             descriptor: None,
-            instance_get_type: ty.clone(),
+            instance_get_type: nullable("int", true),
             instance_set_type: Some(ty),
-            constructor_parameter: None,
+            constructor_parameter: Some(parameter),
             has_default: true,
         })
     }
@@ -352,13 +354,16 @@ fn callee_matches(call: &CallValueSummary, name: &str) -> bool {
 }
 
 pub fn optional_builtin_id_field(name: impl Into<String>, ty: TypeExpr) -> FieldPatch {
+    let name = name.into();
+    let mut parameter = dsl::keyword_only(name.clone(), ty.clone());
+    parameter.required = false;
     FieldPatch {
-        name: name.into(),
+        name,
         mode: MemberPatchMode::ReplaceExisting,
         descriptor: None,
         instance_get_type: ty.clone(),
         instance_set_type: Some(ty),
-        constructor_parameter: None::<Parameter>,
+        constructor_parameter: Some(parameter),
         has_default: true,
     }
 }
