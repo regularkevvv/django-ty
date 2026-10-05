@@ -1,10 +1,11 @@
 from collections.abc import Callable, Iterator
 from types import TracebackType
 from typing import IO, AnyStr, type_check_only
+from typing_extensions import Self
 
 from django.core.files.utils import FileProxyMixin
 from django.utils.functional import cached_property
-from typing_extensions import Self, override
+from typing_extensions import override
 
 class File(FileProxyMixin[AnyStr], IO[AnyStr]):
     DEFAULT_CHUNK_SIZE: int

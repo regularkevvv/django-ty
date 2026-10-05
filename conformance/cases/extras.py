@@ -30,11 +30,13 @@ def request_from_framework() -> HttpRequest:
     return HttpRequest()
 
 
-HttpRequest().GET["page"] = "1"  # conformance: http.querydict-mutability/fresh-request-write expect=pass
+def write_mutable_copy(request: HttpRequest) -> None:
+    request.GET.copy()["page"] = "1"  # conformance: http.querydict-mutability/mutable-copy-write expect=pass
 
 
 lazy_message = gettext_lazy("hello")
 assert_type(lazy_message.upper(), str)  # conformance: typing.lazy-string/string-method expect=pass
 assert_type(lazy_message.split(), list[str])  # conformance: typing.lazy-string/string-list-method expect=pass
 
-request_from_framework().GET["page"] = "1"  # conformance: http.querydict-mutability/immutable-querydict-write expect=fail
+def write_framework_request(request: HttpRequest) -> None:
+    request.GET["page"] = "1"  # conformance: http.querydict-mutability/immutable-querydict-write expect=fail

@@ -1,7 +1,8 @@
 from collections.abc import Callable, Sequence
 from typing import Any, overload, type_check_only
+from typing_extensions import Self
 
-from typing_extensions import Self, TypeVar
+from typing_extensions import TypeVar
 
 # Contains additions from a class being decorated with '@deconstructible'
 @type_check_only

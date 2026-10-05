@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 from enum import Enum
 from typing import Any, cast, overload
+from typing_extensions import Self
 
 from django.core.checks import CheckMessage
 from django.db.backends.base.base import BaseDatabaseWrapper
@@ -9,7 +10,7 @@ from django.db.models.base import Model
 from django.db.models.expressions import BaseExpression, Combinable
 from django.db.models.query_utils import Q
 from django.utils.functional import _StrOrPromise
-from typing_extensions import Self, override
+from typing_extensions import override
 
 class Deferrable(Enum):
     DEFERRED = cast(str, ...)
@@ -71,7 +72,7 @@ class UniqueConstraint(BaseConstraint):
         self,
         *expressions: str | BaseExpression | Combinable,
         fields: None = None,
-        name: str | None = None,
+        name: str,
         condition: Q | None = None,
         deferrable: Deferrable | None = None,
         include: Sequence[str] | None = None,
@@ -85,7 +86,7 @@ class UniqueConstraint(BaseConstraint):
         self,
         *,
         fields: Sequence[str],
-        name: str | None = None,
+        name: str,
         condition: Q | None = None,
         deferrable: Deferrable | None = None,
         include: Sequence[str] | None = None,

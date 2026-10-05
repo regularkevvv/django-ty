@@ -1,8 +1,8 @@
 from typing import Any, ClassVar
+from typing_extensions import Self
 
 from django.contrib.gis.db.backends.base.models import SpatialRefSysMixin
 from django.db import models
-from typing_extensions import Self
 
 class PostGISGeometryColumns(models.Model):
     f_table_catalog: Any

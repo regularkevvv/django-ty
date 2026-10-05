@@ -1,14 +1,15 @@
 [baseline]
 upstream_name = "django-stubs"
-version = "6.0.6"
-commit = "c1d968a356955f9598da6536115ccae4ed802b44"
+version = "6.1.1"
+commit = "c7816bcf4cb8ec8706acb5b671ca62131b345ef7"
 repository = "https://github.com/typeddjango/django-stubs"
 upstream_stub_root = "django-stubs"
 vendored_stub_root = "python/django_ty/stubs/django"
-expected_stub_files = 704
-expected_public_symbols = 16569
-expected_static_tree_sha256 = "ddd7f5058ccd5cad6590adf121b033a7809b68bcd83ca14103d7ff070423aba6"
+expected_stub_files = 712
+expected_public_symbols = 16879
+expected_static_tree_sha256 = "7fba47e3ecdef02cedafb0f555ce3db732aaf4ef7ec8fe469a297ea70e9c542d"
 expected_transformers = [
+    "apps",
     "auth",
     "choices",
     "fields",
@@ -35,11 +36,11 @@ semantic_target_percent = 95
 
 [conformance]
 python = "3.13"
-django = "6.0.7"
-mypy = "2.1.0"
-ty_extended = "0.84.0"
-ty_extended_commit = "05738e1075cde5e65ff2f35fd61f5b4f631d07c8"
-django_ty = "0.3.1"
+django = "6.1.1"
+mypy = "2.3.1"
+ty_extended = "0.84.2"
+ty_extended_commit = "0c1c84c1340ab818faa328a32a48048ebf06d105"
+django_ty = "0.3.2"
 minimum_cases_per_feature = 2
 
 [[feature]]
@@ -269,3 +270,9 @@ id = "typing.lazy-string"
 area = "Django extras"
 surface = "dynamic"
 upstream = ["mypy_django_plugin/transformers/functional.py:resolve_str_promise_attribute"]
+
+[[feature]]
+id = "apps.model-registry"
+area = "Django extras"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/apps.py:resolve_model_for_get_model"]

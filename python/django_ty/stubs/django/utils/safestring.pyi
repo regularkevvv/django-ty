@@ -1,8 +1,9 @@
 from collections.abc import Callable
 from typing import Any, TypeAlias, overload
+from typing_extensions import Self
 
 from django.utils.functional import _StrOrPromise
-from typing_extensions import Self, TypeVar, override
+from typing_extensions import TypeVar, override
 
 _SD = TypeVar("_SD", bound=SafeData)
 

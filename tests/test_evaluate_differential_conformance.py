@@ -4,6 +4,8 @@ import unittest
 
 from scripts.evaluate_differential_conformance import (
     ConformanceError,
+    Diagnostic,
+    require_reachable,
     normalize_ty_checker_version,
 )
 
@@ -36,6 +38,15 @@ class NormalizeTyCheckerVersionTest(unittest.TestCase):
     def test_rejects_wrong_embedded_commit(self) -> None:
         with self.assertRaisesRegex(ConformanceError, "expected abcdef123"):
             self.normalize("ty 1.2.3 (deadbeef0 2030-01-02)")
+
+
+class ReachabilityTest(unittest.TestCase):
+    def test_unreachable_assertions_cannot_be_counted_as_acceptance(self) -> None:
+        diagnostic = Diagnostic(
+            "cases/extras.py", 36, 1, "unreachable", "Statement is unreachable"
+        )
+        with self.assertRaisesRegex(ConformanceError, "isolate the assertion"):
+            require_reachable("mypy", [diagnostic])
 
 
 if __name__ == "__main__":

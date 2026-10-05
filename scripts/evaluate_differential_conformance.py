@@ -23,7 +23,7 @@ except ModuleNotFoundError:
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = ROOT / "conformance"
-MAP_PATH = ROOT / "compatibility" / "django-stubs-6.0.6.toml"
+MAP_PATH = ROOT / "compatibility" / "django-stubs-6.1.1.toml"
 RESULT_PATH = ROOT / "compatibility" / "differential-conformance.json"
 CHECK_PATHS = ("conformance_project", "conformance_models", "cases")
 MARKER_RE = re.compile(
@@ -159,6 +159,15 @@ def parse_diagnostics(
         elif line.strip():
             unparsed.append(line)
     return diagnostics, unparsed
+
+
+def require_reachable(checker: str, diagnostics: list[Diagnostic]) -> None:
+    for diagnostic in diagnostics:
+        if diagnostic.code == "unreachable":
+            raise ConformanceError(
+                f"{checker} skipped unreachable code at {diagnostic.path}:{diagnostic.line}; "
+                "isolate the assertion before scoring conformance"
+            )
 
 
 def checker_version(executable: Path) -> str:
@@ -348,14 +357,11 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     for forbidden_distribution in ("django-stubs", "django-stubs-ext", "mypy"):
         require_distribution_absent(args.ty_python, forbidden_distribution)
     reported_ty_version = checker_version(args.ty_bin)
-    if args.probe:
-        ty_version = reported_ty_version
-    else:
-        ty_version = normalize_ty_checker_version(
-            reported_ty_version,
-            conformance["ty_extended"],
-            conformance["ty_extended_commit"],
-        )
+    ty_version = normalize_ty_checker_version(
+        reported_ty_version,
+        conformance["ty_extended"],
+        conformance["ty_extended_commit"],
+    )
 
     with tempfile.TemporaryDirectory(prefix="django-ty-mypy-cache-") as cache_dir:
         mypy_command = [
@@ -381,6 +387,8 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         ".",
         "--python",
         str(args.ty_python),
+        "--python-version",
+        ".".join(python_version(args.ty_python).split(".")[:2]),
         "--output-format",
         "concise",
         "--color",
@@ -393,14 +401,14 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
 
     reference, mypy_unparsed = parse_diagnostics(mypy_output, "mypy", PROJECT_ROOT)
     candidate, ty_unparsed = parse_diagnostics(ty_output, "ty", PROJECT_ROOT)
+    require_reachable("mypy", reference)
+    require_reachable("ty", candidate)
     unparsed_output = {"mypy": mypy_unparsed, "ty": ty_unparsed}
     if not args.probe:
         for checker, unparsed in unparsed_output.items():
             if unparsed:
                 preview = "\n".join(unparsed[:10])
-                raise ConformanceError(
-                    f"could not parse {checker} output:\n{preview}"
-                )
+                raise ConformanceError(f"could not parse {checker} output:\n{preview}")
     marker_by_location = {marker.key: marker for marker in markers}
     unowned_diagnostics: dict[str, list[dict[str, Any]]] = {}
     for checker, diagnostics in (("mypy", reference), ("ty", candidate)):
@@ -528,13 +536,13 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     result = {
         "schema_version": 1,
         "reference": {
-            "checker": checker_version(args.mypy_bin),
+            "checker": checker_version(args.mypy_bin).split(" (compiled:")[0],
             "django_stubs": reference_versions["django-stubs"],
             "django_stubs_commit": (
                 args.django_stubs_commit if args.probe else baseline["commit"]
             ),
             "django": reference_versions["Django"],
-            "python": reference_versions["Python"]
+            "python": ".".join(reference_versions["Python"].split(".")[:2])
             if args.probe
             else conformance["python"],
         },
@@ -616,7 +624,9 @@ def main() -> int:
     )
     args = parser.parse_args()
     if args.probe and args.check:
-        parser.error("--probe only supports --write; probe results are inputs to scripts/probe_django_versions.py")
+        parser.error(
+            "--probe only supports --write; probe results are inputs to scripts/probe_django_versions.py"
+        )
 
     try:
         result = evaluate(args)

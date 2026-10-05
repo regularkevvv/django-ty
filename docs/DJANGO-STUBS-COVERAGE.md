@@ -1,19 +1,23 @@
 # Django Compatibility Map
 
-Static declaration baseline: [`django-stubs` 6.0.6](https://github.com/typeddjango/django-stubs/tree/c1d968a356955f9598da6536115ccae4ed802b44) at `c1d968a356955f9598da6536115ccae4ed802b44`.
+Static declaration baseline: [`django-stubs` 6.1.1](https://github.com/typeddjango/django-stubs/tree/c7816bcf4cb8ec8706acb5b671ca62131b345ef7) at `c7816bcf4cb8ec8706acb5b671ca62131b345ef7`.
 
 `django-ty` vendors the pinned declaration tree inside its wheel. It neither installs nor executes the upstream mypy plugin.
 
+Reviewed adaptations inline TemplatesSetting and preserve the mutable GET/POST types of directly constructed HttpRequest objects. Framework request types stay immutable. Typing imports use typing_extensions, and enum declarations have Python 3.10 fallbacks. The same transformations are applied during upstream fingerprint verification, and scripts/check_querydict_runtime.py compares seven assignment cases with the installed Django runtime.
+
 ## Measured Surface
 
-- Static API: **100% available**: 704 `.pyi` modules and 16569 public symbols are packaged in the wheel.
-- Vendored static-tree SHA-256: `ddd7f5058ccd5cad6590adf121b033a7809b68bcd83ca14103d7ff070423aba6`.
-- Dynamic feature-balanced parity: **100.0%** across 37 reference capabilities (37 supported, 0 partial, 0 unsupported).
-- Assertion conformance: **100.0%** (82 of 82 reference outcomes matched).
-- Candidate host: `django-ty` 0.3.1 on `ty-extended` 0.84.0 at `05738e1075cde5e65ff2f35fd61f5b4f631d07c8`.
+- Static API: **100% available**: 712 `.pyi` modules and 16879 public symbols are packaged in the wheel.
+- Vendored static-tree SHA-256: `7fba47e3ecdef02cedafb0f555ce3db732aaf4ef7ec8fe469a297ea70e9c542d`.
+- Dynamic feature-balanced parity: **100.0%** across 38 reference capabilities (38 supported, 0 partial, 0 unsupported).
+- Assertion conformance: **100.0%** (86 of 86 reference outcomes matched).
+- Candidate host: `django-ty` 0.3.2 on `ty-extended` 0.84.2 at `0c1c84c1340ab818faa328a32a48048ebf06d105`.
 - Target: **95%** dynamic semantic parity. The static score is deliberately separate and does not hide semantic gaps.
 
 Auxiliary `django-stubs-ext` utilities such as `WithAnnotations` are outside this Django-behavior inventory. The candidate wheel must not install or package `django-stubs`, `django-stubs-ext`, or mypy; generic `Annotated` transport remains a library-neutral ty-extended plugin capability.
+
+Literal apps.get_model lookups currently resolve conventional app labels. Custom AppConfig labels and dynamically computed registry names are outside the measured surface.
 
 ## Methodology
 
@@ -27,7 +31,7 @@ Feature-balanced parity gives every capability equal weight. Assertion conforman
 
 | Area | Capabilities | Feature-balanced parity |
 | --- | ---: | ---: |
-| Django extras | 5 | 100.0% |
+| Django extras | 6 | 100.0% |
 | Managers | 4 | 100.0% |
 | Models and fields | 8 | 100.0% |
 | Query lookups | 4 | 100.0% |
@@ -76,6 +80,7 @@ Feature-balanced parity gives every capability equal weight. Assertion conforman
 | Django extras | `models.save-update-fields` | 2/2 | 100.0% | supported | `mypy_django_plugin/transformers/save.py:validate_save_update_fields` |
 | Django extras | `http.querydict-mutability` | 2/2 | 100.0% | supported | `mypy_django_plugin/transformers/request.py:check_querydict_is_mutable` |
 | Django extras | `typing.lazy-string` | 2/2 | 100.0% | supported | `mypy_django_plugin/transformers/functional.py:resolve_str_promise_attribute` |
+| Django extras | `apps.model-registry` | 4/4 | 100.0% | supported | `mypy_django_plugin/transformers/apps.py:resolve_model_for_get_model` |
 
 ## Reproduce
 
@@ -87,7 +92,7 @@ uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.
 To additionally verify the vendored files against the pinned source checkout:
 
 ```sh
-uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --upstream-root /path/to/django-stubs-6.0.6 --check
+uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --upstream-root /path/to/django-stubs-6.1.1 --check
 ```
 
 The differential runner builds both environments, validates every declared reference outcome, rejects diagnostics outside assertion markers, and compares accept/reject behavior line by line. The documentation check verifies the vendored static tree, source inventory, checked result, and generated report.

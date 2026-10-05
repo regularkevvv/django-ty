@@ -12,7 +12,7 @@ import tomllib
 MAP_PATH = (
     Path(__file__).resolve().parents[1]
     / "compatibility"
-    / "django-stubs-6.0.6.toml"
+    / "django-stubs-6.1.1.toml"
 )
 
 
