@@ -25,9 +25,9 @@ created = Book.objects.create(
 
 title: str = book.title
 pages: int | None = book.pages
-book_id: int = book.id
-book_pk: int = book.pk
-author_id: int = book.author_id
+book_id: int | None = book.id
+book_pk: int | None = book.pk
+author_id: int | None = book.author_id
 author_name: str = book.author.name
 tag_label: str = tag.label
 

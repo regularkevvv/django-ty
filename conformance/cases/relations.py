@@ -4,7 +4,7 @@ from conformance_models.models import Author, Book, Category, Tag, User
 
 
 assert_type(Book().author, Author)  # conformance: relations.foreign-key-one-to-one/foreign-key-read expect=pass
-assert_type(Book().author_id, int)  # conformance: relations.foreign-key-one-to-one/foreign-key-id expect=pass
+assert_type(Book().author_id, int | None)  # conformance: relations.foreign-key-one-to-one/foreign-key-id expect=pass
 assert_type(User().edited_book, Book)  # conformance: relations.foreign-key-one-to-one/reverse-one-to-one expect=pass
 
 assert_type(Book().tags.get(), Tag)  # conformance: relations.many-to-many/forward-manager-result expect=pass

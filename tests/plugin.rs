@@ -739,12 +739,19 @@ fn class_transform_adds_fields_managers_relation_ids_and_optional_constructor_ar
         owner.instance_set_type.as_ref().unwrap().expression,
         format!("{USER} | int | None")
     );
-    assert!(
-        patch
+    for name in ["id", "pk", "author_id", "owner_id"] {
+        let field = patch
             .fields
             .iter()
-            .any(|field| field.name == "author_id" && field.instance_get_type.expression == "int")
-    );
+            .find(|field| field.name == name)
+            .unwrap();
+        let parameter = field.constructor_parameter.as_ref().unwrap();
+        assert_eq!(parameter.name.as_deref(), Some(name));
+        assert!(!parameter.required);
+    }
+    assert!(patch.fields.iter().any(
+        |field| field.name == "author_id" && field.instance_get_type.expression == "int | None"
+    ));
     assert!(patch.fields.iter().any(
         |field| field.name == "owner_id" && field.instance_get_type.expression == "int | None"
     ));

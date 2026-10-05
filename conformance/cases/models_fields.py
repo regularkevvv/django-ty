@@ -8,8 +8,8 @@ from conformance_models.models import Article, Book, BookProxy
 assert_type(Book.objects.get(), Book)  # conformance: models.subclass-transform/model-manager-result expect=pass
 assert_type(Book(title="Dune").title, str)  # conformance: models.subclass-transform/model-instance-member expect=pass
 
-assert_type(Book().id, int)  # conformance: models.default-primary-key/default-id expect=pass
-assert_type(Book().pk, int)  # conformance: models.default-primary-key/default-pk expect=pass
+assert_type(Book().id, int | None)  # conformance: models.default-primary-key/default-id expect=pass
+assert_type(Book().pk, int | None)  # conformance: models.default-primary-key/default-pk expect=pass
 
 assert_type(Book().title, str)  # conformance: models.field-descriptors/char-read expect=pass
 assert_type(Book().pages, int | None)  # conformance: models.field-descriptors/nullable-int-read expect=pass
@@ -30,3 +30,8 @@ assert_type(Book().get_status_display(), str)  # conformance: models.choices-enu
 
 assert_type(Book().code, str)  # conformance: models.custom-fields/generic-field-read expect=pass
 Book().code = 42  # conformance: models.custom-fields/generic-field-write expect=fail
+
+Book(pk=1)  # conformance: models.constructor-keywords/pk-alias expect=pass
+Book(id=1)  # conformance: models.constructor-keywords/id-keyword expect=pass
+Book(author_id=1)  # conformance: models.constructor-keywords/relation-id-keyword expect=pass
+Book(pk=None)  # conformance: models.constructor-keywords/nullable-pk-keyword expect=pass
