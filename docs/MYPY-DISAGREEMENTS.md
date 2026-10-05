@@ -25,7 +25,7 @@ An auto key with [`db_default`](https://docs.djangoproject.com/en/6.1/ref/models
 
 Concrete children use a separate [parent-link primary key](https://docs.djangoproject.com/en/6.1/topics/db/models/#multi-table-inheritance): `Child(id=123).pk` can be `None`. Abstract and proxy inheritance retain tracking.
 
-**Callbacks:** Project `@receiver` handlers disable refinements for their sender models. External handlers, aliased decorators, and dynamic registration require an opt-out when callbacks change IDs:
+**Callbacks:** Project `@receiver` handlers keep construction, loading, and saving broad for their sender models. Deletion still clears the ID. External handlers, aliased decorators, and dynamic registration require an opt-out when callbacks change IDs:
 
 ```toml
 [tool.ty.plugins.config.django-ty]
