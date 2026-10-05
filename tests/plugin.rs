@@ -2073,3 +2073,138 @@ fn auth_self_and_mutation_hooks_cover_success_and_safe_fallbacks() {
     );
     assert!(response.diagnostics[0].location.is_some());
 }
+
+#[test]
+fn fresh_request_constructor_preserves_subclass_identity() {
+    for (callee, mutable) in [
+        ("django.http.request.HttpRequest", true),
+        ("accounts.CustomRequest", false),
+        ("django.core.handlers.wsgi.WSGIRequest", false),
+        ("django.core.handlers.asgi.ASGIRequest", false),
+    ] {
+        let request = CallRequest {
+            context: semantic_context("requests"),
+            callee: TypeExpr::expression(callee),
+            receiver: None,
+            arguments: Vec::new(),
+            existing_signature: None,
+            default_return_type: None,
+            project_index: None,
+        };
+        let response = DjangoTyPlugin.adjust_call_return(&request);
+        if mutable {
+            assert_eq!(
+                return_patch(response).return_type.expression,
+                "django.http.request._MutableHttpRequest"
+            );
+        } else {
+            assert!(matches!(response, PluginResponse::NoChange));
+        }
+    }
+}
+
+#[test]
+fn callable_defaults_validate_named_results_and_heterogeneous_values() {
+    let index = json!({"models": {BOOK: {"fields": {"pages": "int | None", "title": "str"}}}});
+    for (expression, entries, accepted) in [
+        (
+            "dict[str, () -> int]",
+            vec![(
+                "pages",
+                LiteralValue::SymbolRef(SymbolRef {
+                    qualified_name: "age".into(),
+                }),
+            )],
+            true,
+        ),
+        (
+            "dict[str, () -> library.models.Book]",
+            vec![(
+                "pages",
+                LiteralValue::SymbolRef(SymbolRef {
+                    qualified_name: "wrong".into(),
+                }),
+            )],
+            false,
+        ),
+        (
+            "dict[str, library.models.Book.Status]",
+            vec![(
+                "title",
+                LiteralValue::EnumRef(SymbolRef {
+                    qualified_name: "Book.Status.DRAFT".into(),
+                }),
+            )],
+            true,
+        ),
+        (
+            "dict[str, Callable[[], int]]",
+            vec![(
+                "pages",
+                LiteralValue::EnumRef(SymbolRef {
+                    qualified_name: "helpers.age".into(),
+                }),
+            )],
+            true,
+        ),
+        (
+            "dict[str, type[library.models.Book]]",
+            vec![(
+                "pages",
+                LiteralValue::ClassRef(SymbolRef {
+                    qualified_name: BOOK.into(),
+                }),
+            )],
+            false,
+        ),
+        (
+            "dict[str, (() -> str) | (() -> int)]",
+            vec![
+                ("pages", LiteralValue::Unknown),
+                ("title", LiteralValue::Unknown),
+            ],
+            true,
+        ),
+        (
+            "dict[str, str | (() -> Literal[43])]",
+            vec![
+                ("pages", LiteralValue::Unknown),
+                (
+                    "title",
+                    LiteralValue::Str {
+                        value: "Mixed".into(),
+                    },
+                ),
+            ],
+            true,
+        ),
+        (
+            "dict[str, Callable[[], tuple[int, str]]]",
+            vec![("pages", LiteralValue::Unknown)],
+            false,
+        ),
+    ] {
+        let argument = ArgumentSummary {
+            name: Some("defaults".into()),
+            kind: ArgumentKind::Keyword,
+            type_expr: Some(TypeExpr::annotation(expression)),
+            value: LiteralValue::Dict {
+                entries: entries
+                    .into_iter()
+                    .map(|(key, value)| LiteralDictEntry {
+                        key: LiteralValue::Str { value: key.into() },
+                        value,
+                    })
+                    .collect(),
+            },
+            source: None,
+        };
+        let patch = return_patch(call(
+            "get_or_create",
+            manager_receiver(BOOK),
+            vec![argument],
+            index.clone(),
+        ));
+        assert_eq!(patch.diagnostics.is_empty(), accepted, "{expression}");
+    }
+}
