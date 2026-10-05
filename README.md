@@ -39,11 +39,12 @@ Utilities supplied by `django-stubs-ext`, including `WithAnnotations`, are
 intentionally outside `django-ty`'s product surface. `django-ty` handles Django
 model fields, forward and reverse relations, model-specific managers, queryset
 result types, `values()`, `values_list()`, basic `annotate()`, and literal lookup
-validation.
+validation. Auto-primary-key state follows construction, loading, saving, and
+deletion; aliases and branches are handled by ty-extended 0.84.4+.
 
-Django's official documentation defines the expected behavior. All **119
+Django's official documentation defines the expected behavior. All **166
 assertions across 38 capabilities** pass on the **18 supported Django/Python
-pairs** from Django 5.0 through 6.1. Independent runtime checks cover 55 reviewed
+pairs** from Django 5.0 through 6.1. Independent runtime checks cover 83 reviewed
 contracts and nine QueryDict assignment cases on each pair.
 
 Mypy is a comparison tool. Its disagreements are listed with version-specific

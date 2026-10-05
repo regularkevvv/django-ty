@@ -174,6 +174,118 @@
         "observed": "D",
         "passed": true
       },
+      "state-class-signal": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-concrete-child": {
+        "observed": "(123, None)",
+        "passed": true
+      },
+      "state-conditional-save": {
+        "observed": "[False, True]",
+        "passed": true
+      },
+      "state-constructor-nullable": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-constructor-precedence": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-create-overridden-save": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-custom-init": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-custom-loader": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-database-default": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-database-default-explicit": {
+        "observed": "123",
+        "passed": true
+      },
+      "state-database-default-saved": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-delete-alias": {
+        "observed": "(None, None, None)",
+        "passed": true
+      },
+      "state-explicit-auto": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-explicit-auto-delete": {
+        "observed": "(None, None)",
+        "passed": true
+      },
+      "state-explicit-auto-unsaved": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-failed-save": {
+        "exception": "ValueError",
+        "passed": true
+      },
+      "state-id-write": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-inherited": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-loaded": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-overridden-save": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-proxy-key": {
+        "observed": "123",
+        "passed": true
+      },
+      "state-resave": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-save": {
+        "observed": "(True, True)",
+        "passed": true
+      },
+      "state-signal-alias": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-signal-init": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-signal-save": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-skipped-save": {
+        "observed": "True",
+        "passed": true
+      },
+      "state-unknown-call": {
+        "observed": "True",
+        "passed": true
+      },
       "string-in-lookup": {
         "observed": "['D']",
         "passed": true
@@ -237,27 +349,27 @@
     "python": "3.13"
   },
   "candidate": {
-    "checker": "ty 0.84.2",
+    "checker": "ty 0.84.4",
     "django_ty": "0.5.0",
     "django": "6.1.1",
-    "ty_extended": "0.84.2",
-    "ty_extended_commit": "0c1c84c1340ab818faa328a32a48048ebf06d105"
+    "ty_extended": "0.84.4",
+    "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
   },
   "corpus": {
-    "sha256": "ed065f938ca6cf893c5074e032d3aac25bcb818ee4091446b321c82a6990f3e5",
+    "sha256": "4a4e1cbeff35eb0c655071d262555ef69313b9f8c4fdd77580aa39d049d7dfc0",
     "features": 38,
-    "assertions": 119,
-    "documentation_contract_sha256": "b822a4c3fba9c1d5b79f80730d8e46da7b29d74a1379fe9246d7b70662628bb7",
-    "runtime_proof_sha256": "5f786d6bd04ec9dc02c3f150e7f6be0c20b515d52e5f19284e528c344d3beb4a"
+    "assertions": 166,
+    "documentation_contract_sha256": "fe2da7a3a05be74177ff3c2ed5226e516b545a2417187ac1ddfd16006fc1377b",
+    "runtime_proof_sha256": "d2562bb08ee62f6c82db683eab5fc86159a0d9b06dad019e84db7f3725dacd24"
   },
   "scores": {
-    "feature_balanced_percent": 92.7,
-    "assertion_conformance_percent": 86.6,
-    "matched_assertions": 103,
-    "total_assertions": 119,
+    "feature_balanced_percent": 93.8,
+    "assertion_conformance_percent": 74.7,
+    "matched_assertions": 124,
+    "total_assertions": 166,
     "contract_feature_balanced_percent": 100.0,
     "contract_assertion_percent": 100.0,
-    "contract_matched_assertions": 119
+    "contract_matched_assertions": 166
   },
   "areas": [
     {
@@ -273,7 +385,7 @@
     {
       "area": "Models and fields",
       "features": 8,
-      "percent": 87.5
+      "percent": 92.9
     },
     {
       "area": "Query lookups",
@@ -343,11 +455,242 @@
         "mypy_django_plugin/transformers/models.py:AddPrimaryKeyAlias"
       ],
       "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
-      "cases": 2,
-      "matched": 0,
-      "percent": 0.0,
-      "status": "unsupported",
+      "cases": 49,
+      "matched": 21,
+      "percent": 42.9,
+      "status": "partial",
       "assertions": [
+        {
+          "case": "aliased-signal-sender",
+          "path": "cases/model_state.py",
+          "line": 156,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "both-branches-save",
+          "path": "cases/model_state.py",
+          "line": 53,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "class-signal-handler",
+          "path": "cases/model_state.py",
+          "line": 161,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "concrete-child-key",
+          "path": "cases/model_state.py",
+          "line": 134,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "conditional-save",
+          "path": "cases/model_state.py",
+          "line": 48,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "constructor-pk-precedence",
+          "path": "cases/model_state.py",
+          "line": 95,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "create-overridden-save",
+          "path": "cases/model_state.py",
+          "line": 108,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "created-id",
+          "path": "cases/model_state.py",
+          "line": 26,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "custom-initialization",
+          "path": "cases/model_state.py",
+          "line": 104,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "custom-loading",
+          "path": "cases/model_state.py",
+          "line": 106,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "database-default-explicit",
+          "path": "cases/model_state.py",
+          "line": 143,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "database-default-saved",
+          "path": "cases/model_state.py",
+          "line": 145,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "database-default-unknown",
+          "path": "cases/model_state.py",
+          "line": 149,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | DatabaseDefault | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "database-default-unpacked",
+          "path": "cases/model_state.py",
+          "line": 151,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | DatabaseDefault | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "database-default-unsaved",
+          "path": "cases/model_state.py",
+          "line": 141,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"DatabaseDefault\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
         {
           "case": "default-id",
           "path": "cases/models_fields.py",
@@ -360,7 +703,7 @@
             {
               "column": 1,
               "code": "assert-type",
-              "message": "Expression is of type \"int\", not \"int | None\""
+              "message": "Expression is of type \"int\", not \"None\""
             }
           ],
           "candidate_diagnostics": []
@@ -377,13 +720,455 @@
             {
               "column": 1,
               "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "deleted-alias-id",
+          "path": "cases/model_state.py",
+          "line": 38,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "deleted-alias-pk",
+          "path": "cases/model_state.py",
+          "line": 39,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "explicit-auto-constructor",
+          "path": "cases/model_state.py",
+          "line": 99,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "explicit-auto-deleted",
+          "path": "cases/model_state.py",
+          "line": 86,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "explicit-auto-deleted-pk",
+          "path": "cases/model_state.py",
+          "line": 87,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "explicit-auto-loaded",
+          "path": "cases/model_state.py",
+          "line": 84,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "explicit-auto-row",
+          "path": "cases/model_state.py",
+          "line": 121,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "explicit-auto-unsaved",
+          "path": "cases/model_state.py",
+          "line": 97,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "explicit-constructor-id",
+          "path": "cases/model_state.py",
+          "line": 91,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "explicit-constructor-pk",
+          "path": "cases/model_state.py",
+          "line": 92,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "failed-save-handler",
+          "path": "cases/model_state.py",
+          "line": 169,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 9,
+              "code": "assert-type",
               "message": "Expression is of type \"int\", not \"int | None\""
             }
           ],
           "candidate_diagnostics": []
+        },
+        {
+          "case": "failed-save-join",
+          "path": "cases/model_state.py",
+          "line": 170,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "full-save",
+          "path": "cases/model_state.py",
+          "line": 63,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "id-write-invalidates-pk",
+          "path": "cases/model_state.py",
+          "line": 114,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "inherited-loaded-pk",
+          "path": "cases/model_state.py",
+          "line": 82,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "loaded-id",
+          "path": "cases/model_state.py",
+          "line": 23,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "loaded-pk",
+          "path": "cases/model_state.py",
+          "line": 24,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "nullable-constructor-id",
+          "path": "cases/model_state.py",
+          "line": 94,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "overridden-save",
+          "path": "cases/model_state.py",
+          "line": 77,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "post-init-signal",
+          "path": "cases/model_state.py",
+          "line": 126,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "post-save-signal",
+          "path": "cases/model_state.py",
+          "line": 129,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "proxy-constructor-key",
+          "path": "cases/model_state.py",
+          "line": 136,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "queryset-loaded-pk",
+          "path": "cases/model_state.py",
+          "line": 28,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "resaved-pk",
+          "path": "cases/model_state.py",
+          "line": 41,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "rethrown-save-success",
+          "path": "cases/model_state.py",
+          "line": 179,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "saved-id",
+          "path": "cases/model_state.py",
+          "line": 34,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "saved-pk",
+          "path": "cases/model_state.py",
+          "line": 35,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "skipped-save",
+          "path": "cases/model_state.py",
+          "line": 59,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "typed-constructor-id",
+          "path": "cases/model_state.py",
+          "line": 93,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "unknown-call-invalidates",
+          "path": "cases/model_state.py",
+          "line": 71,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "unknown-update-fields",
+          "path": "cases/model_state.py",
+          "line": 61,
+          "expect": "pass",
+          "reference": "reject",
+          "candidate": "accept",
+          "matches": false,
+          "reference_diagnostics": [
+            {
+              "column": 5,
+              "code": "assert-type",
+              "message": "Expression is of type \"int\", not \"int | None\""
+            }
+          ],
+          "candidate_diagnostics": []
+        },
+        {
+          "case": "values-row-id",
+          "path": "cases/model_state.py",
+          "line": 119,
+          "expect": "pass",
+          "reference": "accept",
+          "candidate": "accept",
+          "matches": true,
+          "reference_diagnostics": [],
+          "candidate_diagnostics": []
         }
       ],
-      "contract_matched": 2,
+      "contract_matched": 49,
       "contract_percent": 100.0
     },
     {
@@ -902,7 +1687,7 @@
         {
           "case": "settings-field-declaration",
           "path": "conformance_models/models.py",
-          "line": 62,
+          "line": 64,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1089,7 +1874,7 @@
         {
           "case": "queryset-self-return",
           "path": "conformance_models/models.py",
-          "line": 91,
+          "line": 93,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1139,7 +1924,7 @@
         {
           "case": "generated-manager-class",
           "path": "conformance_models/models.py",
-          "line": 108,
+          "line": 110,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -1150,7 +1935,7 @@
         {
           "case": "generated-queryset-self-return",
           "path": "conformance_models/models.py",
-          "line": 105,
+          "line": 107,
           "expect": "pass",
           "reference": "accept",
           "candidate": "accept",
@@ -2793,6 +3578,310 @@
       "classification": "implementation-defect-or-incomplete-validation",
       "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
       "runtime_proof": "async-callable-update"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "deleted-alias-id",
+      "path": "cases/model_state.py",
+      "line": 38,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-delete-alias",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "deleted-alias-pk",
+      "path": "cases/model_state.py",
+      "line": 39,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-delete-alias",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "conditional-save",
+      "path": "cases/model_state.py",
+      "line": 48,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-conditional-save",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "skipped-save",
+      "path": "cases/model_state.py",
+      "line": 59,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-skipped-save",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "unknown-update-fields",
+      "path": "cases/model_state.py",
+      "line": 61,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-skipped-save",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "unknown-call-invalidates",
+      "path": "cases/model_state.py",
+      "line": 71,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-unknown-call",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "overridden-save",
+      "path": "cases/model_state.py",
+      "line": 77,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-overridden-save",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "explicit-auto-deleted",
+      "path": "cases/model_state.py",
+      "line": 86,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-explicit-auto-delete",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "explicit-auto-deleted-pk",
+      "path": "cases/model_state.py",
+      "line": 87,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-explicit-auto-delete",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "nullable-constructor-id",
+      "path": "cases/model_state.py",
+      "line": 94,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+      "runtime_proof": "state-constructor-nullable",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "constructor-pk-precedence",
+      "path": "cases/model_state.py",
+      "line": 95,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+      "runtime_proof": "state-constructor-precedence",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "explicit-auto-unsaved",
+      "path": "cases/model_state.py",
+      "line": 97,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+      "runtime_proof": "state-explicit-auto-unsaved",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "custom-initialization",
+      "path": "cases/model_state.py",
+      "line": 104,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-custom-init",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "custom-loading",
+      "path": "cases/model_state.py",
+      "line": 106,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-custom-loader",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "create-overridden-save",
+      "path": "cases/model_state.py",
+      "line": 108,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-create-overridden-save",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "id-write-invalidates-pk",
+      "path": "cases/model_state.py",
+      "line": 114,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+      "runtime_proof": "state-id-write",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "post-init-signal",
+      "path": "cases/model_state.py",
+      "line": 126,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+      "runtime_proof": "state-signal-init",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/signals.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "post-save-signal",
+      "path": "cases/model_state.py",
+      "line": 129,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-save",
+      "runtime_proof": "state-signal-save",
+      "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/signals.py"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "concrete-child-key",
+      "path": "cases/model_state.py",
+      "line": 134,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/#multi-table-inheritance",
+      "runtime_proof": "state-concrete-child"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "database-default-unsaved",
+      "path": "cases/model_state.py",
+      "line": 141,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+      "runtime_proof": "state-database-default"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "database-default-unknown",
+      "path": "cases/model_state.py",
+      "line": 149,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+      "runtime_proof": "state-database-default"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "database-default-unpacked",
+      "path": "cases/model_state.py",
+      "line": 151,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+      "runtime_proof": "state-database-default"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "aliased-signal-sender",
+      "path": "cases/model_state.py",
+      "line": 156,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+      "runtime_proof": "state-signal-alias"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "class-signal-handler",
+      "path": "cases/model_state.py",
+      "line": 161,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+      "runtime_proof": "state-class-signal"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "failed-save-handler",
+      "path": "cases/model_state.py",
+      "line": 169,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#forcing-an-insert-or-update",
+      "runtime_proof": "state-failed-save"
+    },
+    {
+      "feature": "models.default-primary-key",
+      "case": "failed-save-join",
+      "path": "cases/model_state.py",
+      "line": 170,
+      "expect": "pass",
+      "reference": "reject",
+      "classification": "deliberate-policy-or-limit",
+      "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#forcing-an-insert-or-update",
+      "runtime_proof": "state-failed-save"
     },
     {
       "feature": "models.default-primary-key",

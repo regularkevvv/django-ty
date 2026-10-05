@@ -11,8 +11,8 @@ use crate::constants::{MANAGER_BASE, MODEL_BASES, QUERYSET_BASE};
 use crate::diagnostics::{reverse_relation_conflict, unknown_relation_target};
 use crate::fields::{
     RelationKind, choice_enum_target, django_field_class_type, django_field_from_summary,
-    field_call, is_manager_call, is_relation_call, optional_builtin_id_field, relation_target_name,
-    reverse_relation_name, string_call_argument,
+    field_call, is_auto_field, is_manager_call, is_relation_call, optional_builtin_id_field,
+    relation_target_name, reverse_relation_name, string_call_argument,
 };
 use crate::settings::{SettingsIndex, settings_index};
 use crate::types::{
@@ -83,6 +83,11 @@ pub fn build_index_response(request: &BuildProjectIndexRequest) -> ProjectIndexR
                 "fields": fields,
                 "field_types": model_index.field_types,
                 "manager_queryset": manager_queryset,
+                "auto_primary_key_default": model_index.auto_primary_key_default,
+                "auto_primary_key": if model_index.custom_primary_key || model_index.multi_table { None } else { Some(model_index.auto_primary_key.as_deref().unwrap_or("id")) },
+                "custom_loading": model_index.custom_loading,
+                "custom_save": model_index.custom_save,
+                "signal_receivers": crate::state::has_signal_receiver(request, &class.qualified_name),
             }),
         );
 
@@ -283,6 +288,12 @@ fn inherited_model_contributions(
 struct ModelIndex {
     fields: ty_plugin_sdk::serde_json::Map<String, Value>,
     field_types: ty_plugin_sdk::serde_json::Map<String, Value>,
+    auto_primary_key: Option<String>,
+    auto_primary_key_default: Option<String>,
+    custom_primary_key: bool,
+    multi_table: bool,
+    custom_loading: bool,
+    custom_save: bool,
 }
 
 pub fn model_class_names(request: &BuildProjectIndexRequest) -> BTreeSet<String> {
@@ -311,6 +322,17 @@ pub fn model_class_names(request: &BuildProjectIndexRequest) -> BTreeSet<String>
             return model_names;
         }
     }
+}
+
+fn model_meta_flag(class: &ty_plugin_sdk::protocol::ClassSummary, flag: &str) -> bool {
+    class
+        .nested_classes
+        .iter()
+        .filter(|nested| nested.name == "Meta")
+        .flat_map(|meta| &meta.class_constants)
+        .any(|constant| {
+            constant.name == flag && matches!(constant.value, LiteralValue::Bool { value: true })
+        })
 }
 
 fn inherited_model_indexes(
@@ -350,12 +372,31 @@ fn inherited_model_indexes(
                 let Some(base_index) = resolved.get(&base_name) else {
                     continue;
                 };
+                model_index.auto_primary_key = base_index.auto_primary_key.clone();
+                model_index.auto_primary_key_default = base_index.auto_primary_key_default.clone();
+                model_index.custom_primary_key |= base_index.custom_primary_key;
+                // Concrete inheritance adds a parent-link primary key distinct from id.
+                model_index.multi_table |= base_index.multi_table
+                    || !model_meta_flag(class, "proxy")
+                        && classes
+                            .get(base_name.as_str())
+                            .is_some_and(|base| !model_meta_flag(base, "abstract"));
+                model_index.custom_loading |= base_index.custom_loading;
+                model_index.custom_save |= base_index.custom_save;
                 model_index.fields.extend(base_index.fields.clone());
                 model_index
                     .field_types
                     .extend(base_index.field_types.clone());
             }
             if let Some(local_index) = local.get(*name) {
+                if local_index.auto_primary_key.is_some() || local_index.custom_primary_key {
+                    model_index.auto_primary_key = local_index.auto_primary_key.clone();
+                    model_index.auto_primary_key_default =
+                        local_index.auto_primary_key_default.clone();
+                    model_index.custom_primary_key = local_index.custom_primary_key;
+                }
+                model_index.custom_loading |= local_index.custom_loading;
+                model_index.custom_save |= local_index.custom_save;
                 model_index.fields.extend(local_index.fields.clone());
                 model_index
                     .field_types
@@ -419,9 +460,52 @@ fn local_model_index(
             json!(django_field_class_type(&class.qualified_name, call).expression),
         );
     }
+    let primary_key = class.fields.iter().find_map(|field| {
+        let call = field_call(field.assigned_value.as_ref())?;
+        let auto = is_auto_field(call);
+        (auto
+            || call.callee.qualified_name.ends_with(".CompositePrimaryKey")
+            || crate::fields::bool_call_argument(call, "primary_key") == Some(true))
+        .then_some((field.name.clone(), auto))
+    });
     ModelIndex {
         fields,
         field_types,
+        auto_primary_key: primary_key
+            .as_ref()
+            .filter(|(_, auto)| *auto)
+            .map(|(name, _)| name.clone()),
+        auto_primary_key_default: primary_key
+            .as_ref()
+            .and_then(|(name, _)| class.fields.iter().find(|field| &field.name == name))
+            .and_then(|field| field_call(field.assigned_value.as_ref()))
+            .map(|call| {
+                match call
+                    .arguments
+                    .iter()
+                    .find(|argument| argument.name.as_deref() == Some("default"))
+                    .map(|argument| &argument.value)
+                {
+                    Some(LiteralValue::Int { .. }) => "int",
+                    None if call
+                        .arguments
+                        .iter()
+                        .any(|argument| argument.name.as_deref() == Some("db_default")) =>
+                    {
+                        "django.db.models.expressions.DatabaseDefault"
+                    }
+                    None | Some(LiteralValue::None) => "None",
+                    _ => "int | None",
+                }
+                .to_string()
+            }),
+        custom_primary_key: primary_key.is_some_and(|(_, auto)| !auto),
+        multi_table: false,
+        custom_save: class.methods.iter().any(|method| method.name == "save"),
+        custom_loading: class
+            .methods
+            .iter()
+            .any(|method| matches!(method.name.as_str(), "__new__" | "__init__" | "from_db")),
     }
 }
 
@@ -455,7 +539,11 @@ pub fn model_field_index(
         };
         fields.insert(
             field.name.clone(),
-            json!(canonical_type_expression(&django_field.get_type)),
+            json!(if is_auto_field(call) {
+                "int".to_string()
+            } else {
+                canonical_type_expression(&django_field.get_type)
+            }),
         );
         if matches!(
             django_field.relation,
@@ -519,9 +607,9 @@ pub fn model_virtual_types(
     ]
 }
 
-fn project_queryset_classes<'a>(
-    request: &'a BuildProjectIndexRequest,
-) -> BTreeMap<String, &'a ty_plugin_sdk::protocol::ClassSummary> {
+fn project_queryset_classes(
+    request: &BuildProjectIndexRequest,
+) -> BTreeMap<String, &ty_plugin_sdk::protocol::ClassSummary> {
     let all_class_names = request
         .classes
         .iter()
@@ -732,10 +820,15 @@ fn reverse_contribution(
     }
 }
 
-pub fn default_model_fields() -> Vec<FieldPatch> {
+pub fn default_model_fields(primary_key_default: Option<&str>) -> Vec<FieldPatch> {
+    let pk_type = if primary_key_default == Some("django.db.models.expressions.DatabaseDefault") {
+        "int | None | django.db.models.expressions.DatabaseDefault"
+    } else {
+        "int | None"
+    };
     vec![
         optional_builtin_id_field("id", annotation("int | None")),
-        optional_builtin_id_field("pk", annotation("int | None")),
+        optional_builtin_id_field("pk", annotation(pk_type)),
     ]
 }
 

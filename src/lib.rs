@@ -11,6 +11,7 @@ mod index;
 mod plugin;
 mod querysets;
 mod settings;
+mod state;
 mod types;
 
 pub use plugin::DjangoTyPlugin;

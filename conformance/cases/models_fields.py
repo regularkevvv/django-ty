@@ -8,8 +8,8 @@ from conformance_models.models import Article, Book, BookProxy
 assert_type(Book.objects.get(), Book)  # conformance: models.subclass-transform/model-manager-result expect=pass
 assert_type(Book(title="Dune").title, str)  # conformance: models.subclass-transform/model-instance-member expect=pass
 
-assert_type(Book().id, int | None)  # conformance: models.default-primary-key/default-id expect=pass
-assert_type(Book().pk, int | None)  # conformance: models.default-primary-key/default-pk expect=pass
+assert_type(Book().id, None)  # conformance: models.default-primary-key/default-id expect=pass
+assert_type(Book().pk, None)  # conformance: models.default-primary-key/default-pk expect=pass
 
 assert_type(Book().title, str)  # conformance: models.field-descriptors/char-read expect=pass
 assert_type(Book().pages, int | None)  # conformance: models.field-descriptors/nullable-int-read expect=pass

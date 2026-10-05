@@ -342,7 +342,17 @@ fn scalar_field_type(call: &CallValueSummary, is_nullable: bool) -> Option<TypeE
         "FileField" | "ImageField" => "django.db.models.fields.files.FieldFile",
         _ => return None,
     };
-    Some(nullable(expression, is_nullable))
+    let expression = if is_auto_field(call)
+        && call
+            .arguments
+            .iter()
+            .any(|argument| argument.name.as_deref() == Some("db_default"))
+    {
+        "int | django.db.models.expressions.DatabaseDefault"
+    } else {
+        expression
+    };
+    Some(nullable(expression, is_nullable || is_auto_field(call)))
 }
 
 fn callee_matches(call: &CallValueSummary, name: &str) -> bool {
@@ -366,6 +376,13 @@ pub fn optional_builtin_id_field(name: impl Into<String>, ty: TypeExpr) -> Field
         constructor_parameter: Some(parameter),
         has_default: true,
     }
+}
+
+pub fn is_auto_field(call: &CallValueSummary) -> bool {
+    matches!(
+        call.callee.qualified_name.rsplit('.').next(),
+        Some("AutoField" | "BigAutoField" | "SmallAutoField")
+    )
 }
 
 #[cfg(test)]

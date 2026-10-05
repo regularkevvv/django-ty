@@ -11,8 +11,8 @@ Reviewed adaptations inline TemplatesSetting and add a mutable request helper us
 - Vendored static declaration inventory: 712 `.pyi` modules and 16879 public symbols are packaged in the wheel.
 - Vendored static-tree SHA-256: `fc4a572a925776c7b2e45364dd22c44a91089c0ed82ad291ca8c45a228f3523f`.
 - Documented feature contract coverage: **100.0%** across 38 reviewed capabilities (38 supported, 0 partial, 0 unsupported).
-- Assertion conformance: **100.0%** (119 of 119 documented expectations matched).
-- Candidate host: `django-ty` 0.5.0 on `ty-extended` 0.84.2 at `0c1c84c1340ab818faa328a32a48048ebf06d105`.
+- Assertion conformance: **100.0%** (166 of 166 documented expectations matched).
+- Candidate host: `django-ty` 0.5.0 on `ty-extended` 0.84.4 at `1e7e01dc34da874f494db30a49323e570ef8974a`.
 - Target: **95%** documented contract coverage. The static score is deliberately separate and does not hide semantic gaps.
 
 Auxiliary `django-stubs-ext` utilities such as `WithAnnotations` are outside this Django-behavior inventory. The candidate wheel must not install or package `django-stubs`, `django-stubs-ext`, or mypy; generic `Annotated` transport remains a library-neutral ty-extended plugin capability.
@@ -44,7 +44,7 @@ Feature-balanced contract coverage gives every capability equal weight. Assertio
 | Area | Capability | Contract cases | Contract coverage | Mypy agreement | Official Django documentation |
 | --- | --- | ---: | ---: | ---: | --- |
 | Models and fields | `models.subclass-transform` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/topics/db/models/) |
-| Models and fields | `models.default-primary-key` | 2/2 | 100.0% | 0.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys) |
+| Models and fields | `models.default-primary-key` | 49/49 | 100.0% | 42.9% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys) |
 | Models and fields | `models.field-descriptors` | 3/3 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/fields/) |
 | Models and fields | `models.constructor-keywords` | 7/7 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/instances/) |
 | Models and fields | `models.create-keywords` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#create) |

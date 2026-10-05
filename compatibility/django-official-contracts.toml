@@ -97,3 +97,93 @@ policy = "Documentation defines expected behavior; installed Django validates re
 "lookups.creation-defaults/typed-callable-invalid" = { proof = "typed-callable-invalid", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }
 "lookups.creation-defaults/invalid-existing-defaults" = { proof = "invalid-existing-defaults", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }
 "lookups.creation-defaults/async-callable-invalid" = { proof = "async-callable-invalid", expect = "fail", classification = "implementation-defect-or-incomplete-validation" }
+"models.default-primary-key/deleted-alias-id" = { proof = "state-delete-alias", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/deleted-alias-pk" = { proof = "state-delete-alias", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/conditional-save" = { proof = "state-conditional-save", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/skipped-save" = { proof = "state-skipped-save", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/unknown-update-fields" = { proof = "state-skipped-save", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/unknown-call-invalidates" = { proof = "state-unknown-call", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/overridden-save" = { proof = "state-overridden-save", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/explicit-auto-deleted" = { proof = "state-explicit-auto-delete", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/explicit-auto-deleted-pk" = { proof = "state-explicit-auto-delete", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/nullable-constructor-id" = { proof = "state-constructor-nullable", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/#creating-objects", source = "django/db/models/base.py" }
+"models.default-primary-key/constructor-pk-precedence" = { proof = "state-constructor-precedence", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/#creating-objects", source = "django/db/models/base.py" }
+"models.default-primary-key/explicit-auto-unsaved" = { proof = "state-explicit-auto-unsaved", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/#creating-objects", source = "django/db/models/base.py" }
+"models.default-primary-key/custom-initialization" = { proof = "state-custom-init", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/custom-loading" = { proof = "state-custom-loader", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/create-overridden-save" = { proof = "state-create-overridden-save", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/id-write-invalidates-pk" = { proof = "state-id-write", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/models/instances/", source = "django/db/models/base.py" }
+"models.default-primary-key/post-init-signal" = { proof = "state-signal-init", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/signals/#post-init", source = "django/db/models/signals.py" }
+"models.default-primary-key/post-save-signal" = { proof = "state-signal-save", expect = "pass", classification = "deliberate-policy-or-limit", documentation = "ref/signals/#post-save", source = "django/db/models/signals.py" }
+
+[review."models.default-primary-key/concrete-child-key"]
+proof = "state-concrete-child"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "topics/db/models/#multi-table-inheritance"
+
+[review."models.default-primary-key/proxy-constructor-key"]
+proof = "state-proxy-key"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "topics/db/models/#proxy-models"
+
+[review."models.default-primary-key/database-default-unsaved"]
+proof = "state-database-default"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/models/fields/#db-default"
+
+[review."models.default-primary-key/database-default-explicit"]
+proof = "state-database-default-explicit"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/models/fields/#db-default"
+
+[review."models.default-primary-key/database-default-saved"]
+proof = "state-database-default-saved"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/models/fields/#db-default"
+
+[review."models.default-primary-key/database-default-unknown"]
+proof = "state-database-default"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/models/fields/#db-default"
+
+[review."models.default-primary-key/database-default-unpacked"]
+proof = "state-database-default"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/models/fields/#db-default"
+
+[review."models.default-primary-key/aliased-signal-sender"]
+proof = "state-signal-alias"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/signals/#post-init"
+
+[review."models.default-primary-key/class-signal-handler"]
+proof = "state-class-signal"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/signals/#post-init"
+
+[review."models.default-primary-key/failed-save-handler"]
+proof = "state-failed-save"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/models/instances/#forcing-an-insert-or-update"
+
+[review."models.default-primary-key/failed-save-join"]
+proof = "state-failed-save"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/models/instances/#forcing-an-insert-or-update"
+
+[review."models.default-primary-key/rethrown-save-success"]
+proof = "state-save"
+expect = "pass"
+classification = "deliberate-policy-or-limit"
+documentation = "ref/models/instances/#saving-objects"

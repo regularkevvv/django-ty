@@ -2,12 +2,13 @@ use django_ty::DjangoTyPlugin;
 use ty_plugin_sdk::Plugin;
 use ty_plugin_sdk::protocol::{
     AnalyzeClassRequest, ArgumentKind, ArgumentSummary, AssignedValueSummary, AssignmentSummary,
-    BuildProjectIndexRequest, CallRequest, CallReturnPatch, CallSignaturePatch, CallValueSummary,
-    ClassSummary, ContributionPatch, FieldSummary, LiteralDictEntry, LiteralValue,
-    MemberAccessPatch, MethodClaimKind, MethodSummary, MutationOperation, MutationRequest,
-    NestedClassSummary, Parameter, ParameterKind, PluginRequest, PluginResponse, ProjectContext,
-    ReceiverSummary, SemanticContext, SettingValueSummary, SettingsModuleSummary, SymbolRef,
-    SymbolSource, TextPosition, TypeExpr, TypeSnapshot, ValueSummary, VirtualTypeShape,
+    BuildProjectIndexRequest, CallOrSymbolSummary, CallRequest, CallReturnPatch,
+    CallSignaturePatch, CallValueSummary, ClassSummary, ConstantSummary, ContributionPatch,
+    FieldSummary, LiteralDictEntry, LiteralValue, MemberAccessPatch, MethodClaimKind,
+    MethodSummary, MutationOperation, MutationRequest, NestedClassSummary, Parameter,
+    ParameterKind, PluginRequest, PluginResponse, ProjectContext, ReceiverSummary, SemanticContext,
+    SettingValueSummary, SettingsModuleSummary, SymbolRef, SymbolSource, TextPosition, TypeExpr,
+    TypeSnapshot, ValueSummary, VirtualTypeShape,
 };
 use ty_plugin_sdk::serde_json::{Value, json};
 
@@ -22,6 +23,7 @@ fn semantic_context(module: &str) -> SemanticContext {
         file_path: format!("/project/{}.py", module.replace('.', "/")),
         python_version: "3.13".to_string(),
         platform: "linux".to_string(),
+        config: json!({}),
         speculative: false,
     }
 }
@@ -241,6 +243,7 @@ fn build_index(classes: Vec<ClassSummary>) -> PluginResponse {
         context: project_context(),
         classes,
         settings: settings(),
+        functions: Vec::new(),
         assignments: Vec::new(),
         previous_index_fingerprint: None,
     })
@@ -497,7 +500,7 @@ fn packaged_manifest_uses_the_wheel_artifact() {
 
     assert_eq!(manifest.id, "django-ty");
     assert_eq!(manifest.version, env!("CARGO_PKG_VERSION"));
-    assert_eq!(manifest.ty_compatibility.requirement, ">=0.84.0,<0.85.0");
+    assert_eq!(manifest.ty_compatibility.requirement, ">=0.84.4,<0.85.0");
     assert!(matches!(
         manifest.runtime,
         ty_plugin_sdk::protocol::RuntimeSpec::Wasm(ref wasm) if wasm.artifact == "django_ty.wasm"
@@ -1536,6 +1539,7 @@ fn sdk_json_dispatch_round_trips_manifest_and_project_index() {
         context: project_context(),
         classes: vec![book_model(), author_model(), tag_model(), user_model()],
         settings: settings(),
+        functions: Vec::new(),
         assignments: Vec::new(),
         previous_index_fingerprint: Some("previous".to_string()),
     };
@@ -1940,6 +1944,7 @@ fn project_index_builds_custom_queryset_managers_and_typed_settings_contribution
             diagnostics: Vec::new(),
             source: SymbolSource::default(),
         }],
+        functions: Vec::new(),
         assignments,
         previous_index_fingerprint: None,
     });
@@ -2207,4 +2212,542 @@ fn callable_defaults_validate_named_results_and_heterogeneous_values() {
         ));
         assert_eq!(patch.diagnostics.is_empty(), accepted, "{expression}");
     }
+}
+
+fn state_request(
+    method: &str,
+    receiver: Option<ReceiverSummary>,
+    arguments: Vec<ArgumentSummary>,
+) -> CallRequest {
+    CallRequest {
+        context: semantic_context("library.use"),
+        callee: TypeExpr::expression(format!("django.db.models.base.Model.{method}")),
+        receiver,
+        arguments,
+        existing_signature: None,
+        default_return_type: None,
+        project_index: Some(
+            json!({"models": {BOOK: {"auto_primary_key": "id", "custom_loading": false}}}),
+        ),
+    }
+}
+
+fn instance_receiver() -> ReceiverSummary {
+    ReceiverSummary {
+        type_expr: TypeExpr::annotation(BOOK),
+        nominal_class: Some(BOOK.to_string()),
+        generic_arguments: Vec::new(),
+        plugin_metadata: json!({}),
+    }
+}
+
+#[test]
+fn state_hooks_refine_only_successful_model_operations() {
+    assert!(DjangoTyPlugin.manifest().capabilities.call_state);
+    for method in ["save", "delete", "get", "create", "earliest", "latest"] {
+        let receiver = if matches!(method, "save" | "delete") {
+            instance_receiver()
+        } else {
+            manager_receiver(BOOK)
+        };
+        let request = state_request(method, Some(receiver), Vec::new());
+        let PluginResponse::CallStatePatch(patch) = DjangoTyPlugin.adjust_call_state(&request)
+        else {
+            panic!("missing state for {method}");
+        };
+        assert!(!patch.preserves_other_objects);
+        let members = if matches!(method, "save" | "delete") {
+            assert!(!patch.fresh_result);
+            patch.receiver_members
+        } else {
+            assert!(patch.fresh_result);
+            patch.result_members
+        };
+        assert_eq!(
+            members["id"].expression,
+            if method == "delete" { "None" } else { "int" }
+        );
+        assert_eq!(members["pk"], members["id"]);
+    }
+    for method in ["save", "get"] {
+        let mut request = state_request(
+            method,
+            Some(if method == "save" {
+                instance_receiver()
+            } else {
+                manager_receiver(BOOK)
+            }),
+            Vec::new(),
+        );
+        request.project_index.as_mut().unwrap()["models"][BOOK]["auto_primary_key"] = json!("key");
+        let PluginResponse::CallStatePatch(patch) = DjangoTyPlugin.adjust_call_state(&request)
+        else {
+            panic!();
+        };
+        assert!(
+            if method == "save" {
+                patch.receiver_members
+            } else {
+                patch.result_members
+            }
+            .contains_key("key")
+        );
+    }
+}
+
+#[test]
+fn state_hooks_reject_uncertain_saves_and_nonmodel_results() {
+    for value in [
+        LiteralValue::List { items: vec![] },
+        LiteralValue::Tuple { items: vec![] },
+        LiteralValue::Unknown,
+        LiteralValue::Str {
+            value: "title".into(),
+        },
+    ] {
+        let request = state_request(
+            "save",
+            Some(instance_receiver()),
+            vec![keyword_value("update_fields", value)],
+        );
+        assert_eq!(
+            DjangoTyPlugin.adjust_call_state(&request),
+            PluginResponse::NoChange
+        );
+    }
+    for value in [
+        LiteralValue::None,
+        LiteralValue::List {
+            items: vec![LiteralValue::Str {
+                value: "title".into(),
+            }],
+        },
+        LiteralValue::Tuple {
+            items: vec![LiteralValue::Str {
+                value: "title".into(),
+            }],
+        },
+    ] {
+        let request = state_request(
+            "save",
+            Some(instance_receiver()),
+            vec![keyword_value("update_fields", value)],
+        );
+        assert!(matches!(
+            DjangoTyPlugin.adjust_call_state(&request),
+            PluginResponse::CallStatePatch(_)
+        ));
+    }
+    for kind in [
+        ArgumentKind::Positional,
+        ArgumentKind::StarArgs,
+        ArgumentKind::StarKwargs,
+    ] {
+        let mut argument = keyword_value("using", LiteralValue::None);
+        argument.kind = kind;
+        assert_eq!(
+            DjangoTyPlugin.adjust_call_state(&state_request(
+                "save",
+                Some(instance_receiver()),
+                vec![argument]
+            )),
+            PluginResponse::NoChange
+        );
+    }
+    assert!(matches!(
+        DjangoTyPlugin.adjust_call_state(&state_request(
+            "save",
+            Some(instance_receiver()),
+            vec![keyword_value("using", LiteralValue::None)]
+        )),
+        PluginResponse::CallStatePatch(_)
+    ));
+    let mut custom_save = state_request("create", Some(manager_receiver(BOOK)), vec![]);
+    custom_save.project_index.as_mut().unwrap()["models"][BOOK]["custom_save"] = json!(true);
+    assert_eq!(
+        DjangoTyPlugin.adjust_call_state(&custom_save),
+        PluginResponse::NoChange
+    );
+    for request in [
+        state_request("save", None, vec![]),
+        state_request("filter", Some(manager_receiver(BOOK)), vec![]),
+        state_request("get", Some(instance_receiver()), vec![]),
+        state_request("get", Some(queryset_receiver(BOOK, "int")), vec![]),
+        state_request("save", Some(instance_receiver()), vec![]),
+        state_request("get", Some(manager_receiver(BOOK)), vec![]),
+        state_request("get", Some(queryset_receiver(BOOK, BOOK)), vec![]),
+    ]
+    .into_iter()
+    .enumerate()
+    .map(|(index, mut request)| {
+        match index {
+            4 => request.project_index = None,
+            5 => {
+                request.project_index.as_mut().unwrap()["models"][BOOK]["auto_primary_key"] =
+                    json!(null)
+            }
+            6 => {
+                request.project_index.as_mut().unwrap()["models"][BOOK]["custom_loading"] =
+                    json!(true)
+            }
+            _ => {}
+        }
+        request
+    }) {
+        assert_eq!(
+            DjangoTyPlugin.adjust_call_state(&request),
+            PluginResponse::NoChange
+        );
+    }
+    let mut request = state_request("save", Some(instance_receiver()), vec![]);
+    request.receiver.as_mut().unwrap().nominal_class = None;
+    assert!(matches!(
+        DjangoTyPlugin.adjust_call_state(&request),
+        PluginResponse::CallStatePatch(_)
+    ));
+}
+
+#[test]
+fn index_tracks_inherited_auto_keys_and_custom_loading() {
+    let mut auto = model_class(
+        "app.Auto",
+        vec![field(
+            "key",
+            "django.db.models.BigAutoField",
+            vec![keyword_bool("primary_key", true)],
+        )],
+    );
+    auto.nested_classes.push(NestedClassSummary {
+        name: "Meta".into(),
+        qualified_name: "app.Auto.Meta".into(),
+        bases: vec![],
+        class_constants: vec![ConstantSummary {
+            name: "abstract".into(),
+            value: LiteralValue::Bool { value: true },
+            type_expr: None,
+            source: SymbolSource::default(),
+        }],
+        source: SymbolSource::default(),
+    });
+    auto.methods.push(MethodSummary {
+        name: "from_db".to_string(),
+        parameters: Vec::new(),
+        return_type: None,
+        is_public: true,
+        decorators: Vec::new(),
+        source: SymbolSource::default(),
+    });
+    let custom = model_class(
+        "app.Custom",
+        vec![field(
+            "code",
+            "django.db.models.CharField",
+            vec![keyword_bool("primary_key", true)],
+        )],
+    );
+    let response = DjangoTyPlugin.build_project_index(&BuildProjectIndexRequest {
+        context: project_context(),
+        previous_index_fingerprint: None,
+        classes: vec![
+            auto,
+            custom,
+            derived_model_class("app.Child", "app.Auto", vec![]),
+        ],
+        functions: Vec::new(),
+        assignments: Vec::new(),
+        settings: Vec::new(),
+    });
+    let PluginResponse::ProjectIndex(index) = response else {
+        panic!();
+    };
+    assert_eq!(
+        index.plugin_index["models"]["app.Child"]["auto_primary_key"],
+        "key"
+    );
+    assert_eq!(
+        index.plugin_index["models"]["app.Child"]["custom_loading"],
+        true
+    );
+    assert_eq!(
+        index.plugin_index["models"]["app.Custom"]["auto_primary_key"],
+        Value::Null
+    );
+}
+
+#[test]
+fn constructor_state_respects_keys_defaults_and_custom_initialization() {
+    let mut request = state_request("unused", None, vec![]);
+    request.callee = TypeExpr::expression(BOOK);
+    for (arguments, expected) in [
+        (vec![], "None"),
+        (
+            vec![keyword_value("id", LiteralValue::Int { value: 123 })],
+            "int",
+        ),
+        (vec![keyword_value("pk", LiteralValue::None)], "None"),
+        (
+            vec![
+                keyword_value("id", LiteralValue::Int { value: 123 }),
+                keyword_value("pk", LiteralValue::None),
+            ],
+            "None",
+        ),
+        (
+            vec![keyword_value("id", LiteralValue::Unknown)],
+            "int | None",
+        ),
+    ] {
+        request.arguments = arguments;
+        let PluginResponse::CallStatePatch(patch) = DjangoTyPlugin.adjust_call_state(&request)
+        else {
+            panic!();
+        };
+        assert!(patch.fresh_result);
+        assert!(!patch.preserves_other_objects);
+        assert_eq!(patch.result_members["id"].expression, expected);
+        assert_eq!(patch.result_members["pk"].expression, expected);
+    }
+    let mut argument = keyword_value("id", LiteralValue::Unknown);
+    argument.type_expr = Some(TypeExpr::annotation("int"));
+    request.arguments = vec![argument.clone()];
+    let PluginResponse::CallStatePatch(patch) = DjangoTyPlugin.adjust_call_state(&request) else {
+        panic!();
+    };
+    assert_eq!(patch.result_members["id"].expression, "int");
+    for kind in [
+        ArgumentKind::Positional,
+        ArgumentKind::StarArgs,
+        ArgumentKind::StarKwargs,
+    ] {
+        argument.kind = kind;
+        request.arguments = vec![argument.clone()];
+        let PluginResponse::CallStatePatch(patch) = DjangoTyPlugin.adjust_call_state(&request)
+        else {
+            panic!();
+        };
+        assert_eq!(patch.result_members["pk"].expression, "int | None");
+    }
+    request.arguments = vec![];
+    request.project_index.as_mut().unwrap()["models"][BOOK]["auto_primary_key_default"] =
+        json!("int");
+    let PluginResponse::CallStatePatch(patch) = DjangoTyPlugin.adjust_call_state(&request) else {
+        panic!();
+    };
+    assert_eq!(patch.result_members["id"].expression, "int");
+    request.project_index.as_mut().unwrap()["models"][BOOK]["custom_loading"] = json!(true);
+    assert_eq!(
+        DjangoTyPlugin.adjust_call_state(&request),
+        PluginResponse::NoChange
+    );
+    request.project_index.as_mut().unwrap()["models"][BOOK]["custom_loading"] = json!(false);
+    request.project_index.as_mut().unwrap()["models"][BOOK]["auto_primary_key"] = Value::Null;
+    assert_eq!(
+        DjangoTyPlugin.adjust_call_state(&request),
+        PluginResponse::NoChange
+    );
+}
+
+#[test]
+fn auto_key_defaults_are_inherited_and_composite_keys_are_excluded() {
+    for (default, expected) in [
+        (LiteralValue::Int { value: 5 }, "int"),
+        (LiteralValue::None, "None"),
+        (LiteralValue::Unknown, "int | None"),
+    ] {
+        let base = model_class(
+            "app.Base",
+            vec![field(
+                "key",
+                "django.db.models.AutoField",
+                vec![keyword_value("default", default)],
+            )],
+        );
+        let index = project_index(vec![
+            base,
+            derived_model_class("app.Child", "app.Base", vec![]),
+        ]);
+        assert_eq!(
+            index["models"]["app.Child"]["auto_primary_key_default"],
+            expected
+        );
+    }
+    let composite = model_class(
+        "app.Composite",
+        vec![field("pk", "django.db.models.CompositePrimaryKey", vec![])],
+    );
+    let index = project_index(vec![composite]);
+    assert_eq!(
+        index["models"]["app.Composite"]["auto_primary_key"],
+        Value::Null
+    );
+}
+
+#[test]
+fn signal_callbacks_and_explicit_opt_out_keep_nullable_ids() {
+    for method in ["save", "get", "create"] {
+        let receiver = if method == "save" {
+            instance_receiver()
+        } else {
+            manager_receiver(BOOK)
+        };
+        let mut request = state_request(method, Some(receiver), vec![]);
+        request.project_index.as_mut().unwrap()["models"][BOOK]["signal_receivers"] = json!(true);
+        assert!(matches!(
+            DjangoTyPlugin.adjust_call_state(&request),
+            PluginResponse::NoChange
+        ));
+    }
+    let mut constructor = state_request("unused", None, vec![]);
+    constructor.callee = TypeExpr::expression(BOOK);
+    constructor.project_index.as_mut().unwrap()["models"][BOOK]["signal_receivers"] = json!(true);
+    assert!(matches!(
+        DjangoTyPlugin.adjust_call_state(&constructor),
+        PluginResponse::NoChange
+    ));
+    let mut delete = state_request("delete", Some(instance_receiver()), vec![]);
+    delete.project_index.as_mut().unwrap()["models"][BOOK]["signal_receivers"] = json!(true);
+    assert!(matches!(
+        DjangoTyPlugin.adjust_call_state(&delete),
+        PluginResponse::CallStatePatch(_)
+    ));
+    delete.context.config = json!({"model-state": false});
+    assert!(matches!(
+        DjangoTyPlugin.adjust_call_state(&delete),
+        PluginResponse::NoChange
+    ));
+}
+
+#[test]
+fn concrete_inheritance_disables_state_while_proxy_models_keep_auto_keys() {
+    let parent = model_class(BOOK, vec![]);
+    let child = derived_model_class("library.models.Child", BOOK, vec![]);
+    let mut proxy = derived_model_class("library.models.Proxy", BOOK, vec![]);
+    proxy.nested_classes.push(NestedClassSummary {
+        name: "Meta".into(),
+        qualified_name: "library.models.Proxy.Meta".into(),
+        bases: vec![],
+        class_constants: vec![ConstantSummary {
+            name: "proxy".into(),
+            value: LiteralValue::Bool { value: true },
+            type_expr: None,
+            source: SymbolSource::default(),
+        }],
+        source: SymbolSource::default(),
+    });
+    let index = project_index(vec![
+        parent,
+        child,
+        proxy,
+        derived_model_class("library.models.Grandchild", "library.models.Child", vec![]),
+    ]);
+    assert_eq!(index["models"][BOOK]["auto_primary_key"], "id");
+    assert_eq!(
+        index["models"]["library.models.Proxy"]["auto_primary_key"],
+        "id"
+    );
+    for name in ["library.models.Child", "library.models.Grandchild"] {
+        assert_eq!(index["models"][name]["auto_primary_key"], Value::Null);
+    }
+}
+
+#[test]
+fn database_defaults_have_sentinel_types_until_an_auto_key_is_set() {
+    let model = model_class(
+        BOOK,
+        vec![field(
+            "id",
+            "django.db.models.AutoField",
+            vec![
+                keyword_bool("primary_key", true),
+                keyword_value("db_default", LiteralValue::Int { value: 123 }),
+            ],
+        )],
+    );
+    let index = project_index(vec![model.clone()]);
+    assert_eq!(
+        index["models"][BOOK]["auto_primary_key_default"],
+        "django.db.models.expressions.DatabaseDefault"
+    );
+    let mut request = state_request("unused", None, vec![]);
+    request.callee = TypeExpr::expression(BOOK);
+    request.project_index = Some(index.clone());
+    let PluginResponse::ClassPatch(class_patch) =
+        DjangoTyPlugin.analyze_class(&AnalyzeClassRequest {
+            context: semantic_context("library.models"),
+            class: model,
+            project_index: Some(index),
+        })
+    else {
+        panic!()
+    };
+    let pk = class_patch
+        .fields
+        .iter()
+        .find(|field| field.name == "pk")
+        .unwrap();
+    assert_eq!(
+        pk.instance_get_type.expression,
+        "int | None | django.db.models.expressions.DatabaseDefault"
+    );
+    let PluginResponse::CallStatePatch(patch) = DjangoTyPlugin.adjust_call_state(&request) else {
+        panic!()
+    };
+    assert_eq!(
+        patch.result_members["pk"].expression,
+        "django.db.models.expressions.DatabaseDefault"
+    );
+    for argument in [
+        ArgumentSummary {
+            name: None,
+            kind: ArgumentKind::StarKwargs,
+            value: LiteralValue::Unknown,
+            type_expr: None,
+            source: None,
+        },
+        keyword_value("pk", LiteralValue::Unknown),
+    ] {
+        request.arguments = vec![argument];
+        let PluginResponse::CallStatePatch(patch) = DjangoTyPlugin.adjust_call_state(&request)
+        else {
+            panic!()
+        };
+        assert_eq!(
+            patch.result_members["pk"].expression,
+            "int | None | django.db.models.expressions.DatabaseDefault"
+        );
+    }
+}
+
+#[test]
+fn class_signal_handlers_disable_model_state() {
+    let mut handlers = non_model_class();
+    let mut sender = keyword_value(
+        "sender",
+        LiteralValue::EnumRef(SymbolRef {
+            qualified_name: "models.Book".into(),
+        }),
+    );
+    sender.type_expr = Some(TypeExpr::annotation(BOOK));
+    handlers.methods.push(MethodSummary {
+        name: "clear_id".into(),
+        parameters: vec![],
+        return_type: None,
+        is_public: true,
+        decorators: vec![CallOrSymbolSummary::Call(CallValueSummary {
+            callee: SymbolRef {
+                qualified_name: "receiver".into(),
+            },
+            receiver: None,
+            arguments: vec![sender],
+            return_type: None,
+        })],
+        source: SymbolSource::default(),
+    });
+    let index = project_index(vec![
+        model_class(BOOK, vec![]),
+        model_class(USER, vec![]),
+        handlers,
+    ]);
+    assert_eq!(index["models"][BOOK]["signal_receivers"], true);
+    assert_eq!(index["models"][USER]["signal_receivers"], false);
 }

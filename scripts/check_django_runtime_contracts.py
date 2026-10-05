@@ -33,12 +33,24 @@ def check_database(database: Path) -> dict:
     from django.db.models import Prefetch
     from django.http import HttpRequest
     from conformance_models.models import (
+        Article,
+        AutoCounter,
+        CustomInit,
+        CustomLoader,
+        DatabaseDefaultKey,
+        NoSave,
+        SignalInit,
+        SignalAlias,
+        StaticSignal,
+        SignalSave,
         Author,
         Book,
         Category,
         Publication,
         PublishedQuerySet,
         Tag,
+        TagChild,
+        BookProxy,
         User,
     )
 
@@ -65,6 +77,67 @@ def check_database(database: Path) -> dict:
         else:
             raise AssertionError(f"{name}: invalid input was accepted")
 
+    from django.db.models.expressions import DatabaseDefault
+    defaulted = DatabaseDefaultKey()
+    equal("state-database-default", isinstance(defaulted.pk, DatabaseDefault), True)
+    equal("state-database-default-explicit", DatabaseDefaultKey(pk=123).pk, 123)
+    defaulted.save()
+    equal("state-database-default-saved", isinstance(defaulted.pk, int), True)
+    equal("state-concrete-child", (TagChild(id=123).id, TagChild(id=123).pk), (123, None))
+    equal("state-proxy-key", BookProxy(id=123).pk, 123)
+    failed = Tag()
+    rejected("state-failed-save", lambda: failed.save(force_update=True), ValueError)
+    if failed.pk is not None:
+        raise AssertionError("failed forced update established an ID")
+    equal("state-class-signal", StaticSignal(id=123).pk is None, True)
+    equal("state-signal-alias", SignalAlias(id=123).pk is None, True)
+    equal("state-signal-init", SignalInit(id=123).pk is None, True)
+    signal_saved = SignalSave()
+    signal_saved.save()
+    equal("state-signal-save", signal_saved.pk is None, True)
+    equal("state-custom-init", CustomInit(id=123).pk is None, True)
+    custom_loader = CustomLoader.objects.create()
+    equal("state-custom-loader", CustomLoader.objects.get(pk=custom_loader.pk).pk is None, True)
+    equal("state-create-overridden-save", NoSave.objects.create().pk is None, True)
+    branch_states = []
+    for condition in [False, True]:
+        branch_tag = Tag(label="branch")
+        if condition:
+            branch_tag.save()
+        branch_states.append(branch_tag.pk is not None)
+    equal("state-conditional-save", branch_states, [False, True])
+    equal("state-constructor-nullable", Tag(id=None).pk is None, True)
+    equal("state-constructor-precedence", Tag(id=123, pk=None).id is None, True)
+    equal("state-explicit-auto-unsaved", AutoCounter().key is None, True)
+    state_tag = Tag(label="state")
+    state_tag.save(update_fields=[])
+    equal("state-skipped-save", state_tag.pk is None, True)
+    state_tag.save()
+    equal("state-save", (isinstance(state_tag.id, int), state_tag.id == state_tag.pk), (True, True))
+    equal("state-loaded", isinstance(Tag.objects.get(pk=state_tag.pk).id, int), True)
+    manual = Tag.objects.get(pk=state_tag.pk)
+    manual.id = None
+    equal("state-id-write", manual.pk is None, True)
+    mutated = Tag.objects.get(pk=state_tag.pk)
+    def mutate(value):
+        value.id = None
+    mutate(mutated)
+    equal("state-unknown-call", mutated.pk is None, True)
+    alias = state_tag
+    alias.delete()
+    equal("state-delete-alias", (state_tag.id, state_tag.pk, alias.pk), (None, None, None))
+    state_tag.save()
+    equal("state-resave", isinstance(state_tag.pk, int), True)
+    overridden = NoSave()
+    overridden.save()
+    equal("state-overridden-save", overridden.pk is None, True)
+    counter = AutoCounter.objects.create(label="auto")
+    equal("state-explicit-auto", isinstance(counter.key, int) and counter.pk == counter.key, True)
+    counter.delete()
+    equal("state-explicit-auto-delete", (counter.key, counter.pk), (None, None))
+    from django.utils import timezone
+    article = Article.objects.create(title="inherited", created_at=timezone.now())
+    equal("state-inherited", isinstance(Article.objects.get(pk=article.pk).pk, int), True)
     equal("unsaved-auto-id", Book().id is None, True)
     equal("unsaved-auto-pk", Book().pk is None, True)
     equal("constructor-pk", Book(pk=1).pk, 1)
