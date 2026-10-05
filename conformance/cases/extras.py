@@ -20,14 +20,11 @@ class AlternateBookForm(BookForm):
 
 
 assert_type(get_user_model(), type[User])  # conformance: auth.user-model/get-user-model expect=pass
-assert_type(HttpRequest().user, User | AnonymousUser)  # conformance: auth.user-model/request-user expect=pass
+def check_framework_user(request: HttpRequest) -> None:
+    assert_type(request.user, User | AnonymousUser)  # conformance: auth.user-model/request-user expect=pass
 
-Book().save(update_fields=["missing"])  # conformance: models.save-update-fields/save-invalid-field expect=fail
-Book().save(update_fields=["title"])  # conformance: models.save-update-fields/save-valid-field expect=pass
-
-
-def request_from_framework() -> HttpRequest:
-    return HttpRequest()
+Book(pk=1).save(update_fields=["missing"])  # conformance: models.save-update-fields/save-invalid-field expect=fail
+Book(pk=1).save(update_fields=["title"])  # conformance: models.save-update-fields/save-valid-field expect=pass
 
 
 def write_mutable_copy(request: HttpRequest) -> None:
@@ -40,3 +37,19 @@ assert_type(lazy_message.split(), list[str])  # conformance: typing.lazy-string/
 
 def write_framework_request(request: HttpRequest) -> None:
     request.GET["page"] = "1"  # conformance: http.querydict-mutability/immutable-querydict-write expect=fail
+
+
+def write_fresh_get() -> None:
+    HttpRequest().GET["page"] = "1"  # conformance: http.querydict-mutability/fresh-get-write expect=pass
+
+
+def write_fresh_post() -> None:
+    HttpRequest().POST["page"] = "1"  # conformance: http.querydict-mutability/fresh-post-write expect=pass
+
+
+class CustomRequest(HttpRequest):
+    custom: str = "hello"
+
+
+assert_type(CustomRequest(), CustomRequest)  # conformance: http.querydict-mutability/custom-request-type expect=pass
+assert_type(CustomRequest().custom, str)  # conformance: http.querydict-mutability/custom-request-attribute expect=pass

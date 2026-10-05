@@ -32,7 +32,8 @@ if TYPE_CHECKING:
         pass
 else:
     class CodeField(models.Field):
-        pass
+        def db_type(self, connection: object) -> str:
+            return "text"
 
 
 class BookManager(models.Manager["Book"]):

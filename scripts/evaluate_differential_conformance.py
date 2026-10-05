@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare django-ty with a pinned mypy plus django-stubs reference."""
+"""Check official Django contracts and record the mypy/django-stubs comparison."""
 
 from __future__ import annotations
 
@@ -20,6 +20,19 @@ try:
 except ModuleNotFoundError:
     import tomli as tomllib
 
+
+try:
+    from .django_official_contracts import (
+        load_contracts,
+        documentation_url,
+        reviewed_difference,
+    )
+except ImportError:
+    from django_official_contracts import (
+        load_contracts,
+        documentation_url,
+        reviewed_difference,
+    )
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = ROOT / "conformance"
@@ -170,6 +183,20 @@ def require_reachable(checker: str, diagnostics: list[Diagnostic]) -> None:
             )
 
 
+def require_expected_diagnostic(
+    marker: Marker, diagnostics: list[Diagnostic], contracts: dict
+) -> None:
+    expected = (
+        contracts["review"]
+        .get(f"{marker.feature}/{marker.case}", {})
+        .get("candidate_diagnostic")
+    )
+    if expected and (len(diagnostics) != 1 or expected not in diagnostics[0].message):
+        raise ConformanceError(
+            f"{marker.feature}/{marker.case} requires exactly one {expected} diagnostic; an unrelated rejection is not evidence"
+        )
+
+
 def checker_version(executable: Path) -> str:
     return_code, output = run([str(executable), "--version"], ROOT)
     if return_code != 0 or not output:
@@ -300,6 +327,32 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         for feature in compatibility_map["feature"]
         if feature["surface"] == "dynamic"
     }
+    contracts = load_contracts()
+    missing_docs = sorted(set(feature_rows) - set(contracts["feature_docs"]))
+    if missing_docs:
+        raise ConformanceError(
+            f"features missing official Django documentation: {missing_docs}"
+        )
+    runtime_status, runtime_output = run(
+        [
+            str(python_executable(args.ty_python)),
+            str(ROOT / "scripts/check_django_runtime_contracts.py"),
+        ],
+        ROOT,
+    )
+    if runtime_status:
+        raise ConformanceError(f"Django runtime contract failed:\n{runtime_output}")
+    runtime = json.loads(runtime_output)
+    expected_proofs = {review["proof"] for review in contracts["review"].values()}
+    missing_proofs = expected_proofs - {
+        name
+        for name, result in runtime["cases"].items()
+        if result.get("passed") is True
+    }
+    if missing_proofs:
+        raise ConformanceError(
+            f"missing Django runtime proofs: {sorted(missing_proofs)}"
+        )
     markers = collect_markers(PROJECT_ROOT)
     marker_features = {marker.feature for marker in markers}
     missing = sorted(set(feature_rows) - marker_features)
@@ -417,7 +470,16 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             for diagnostic in diagnostics
             if (diagnostic.path, diagnostic.line) not in marker_by_location
         ]
-        if unowned and args.probe:
+        if checker == "mypy" and any(
+            diagnostic.code != "django-manager-missing"
+            or diagnostic.path != "conformance_models/models.py"
+            or "conformance_models.models.Publication.objects" not in diagnostic.message
+            for diagnostic in unowned
+        ):
+            raise ConformanceError(
+                f"unreviewed mypy diagnostics outside assertions: {unowned}"
+            )
+        if unowned and (args.probe or checker == "mypy"):
             unowned_diagnostics[checker] = [
                 {
                     "path": diagnostic.path,
@@ -442,16 +504,12 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     for diagnostic in candidate:
         candidate_by_location[(diagnostic.path, diagnostic.line)].append(diagnostic)
 
-    baseline_drift: list[str] = []
     assertions_by_feature: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for marker in markers:
+        require_expected_diagnostic(
+            marker, candidate_by_location[marker.key], contracts
+        )
         reference_rejected = bool(reference_by_location[marker.key])
-        expected_rejected = marker.expect == "fail"
-        if reference_rejected != expected_rejected:
-            baseline_drift.append(
-                f"{marker.path}:{marker.line} {marker.feature}/{marker.case}: "
-                f"expected {marker.expect}, mypy {'failed' if reference_rejected else 'passed'}"
-            )
         candidate_rejected = bool(candidate_by_location[marker.key])
         assertions_by_feature[marker.feature].append(
             {
@@ -472,11 +530,6 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 ],
             }
         )
-    if baseline_drift and not args.probe:
-        raise ConformanceError(
-            "reference outcomes do not match the corpus contract:\n"
-            + "\n".join(baseline_drift)
-        )
 
     feature_results: list[dict[str, Any]] = []
     area_rates: dict[str, list[float]] = defaultdict(list)
@@ -493,21 +546,23 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             "id": feature_id,
             "area": feature["area"],
             "upstream": feature["upstream"],
+            "documentation": documentation_url(
+                candidate_versions["Django"], feature_id, contracts
+            ),
             "cases": len(assertions),
             "matched": matched,
             "percent": rate,
             "status": status(rate),
             "assertions": assertions,
         }
-        if args.probe:
-            contract_matched = sum(
-                (assertion["candidate"] == "reject") == (assertion["expect"] == "fail")
-                for assertion in assertions
-            )
-            feature_result["contract_matched"] = contract_matched
-            feature_result["contract_percent"] = percentage(
-                contract_matched, len(assertions)
-            )
+        contract_matched = sum(
+            (assertion["candidate"] == "reject") == (assertion["expect"] == "fail")
+            for assertion in assertions
+        )
+        feature_result["contract_matched"] = contract_matched
+        feature_result["contract_percent"] = percentage(
+            contract_matched, len(assertions)
+        )
         feature_results.append(feature_result)
 
     feature_balanced = round(
@@ -529,12 +584,22 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             "line": marker.line,
             "expect": marker.expect,
             "reference": "reject" if reference_by_location[marker.key] else "accept",
+            **reviewed_difference(
+                marker.feature,
+                marker.case,
+                marker.expect,
+                candidate_versions["Django"],
+                runtime,
+                contracts,
+            ),
         }
         for marker in markers
         if bool(reference_by_location[marker.key]) != (marker.expect == "fail")
     ]
     result = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "authority": contracts["authority"],
+        "django_runtime": runtime,
         "reference": {
             "checker": checker_version(args.mypy_bin).split(" (compiled:")[0],
             "django_stubs": reference_versions["django-stubs"],
@@ -557,6 +622,12 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             "sha256": corpus_digest(PROJECT_ROOT),
             "features": len(feature_results),
             "assertions": len(markers),
+            "documentation_contract_sha256": hashlib.sha256(
+                (ROOT / "compatibility/django-official-contracts.toml").read_bytes()
+            ).hexdigest(),
+            "runtime_proof_sha256": hashlib.sha256(
+                (ROOT / "scripts/check_django_runtime_contracts.py").read_bytes()
+            ).hexdigest(),
         },
         "scores": {
             "feature_balanced_percent": feature_balanced,
@@ -569,24 +640,41 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "areas": area_results,
         "features": feature_results,
     }
-    if args.probe:
-        contract_matched_assertions = sum(
-            feature["contract_matched"] for feature in feature_results
+    contract_matched_assertions = sum(
+        feature["contract_matched"] for feature in feature_results
+    )
+    result["scores"]["contract_feature_balanced_percent"] = round(
+        sum(feature["contract_percent"] for feature in feature_results)
+        / len(feature_results),
+        1,
+    )
+    result["scores"]["contract_assertion_percent"] = percentage(
+        contract_matched_assertions, len(markers)
+    )
+    result["scores"]["contract_matched_assertions"] = contract_matched_assertions
+    result["reference_drift"] = reference_drift
+    result["unowned_diagnostics"] = unowned_diagnostics
+    result["unparsed_output"] = {
+        checker: lines for checker, lines in unparsed_output.items() if lines
+    }
+    if (
+        result["scores"]["contract_matched_assertions"] != len(markers)
+        or result["unowned_diagnostics"].get("ty")
+        or result["unparsed_output"]
+    ):
+        raise ConformanceError(
+            "candidate failed the official Django contract:\n"
+            + "\n".join(
+                f"{assertion['path']}:{assertion['line']} {feature['id']}/{assertion['case']}: expected {assertion['expect']}, candidate {assertion['candidate']}"
+                for feature in feature_results
+                for assertion in feature["assertions"]
+                if (assertion["candidate"] == "reject")
+                != (assertion["expect"] == "fail")
+            )
+            + f"\nunowned diagnostics: {unowned_diagnostics.get('ty', [])}\nunparsed output: {result['unparsed_output']}"
         )
-        result["scores"]["contract_feature_balanced_percent"] = round(
-            sum(feature["contract_percent"] for feature in feature_results)
-            / len(feature_results),
-            1,
-        )
-        result["scores"]["contract_assertion_percent"] = percentage(
-            contract_matched_assertions, len(markers)
-        )
-        result["scores"]["contract_matched_assertions"] = contract_matched_assertions
-        result["reference_drift"] = reference_drift
-        result["unowned_diagnostics"] = unowned_diagnostics
-        result["unparsed_output"] = {
-            checker: lines for checker, lines in unparsed_output.items() if lines
-        }
+    if any(item.get("passed") is not True for item in runtime["cases"].values()):
+        raise ConformanceError("Django runtime proof is incomplete")
     return result
 
 
@@ -630,7 +718,7 @@ def main() -> int:
 
     try:
         result = evaluate(args)
-    except ConformanceError as error:
+    except (ConformanceError, ValueError, KeyError) as error:
         print(f"Differential conformance failed:\n{error}", file=sys.stderr)
         return 1
 
@@ -650,8 +738,8 @@ def main() -> int:
     scores = result["scores"]
     print(
         "Differential conformance passed: "
-        f"{scores['feature_balanced_percent']:.1f}% feature-balanced, "
-        f"{scores['assertion_conformance_percent']:.1f}% assertions"
+        f"{scores['contract_feature_balanced_percent']:.1f}% official-contract coverage; "
+        f"{scores['feature_balanced_percent']:.1f}% mypy agreement"
     )
     return 0
 
