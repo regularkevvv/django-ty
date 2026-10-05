@@ -40,7 +40,7 @@ django = "6.1.1"
 mypy = "2.3.1"
 ty_extended = "0.84.2"
 ty_extended_commit = "0c1c84c1340ab818faa328a32a48048ebf06d105"
-django_ty = "0.3.2"
+django_ty = "0.4.0"
 minimum_cases_per_feature = 2
 
 [[feature]]
