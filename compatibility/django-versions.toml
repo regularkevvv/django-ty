@@ -1,8 +1,8 @@
 # Probe matrix for the Django version compatibility table.
 #
 # Each row runs the differential conformance corpus twice: once with the
-# version-appropriate reference oracle (mypy plus the django-stubs release
-# paired with that Django line) and once with the django-ty candidate on
+# reviewed supported mypy comparison (including upstream-declared partial
+# Django support where explicitly identified) and once with the django-ty candidate on
 # ty-extended, which always evaluates against the vendored django-stubs 6.1.1
 # static tree packaged in the wheel.
 #
@@ -39,18 +39,18 @@ note = "Inside the declared range (EOL upstream)."
 [[matrix.probe]]
 django = "5.2.17"
 python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
-mypy = "1.19.1"
-django_stubs = "5.2.9"
-django_stubs_commit = "2825810e143a0377e3261fef658e1a59f7e0cf90"
+mypy = "2.3.1"
+django_stubs = "6.0.9"
+django_stubs_commit = "942bca5e63f897a157f5d8ee649ca90e9a69003b"
 declared = true
 note = "Inside the declared range (5.2 LTS)."
 
 [[matrix.probe]]
-django = "6.0.7"
+django = "6.0.8"
 python = ["3.12", "3.13", "3.14"]
 mypy = "2.3.1"
-django_stubs = "6.0.6"
-django_stubs_commit = "c1d968a356955f9598da6536115ccae4ed802b44"
+django_stubs = "6.0.9"
+django_stubs_commit = "942bca5e63f897a157f5d8ee649ca90e9a69003b"
 declared = true
 note = "Inside the declared range."
 

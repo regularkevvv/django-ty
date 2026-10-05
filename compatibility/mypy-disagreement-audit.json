@@ -1,0 +1,4139 @@
+{
+  "schema_version": 1,
+  "audited_on": "2026-10-04",
+  "scope": "All 24 distinct reference_drift assertions at the audited commit plus the related stray manager diagnostic. Research only; findings do not amend the original comparison outcomes.",
+  "audited_commit": "a27fd274aa574f497f599543ba7230be39918c06",
+  "corpus": {
+    "sha256": "fdf835b5e5798d3c8d874a87092900f536f457f536dcaf67c90fa963e6132869",
+    "features": 38,
+    "assertions": 105,
+    "documentation_contract_sha256": "73388c19678a055e4c5087c4924f806ec78549e03dc7b97d1ef9f6d22ca2c233",
+    "runtime_proof_sha256": "4de451cb1e8f1dcdfe14768e694122c4cdc865cd24b9fa24424bf8e040e3935a"
+  },
+  "category_counts": {
+    "historical-feature-gap": 12,
+    "deliberate-policy-or-limit": 6,
+    "implementation-defect-or-incomplete-validation": 6
+  },
+  "source_pins": {
+    "django_stubs_6_1_1": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+    "django_6_1_1": "249b13d6e93ee3164dee8ed1775395622a50c337",
+    "upstream_master_inspected": "46cd7de1d2f48ecf9727992e4c7ce114d3f98b8f"
+  },
+  "environments": {
+    "5.0.4": {
+      "python": "3.12.10",
+      "packages": {
+        "Django": "5.0.14",
+        "django-stubs": "5.0.4",
+        "django-stubs-ext": "5.0.4",
+        "mypy": "1.11.2"
+      }
+    },
+    "5.1.3": {
+      "python": "3.12.10",
+      "packages": {
+        "Django": "5.1.15",
+        "django-stubs": "5.1.3",
+        "django-stubs-ext": "5.1.3",
+        "mypy": "1.15.0"
+      }
+    },
+    "5.2-current": {
+      "python": "3.14.2",
+      "packages": {
+        "Django": "5.2.17",
+        "django-stubs": "6.0.9",
+        "django-stubs-ext": "6.0.9",
+        "mypy": "2.3.1"
+      }
+    },
+    "5.2.9": {
+      "python": "3.12.10",
+      "packages": {
+        "Django": "5.2.17",
+        "django-stubs": "5.2.9",
+        "django-stubs-ext": "5.2.9",
+        "mypy": "1.19.1"
+      }
+    },
+    "6.0.6": {
+      "python": "3.12.10",
+      "packages": {
+        "Django": "6.0.8",
+        "django-stubs": "6.0.6",
+        "django-stubs-ext": "6.0.6",
+        "mypy": "2.3.1"
+      }
+    },
+    "6.0.6-supported": {
+      "python": "3.12.10",
+      "packages": {
+        "Django": "6.0.8",
+        "django-stubs": "6.0.6",
+        "django-stubs-ext": "6.0.6",
+        "mypy": "2.1.0"
+      }
+    },
+    "6.0.9-current": {
+      "python": "3.12.10",
+      "packages": {
+        "Django": "6.0.8",
+        "django-stubs": "6.0.9",
+        "django-stubs-ext": "6.0.9",
+        "mypy": "2.3.1"
+      }
+    },
+    "6.1.1": {
+      "python": "3.12.10",
+      "packages": {
+        "Django": "6.1.1",
+        "django-stubs": "6.1.1",
+        "django-stubs-ext": "6.1.1",
+        "mypy": "2.3.1"
+      }
+    },
+    "ty-040": {
+      "python": "3.12.10",
+      "packages": {
+        "Django": "6.1.1",
+        "django-ty": "0.4.0",
+        "ty-extended": "0.84.2"
+      }
+    }
+  },
+  "assertions": [
+    {
+      "identity": "apps.model-registry/qualified-reference",
+      "family": "registry",
+      "category": "historical-feature-gap",
+      "cause": "Older plugin releases return type[Any]; exact-type assertions fail and incompatible assignments are accepted. Literal registry narrowing was added later.",
+      "intent_evidence": "Historical missing inference, documented in upstream feature requests; dynamic fallback remains deliberate.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9",
+        "6.0.6"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "apps.model-registry",
+          "case": "qualified-reference",
+          "path": "cases/apps.py",
+          "line": 6,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-qualified",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "qualified-reference",
+          "path": "cases/apps.py",
+          "line": 6,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-qualified",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "qualified-reference",
+          "path": "cases/apps.py",
+          "line": 6,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-qualified",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "qualified-reference",
+          "path": "cases/apps.py",
+          "line": 6,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-qualified",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Apps.get_model",
+        "AppConfig.get_model"
+      ],
+      "plugin_pipeline": [
+        "resolve_model_for_get_model",
+        "helpers.resolve_lazy_reference"
+      ],
+      "upstream_prs": [
+        3511
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/apps/registry.py#L188",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/apps/config.py#L224",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/apps.py",
+        "https://github.com/typeddjango/django-stubs/pull/3511",
+        "https://github.com/typeddjango/django-stubs/issues/304",
+        "https://github.com/typeddjango/django-stubs/issues/1318",
+        "https://github.com/typeddjango/django-stubs/issues/1725"
+      ]
+    },
+    {
+      "identity": "apps.model-registry/case-insensitive-reference",
+      "family": "registry",
+      "category": "historical-feature-gap",
+      "cause": "Older plugin releases return type[Any]; exact-type assertions fail and incompatible assignments are accepted. Literal registry narrowing was added later.",
+      "intent_evidence": "Historical missing inference, documented in upstream feature requests; dynamic fallback remains deliberate.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9",
+        "6.0.6"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "apps.model-registry",
+          "case": "case-insensitive-reference",
+          "path": "cases/apps.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-case-insensitive",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "case-insensitive-reference",
+          "path": "cases/apps.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-case-insensitive",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "case-insensitive-reference",
+          "path": "cases/apps.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-case-insensitive",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "case-insensitive-reference",
+          "path": "cases/apps.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-case-insensitive",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Apps.get_model",
+        "AppConfig.get_model"
+      ],
+      "plugin_pipeline": [
+        "resolve_model_for_get_model",
+        "helpers.resolve_lazy_reference"
+      ],
+      "upstream_prs": [
+        3511
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/apps/registry.py#L188",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/apps/config.py#L224",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/apps.py",
+        "https://github.com/typeddjango/django-stubs/pull/3511",
+        "https://github.com/typeddjango/django-stubs/issues/304",
+        "https://github.com/typeddjango/django-stubs/issues/1318",
+        "https://github.com/typeddjango/django-stubs/issues/1725"
+      ]
+    },
+    {
+      "identity": "apps.model-registry/keyword-reference",
+      "family": "registry",
+      "category": "historical-feature-gap",
+      "cause": "Older plugin releases return type[Any]; exact-type assertions fail and incompatible assignments are accepted. Literal registry narrowing was added later.",
+      "intent_evidence": "Historical missing inference, documented in upstream feature requests; dynamic fallback remains deliberate.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9",
+        "6.0.6"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "apps.model-registry",
+          "case": "keyword-reference",
+          "path": "cases/apps.py",
+          "line": 8,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-keywords",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "keyword-reference",
+          "path": "cases/apps.py",
+          "line": 8,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-keywords",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "keyword-reference",
+          "path": "cases/apps.py",
+          "line": 8,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-keywords",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "keyword-reference",
+          "path": "cases/apps.py",
+          "line": 8,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-keywords",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Apps.get_model",
+        "AppConfig.get_model"
+      ],
+      "plugin_pipeline": [
+        "resolve_model_for_get_model",
+        "helpers.resolve_lazy_reference"
+      ],
+      "upstream_prs": [
+        3511
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/apps/registry.py#L188",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/apps/config.py#L224",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/apps.py",
+        "https://github.com/typeddjango/django-stubs/pull/3511",
+        "https://github.com/typeddjango/django-stubs/issues/304",
+        "https://github.com/typeddjango/django-stubs/issues/1318",
+        "https://github.com/typeddjango/django-stubs/issues/1725"
+      ]
+    },
+    {
+      "identity": "apps.model-registry/wrong-model",
+      "family": "registry",
+      "category": "historical-feature-gap",
+      "cause": "Older plugin releases return type[Any]; exact-type assertions fail and incompatible assignments are accepted. Literal registry narrowing was added later.",
+      "intent_evidence": "Historical missing inference, documented in upstream feature requests; dynamic fallback remains deliberate.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9",
+        "6.0.6"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "apps.model-registry",
+          "case": "wrong-model",
+          "path": "cases/apps.py",
+          "line": 9,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-wrong-model",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "wrong-model",
+          "path": "cases/apps.py",
+          "line": 9,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-wrong-model",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "wrong-model",
+          "path": "cases/apps.py",
+          "line": 9,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-wrong-model",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "apps.model-registry",
+          "case": "wrong-model",
+          "path": "cases/apps.py",
+          "line": 9,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/applications/#django.apps.apps.get_model",
+          "runtime_proof": "registry-wrong-model",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Apps.get_model",
+        "AppConfig.get_model"
+      ],
+      "plugin_pipeline": [
+        "resolve_model_for_get_model",
+        "helpers.resolve_lazy_reference"
+      ],
+      "upstream_prs": [
+        3511
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/apps/registry.py#L188",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/apps/config.py#L224",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/apps.py",
+        "https://github.com/typeddjango/django-stubs/pull/3511",
+        "https://github.com/typeddjango/django-stubs/issues/304",
+        "https://github.com/typeddjango/django-stubs/issues/1318",
+        "https://github.com/typeddjango/django-stubs/issues/1725"
+      ]
+    },
+    {
+      "identity": "http.querydict-mutability/fresh-get-write",
+      "family": "requests",
+      "category": "deliberate-policy-or-limit",
+      "cause": "Upstream removed a constructor-return hack because respecting __new__ return types discarded custom request subclasses. The immutable base annotation is deliberate; MutableHttpRequest is the replacement helper.",
+      "intent_evidence": "Explicit maintainer explanation in issue 3565 and replacement in PR 3642.",
+      "recorded_disagreement_stubs": [
+        "6.1.1"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "http.querydict-mutability",
+          "case": "fresh-get-write",
+          "path": "cases/extras.py",
+          "line": 43,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "runtime_proof": "fresh-request-get",
+          "django_source": "https://github.com/django/django/blob/6.1.1/django/http/request.py",
+          "django": "6.1.1",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.1.1",
+            "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+            "django": "6.1.1"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "HttpRequest.__init__",
+        "WSGIRequest.GET",
+        "ASGIRequest.GET"
+      ],
+      "plugin_pipeline": [
+        "HttpRequest declaration",
+        "django_stubs_ext.MutableHttpRequest"
+      ],
+      "upstream_prs": [
+        3642
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/http/request.py#L62",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/core/handlers/wsgi.py",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/core/handlers/asgi.py",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/django-stubs/http/request.pyi#L40",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/ext/django_stubs_ext/types.py#L10",
+        "https://github.com/typeddjango/django-stubs/issues/3565",
+        "https://github.com/typeddjango/django-stubs/pull/3642",
+        "https://github.com/python/mypy/pull/21441"
+      ]
+    },
+    {
+      "identity": "http.querydict-mutability/fresh-post-write",
+      "family": "requests",
+      "category": "deliberate-policy-or-limit",
+      "cause": "Upstream removed a constructor-return hack because respecting __new__ return types discarded custom request subclasses. The immutable base annotation is deliberate; MutableHttpRequest is the replacement helper.",
+      "intent_evidence": "Explicit maintainer explanation in issue 3565 and replacement in PR 3642.",
+      "recorded_disagreement_stubs": [
+        "6.1.1"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "http.querydict-mutability",
+          "case": "fresh-post-write",
+          "path": "cases/extras.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "runtime_proof": "fresh-request-post",
+          "django_source": "https://github.com/django/django/blob/6.1.1/django/http/request.py",
+          "django": "6.1.1",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.1.1",
+            "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+            "django": "6.1.1"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "HttpRequest.__init__",
+        "WSGIRequest.GET",
+        "ASGIRequest.GET"
+      ],
+      "plugin_pipeline": [
+        "HttpRequest declaration",
+        "django_stubs_ext.MutableHttpRequest"
+      ],
+      "upstream_prs": [
+        3642
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/http/request.py#L62",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/core/handlers/wsgi.py",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/core/handlers/asgi.py",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/django-stubs/http/request.pyi#L40",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/ext/django_stubs_ext/types.py#L10",
+        "https://github.com/typeddjango/django-stubs/issues/3565",
+        "https://github.com/typeddjango/django-stubs/pull/3642",
+        "https://github.com/python/mypy/pull/21441"
+      ]
+    },
+    {
+      "identity": "lookups.creation-defaults/callable-create-default",
+      "family": "valid-callables",
+      "category": "implementation-defect-or-incomplete-validation",
+      "cause": "Defaults validation compares Callable[[], int] itself against a field setter type instead of checking its resolved return type.",
+      "intent_evidence": "Source and supported-version reproductions establish the defect. No exact upstream callable-default issue was found in the searches performed.",
+      "recorded_disagreement_stubs": [
+        "6.0.6",
+        "6.1.1"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-create-default",
+          "path": "cases/lookups.py",
+          "line": 20,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-create-default",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-create-default",
+          "path": "cases/lookups.py",
+          "line": 20,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-create-default",
+          "django": "6.1.1",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.1.1",
+            "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+            "django": "6.1.1"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.get_or_create",
+        "resolve_callables",
+        "QuerySet.create",
+        "QuerySet.update_or_create",
+        "setattr",
+        "Model.save"
+      ],
+      "plugin_pipeline": [
+        "typecheck_queryset_filter",
+        "_typecheck_defaults_kwarg",
+        "helpers.check_types_compatible"
+      ],
+      "upstream_prs": [
+        3326
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1060",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1095",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/utils.py#L28",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/orm_lookups.py#L59",
+        "https://github.com/typeddjango/django-stubs/pull/3326",
+        "https://github.com/typeddjango/django-stubs/issues/1307"
+      ]
+    },
+    {
+      "identity": "lookups.creation-defaults/callable-update-default",
+      "family": "valid-callables",
+      "category": "implementation-defect-or-incomplete-validation",
+      "cause": "Defaults validation compares Callable[[], int] itself against a field setter type instead of checking its resolved return type.",
+      "intent_evidence": "Source and supported-version reproductions establish the defect. No exact upstream callable-default issue was found in the searches performed.",
+      "recorded_disagreement_stubs": [
+        "6.0.6",
+        "6.1.1"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-update-default",
+          "path": "cases/lookups.py",
+          "line": 21,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#update-or-create",
+          "runtime_proof": "callable-update-default",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-update-default",
+          "path": "cases/lookups.py",
+          "line": 21,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update-or-create",
+          "runtime_proof": "callable-update-default",
+          "django": "6.1.1",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.1.1",
+            "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+            "django": "6.1.1"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.get_or_create",
+        "resolve_callables",
+        "QuerySet.create",
+        "QuerySet.update_or_create",
+        "setattr",
+        "Model.save"
+      ],
+      "plugin_pipeline": [
+        "typecheck_queryset_filter",
+        "_typecheck_defaults_kwarg",
+        "helpers.check_types_compatible"
+      ],
+      "upstream_prs": [
+        3326
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1060",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1095",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/utils.py#L28",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/orm_lookups.py#L59",
+        "https://github.com/typeddjango/django-stubs/pull/3326",
+        "https://github.com/typeddjango/django-stubs/issues/1307"
+      ]
+    },
+    {
+      "identity": "lookups.creation-defaults/callable-invalid-result",
+      "family": "invalid-defaults",
+      "category": "historical-feature-gap",
+      "cause": "Older plugin versions do not validate defaults field values. Later hooks validate literal defaults against model create setter types.",
+      "intent_evidence": "Missing validation acknowledged by issue 1307 and added by PRs 3309 and 3326. Nonliteral dictionaries are still deliberately skipped.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-invalid-result",
+          "path": "cases/lookups.py",
+          "line": 23,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-invalid-result",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-invalid-result",
+          "path": "cases/lookups.py",
+          "line": 23,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-invalid-result",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-invalid-result",
+          "path": "cases/lookups.py",
+          "line": 23,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-invalid-result",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.get_or_create",
+        "resolve_callables",
+        "QuerySet.create",
+        "QuerySet.update_or_create",
+        "IntegerField.get_prep_value"
+      ],
+      "plugin_pipeline": [
+        "typecheck_queryset_filter",
+        "_typecheck_defaults_kwarg"
+      ],
+      "upstream_prs": [
+        3309,
+        3326
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1060",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1095",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/orm_lookups.py#L59",
+        "https://github.com/typeddjango/django-stubs/issues/1307",
+        "https://github.com/typeddjango/django-stubs/pull/3309",
+        "https://github.com/typeddjango/django-stubs/pull/3326"
+      ]
+    },
+    {
+      "identity": "lookups.creation-defaults/get-or-create-default",
+      "family": "invalid-defaults",
+      "category": "historical-feature-gap",
+      "cause": "Older plugin versions do not validate defaults field values. Later hooks validate literal defaults against model create setter types.",
+      "intent_evidence": "Missing validation acknowledged by issue 1307 and added by PRs 3309 and 3326. Nonliteral dictionaries are still deliberately skipped.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "get-or-create-default",
+          "path": "cases/lookups.py",
+          "line": 12,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#get-or-create",
+          "runtime_proof": "get-or-create-default",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "get-or-create-default",
+          "path": "cases/lookups.py",
+          "line": 12,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "get-or-create-default",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "get-or-create-default",
+          "path": "cases/lookups.py",
+          "line": 12,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#get-or-create",
+          "runtime_proof": "get-or-create-default",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.get_or_create",
+        "resolve_callables",
+        "QuerySet.create",
+        "QuerySet.update_or_create",
+        "IntegerField.get_prep_value"
+      ],
+      "plugin_pipeline": [
+        "typecheck_queryset_filter",
+        "_typecheck_defaults_kwarg"
+      ],
+      "upstream_prs": [
+        3309,
+        3326
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1060",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1095",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/orm_lookups.py#L59",
+        "https://github.com/typeddjango/django-stubs/issues/1307",
+        "https://github.com/typeddjango/django-stubs/pull/3309",
+        "https://github.com/typeddjango/django-stubs/pull/3326"
+      ]
+    },
+    {
+      "identity": "lookups.creation-defaults/update-or-create-default",
+      "family": "invalid-defaults",
+      "category": "historical-feature-gap",
+      "cause": "Older plugin versions do not validate defaults field values. Later hooks validate literal defaults against model create setter types.",
+      "intent_evidence": "Missing validation acknowledged by issue 1307 and added by PRs 3309 and 3326. Nonliteral dictionaries are still deliberately skipped.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "update-or-create-default",
+          "path": "cases/lookups.py",
+          "line": 13,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#update-or-create",
+          "runtime_proof": "update-or-create-default",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "update-or-create-default",
+          "path": "cases/lookups.py",
+          "line": 13,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#update-or-create",
+          "runtime_proof": "update-or-create-default",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "update-or-create-default",
+          "path": "cases/lookups.py",
+          "line": 13,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#update-or-create",
+          "runtime_proof": "update-or-create-default",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.get_or_create",
+        "resolve_callables",
+        "QuerySet.create",
+        "QuerySet.update_or_create",
+        "IntegerField.get_prep_value"
+      ],
+      "plugin_pipeline": [
+        "typecheck_queryset_filter",
+        "_typecheck_defaults_kwarg"
+      ],
+      "upstream_prs": [
+        3309,
+        3326
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1060",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1095",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/orm_lookups.py#L59",
+        "https://github.com/typeddjango/django-stubs/issues/1307",
+        "https://github.com/typeddjango/django-stubs/pull/3309",
+        "https://github.com/typeddjango/django-stubs/pull/3326"
+      ]
+    },
+    {
+      "identity": "lookups.field-traversal/unknown-related-field",
+      "family": "related-transform",
+      "category": "implementation-defect-or-incomplete-validation",
+      "cause": "The plugin parses the field prefix and checks the final lookup, but does not reject an unknown intermediate transform. The original string RHS masks this defect in newer releases.",
+      "intent_evidence": "Permissive fallback exists in source. No exact issue for this invalid intermediate transform was found; PR 3655 addresses known transform output types, not this failure.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "lookups.field-traversal",
+          "case": "unknown-related-field",
+          "path": "cases/lookups.py",
+          "line": 7,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/",
+          "runtime_proof": "unknown-related-field",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "lookups.field-traversal",
+          "case": "unknown-related-field",
+          "path": "cases/lookups.py",
+          "line": 7,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/",
+          "runtime_proof": "unknown-related-field",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "lookups.field-traversal",
+          "case": "unknown-related-field",
+          "path": "cases/lookups.py",
+          "line": 7,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/",
+          "runtime_proof": "unknown-related-field",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Query.solve_lookup_type",
+        "Query.build_filter",
+        "Query.build_lookup",
+        "Query.try_transform"
+      ],
+      "plugin_pipeline": [
+        "DjangoContext.resolve_lookup_expected_type",
+        "field.get_lookup"
+      ],
+      "upstream_prs": [],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/sql/query.py#L1343",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/sql/query.py#L1414",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/sql/query.py#L1460",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/django/context.py#L538",
+        "https://github.com/typeddjango/django-stubs/pull/3655"
+      ]
+    },
+    {
+      "identity": "lookups.value-validation/integer-in-wrong-container",
+      "family": "in-container",
+      "category": "implementation-defect-or-incomplete-validation",
+      "cause": "Older In declarations and lookup resolution lose the iterable requirement. PR 3314 makes In expect Iterable[field exact type].",
+      "intent_evidence": "Acknowledged lookup typing bug, fixed upstream.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "lookups.value-validation",
+          "case": "integer-in-wrong-container",
+          "path": "cases/lookups.py",
+          "line": 10,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#field-lookups",
+          "runtime_proof": "integer-in-wrong-container",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "integer-in-wrong-container",
+          "path": "cases/lookups.py",
+          "line": 10,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#field-lookups",
+          "runtime_proof": "integer-in-wrong-container",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "integer-in-wrong-container",
+          "path": "cases/lookups.py",
+          "line": 10,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#field-lookups",
+          "runtime_proof": "integer-in-wrong-container",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "In",
+        "FieldGetDbPrepValueIterableMixin.get_prep_lookup"
+      ],
+      "plugin_pipeline": [
+        "DjangoContext.resolve_lookup_expected_type",
+        "In special case"
+      ],
+      "upstream_prs": [
+        3314
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/lookups.py#L284",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/django/context.py#L538",
+        "https://github.com/typeddjango/django-stubs/issues/3313",
+        "https://github.com/typeddjango/django-stubs/pull/3314"
+      ]
+    },
+    {
+      "identity": "lookups.value-validation/string-integer-invalid",
+      "family": "in-string",
+      "category": "deliberate-policy-or-limit",
+      "cause": "Integer exact lookups permit coercible str values and In expects an iterable of them. Plain str satisfies Iterable[str], without proving that every character is numeric.",
+      "intent_evidence": "Explicit upstream test accepts age__in=\"abc\" and explains why. This is a known value-content limitation.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9",
+        "6.0.6",
+        "6.1.1"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "lookups.value-validation",
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 31,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#in",
+          "runtime_proof": "string-integer-invalid",
+          "django_source": "https://github.com/django/django/blob/5.0.14/django/db/models/fields/__init__.py",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 31,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#in",
+          "runtime_proof": "string-integer-invalid",
+          "django_source": "https://github.com/django/django/blob/5.1.15/django/db/models/fields/__init__.py",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 31,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#in",
+          "runtime_proof": "string-integer-invalid",
+          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/fields/__init__.py",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 31,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#in",
+          "runtime_proof": "string-integer-invalid",
+          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/fields/__init__.py",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 31,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#in",
+          "runtime_proof": "string-integer-invalid",
+          "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/fields/__init__.py",
+          "django": "6.1.1",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.1.1",
+            "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+            "django": "6.1.1"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "In",
+        "FieldGetDbPrepValueIterableMixin.get_prep_lookup",
+        "IntegerField.get_prep_value"
+      ],
+      "plugin_pipeline": [
+        "IntegerField._pyi_lookup_exact_type",
+        "DjangoContext.resolve_lookup_expected_type"
+      ],
+      "upstream_prs": [
+        3314
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/lookups.py#L284",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/fields/__init__.py",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/tests/typecheck/managers/querysets/test_filter.yml#L103",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/django-stubs/db/models/fields/__init__.pyi",
+        "https://github.com/typeddjango/django-stubs/pull/3314"
+      ]
+    },
+    {
+      "identity": "managers.custom-queryset-methods/copied-chain-method",
+      "family": "manager",
+      "category": "implementation-defect-or-incomplete-validation",
+      "cause": "An unresolved QuerySet.as_manager type during semantic analysis blocks the generated manager and falls back to Any. A custom AUTH_USER_MODEL participates in the cycle.",
+      "intent_evidence": "Acknowledged upstream defect. A controlled concept backport of PR 2377 removes both assertion failures and the stray manager diagnostic.",
+      "recorded_disagreement_stubs": [
+        "5.0.4"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "managers.custom-queryset-methods",
+          "case": "copied-chain-method",
+          "path": "cases/managers_querysets.py",
+          "line": 23,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/topics/db/managers/",
+          "runtime_proof": "copied-chain-method",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.as_manager",
+        "Manager.from_queryset",
+        "Manager._get_queryset_methods",
+        "manager method forwarding"
+      ],
+      "plugin_pipeline": [
+        "add_as_manager_to_queryset_class",
+        "AddManagers",
+        "UnknownManager fallback"
+      ],
+      "upstream_prs": [
+        2377
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L399",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/manager.py#L83",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/managers.py#L371",
+        "https://github.com/typeddjango/django-stubs/pull/2377",
+        "https://github.com/typeddjango/django-stubs/issues/1788",
+        "https://github.com/typeddjango/django-stubs/pull/1852"
+      ]
+    },
+    {
+      "identity": "managers.custom-queryset-methods/copied-scalar-method",
+      "family": "manager",
+      "category": "implementation-defect-or-incomplete-validation",
+      "cause": "An unresolved QuerySet.as_manager type during semantic analysis blocks the generated manager and falls back to Any. A custom AUTH_USER_MODEL participates in the cycle.",
+      "intent_evidence": "Acknowledged upstream defect. A controlled concept backport of PR 2377 removes both assertion failures and the stray manager diagnostic.",
+      "recorded_disagreement_stubs": [
+        "5.0.4"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "managers.custom-queryset-methods",
+          "case": "copied-scalar-method",
+          "path": "cases/managers_querysets.py",
+          "line": 24,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/topics/db/managers/",
+          "runtime_proof": "copied-scalar-method",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.as_manager",
+        "Manager.from_queryset",
+        "Manager._get_queryset_methods",
+        "manager method forwarding"
+      ],
+      "plugin_pipeline": [
+        "add_as_manager_to_queryset_class",
+        "AddManagers",
+        "UnknownManager fallback"
+      ],
+      "upstream_prs": [
+        2377
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L399",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/manager.py#L83",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/managers.py#L371",
+        "https://github.com/typeddjango/django-stubs/pull/2377",
+        "https://github.com/typeddjango/django-stubs/issues/1788",
+        "https://github.com/typeddjango/django-stubs/pull/1852"
+      ]
+    },
+    {
+      "identity": "models.default-primary-key/default-id",
+      "family": "ids",
+      "category": "deliberate-policy-or-limit",
+      "cause": "Default primary-key getters deliberately remain nonnullable; raw relation ID getters use field-level nullability, including field.null and default rules. The tested relation is nonnullable with no default. Construction and persistence states are not separately represented.",
+      "intent_evidence": "Explicit getter/setter policy in plugin source and tests. PR 634 permits assigning None to AutoField while retaining a nonnullable getter; ergonomic motivation is inferred, not a found maintainer statement.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9",
+        "6.0.6",
+        "6.1.1"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-id",
+          "path": "cases/models_fields.py",
+          "line": 11,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-id",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-id",
+          "path": "cases/models_fields.py",
+          "line": 11,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-id",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-id",
+          "path": "cases/models_fields.py",
+          "line": 11,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-id",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-id",
+          "path": "cases/models_fields.py",
+          "line": 11,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-id",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-id",
+          "path": "cases/models_fields.py",
+          "line": 11,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-id",
+          "django": "6.1.1",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.1.1",
+            "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+            "django": "6.1.1"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Model.__init__",
+        "Field.get_default",
+        "Field._get_default",
+        "Model._get_pk_val",
+        "Model._save_table"
+      ],
+      "plugin_pipeline": [
+        "AddDefaultPrimaryKey",
+        "AddPrimaryKeyAlias",
+        "AddRelatedModelsId",
+        "get_field_nullability"
+      ],
+      "upstream_prs": [
+        634
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/base.py#L502",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/fields/__init__.py#L1066",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/models.py#L274",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/models.py#L317",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/tests/typecheck/models/test_primary_key.yml",
+        "https://github.com/typeddjango/django-stubs/pull/634"
+      ]
+    },
+    {
+      "identity": "models.default-primary-key/default-pk",
+      "family": "ids",
+      "category": "deliberate-policy-or-limit",
+      "cause": "Default primary-key getters deliberately remain nonnullable; raw relation ID getters use field-level nullability, including field.null and default rules. The tested relation is nonnullable with no default. Construction and persistence states are not separately represented.",
+      "intent_evidence": "Explicit getter/setter policy in plugin source and tests. PR 634 permits assigning None to AutoField while retaining a nonnullable getter; ergonomic motivation is inferred, not a found maintainer statement.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9",
+        "6.0.6",
+        "6.1.1"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-pk",
+          "path": "cases/models_fields.py",
+          "line": 12,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-pk",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-pk",
+          "path": "cases/models_fields.py",
+          "line": 12,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-pk",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-pk",
+          "path": "cases/models_fields.py",
+          "line": 12,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-pk",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-pk",
+          "path": "cases/models_fields.py",
+          "line": 12,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-pk",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-pk",
+          "path": "cases/models_fields.py",
+          "line": 12,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-pk",
+          "django": "6.1.1",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.1.1",
+            "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+            "django": "6.1.1"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Model.__init__",
+        "Field.get_default",
+        "Field._get_default",
+        "Model._get_pk_val",
+        "Model._save_table"
+      ],
+      "plugin_pipeline": [
+        "AddDefaultPrimaryKey",
+        "AddPrimaryKeyAlias",
+        "AddRelatedModelsId",
+        "get_field_nullability"
+      ],
+      "upstream_prs": [
+        634
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/base.py#L502",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/fields/__init__.py#L1066",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/models.py#L274",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/models.py#L317",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/tests/typecheck/models/test_primary_key.yml",
+        "https://github.com/typeddjango/django-stubs/pull/634"
+      ]
+    },
+    {
+      "identity": "relations.foreign-key-one-to-one/foreign-key-id",
+      "family": "ids",
+      "category": "deliberate-policy-or-limit",
+      "cause": "Default primary-key getters deliberately remain nonnullable; raw relation ID getters use field-level nullability, including field.null and default rules. The tested relation is nonnullable with no default. Construction and persistence states are not separately represented.",
+      "intent_evidence": "Explicit getter/setter policy in plugin source and tests. PR 634 permits assigning None to AutoField while retaining a nonnullable getter; ergonomic motivation is inferred, not a found maintainer statement.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9",
+        "6.0.6",
+        "6.1.1"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "relations.foreign-key-one-to-one",
+          "case": "foreign-key-id",
+          "path": "cases/relations.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/instances/#creating-objects",
+          "runtime_proof": "unsaved-relation-id",
+          "django_source": "https://github.com/django/django/blob/5.0.14/django/db/models/base.py",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "relations.foreign-key-one-to-one",
+          "case": "foreign-key-id",
+          "path": "cases/relations.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "unsaved-relation-id",
+          "django_source": "https://github.com/django/django/blob/5.1.15/django/db/models/base.py",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "relations.foreign-key-one-to-one",
+          "case": "foreign-key-id",
+          "path": "cases/relations.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
+          "runtime_proof": "unsaved-relation-id",
+          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "relations.foreign-key-one-to-one",
+          "case": "foreign-key-id",
+          "path": "cases/relations.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
+          "runtime_proof": "unsaved-relation-id",
+          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py",
+          "django": "6.0.8",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.0.6",
+            "django_stubs_commit": "c1d968a356955f9598da6536115ccae4ed802b44",
+            "django": "6.0.8"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        },
+        {
+          "feature": "relations.foreign-key-one-to-one",
+          "case": "foreign-key-id",
+          "path": "cases/relations.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "unsaved-relation-id",
+          "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py",
+          "django": "6.1.1",
+          "reference_environment": {
+            "checker": "mypy 2.3.1",
+            "django_stubs": "6.1.1",
+            "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+            "django": "6.1.1"
+          },
+          "tested_python_versions": [
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Model.__init__",
+        "Field.get_default",
+        "Field._get_default",
+        "Model._get_pk_val",
+        "Model._save_table"
+      ],
+      "plugin_pipeline": [
+        "AddDefaultPrimaryKey",
+        "AddPrimaryKeyAlias",
+        "AddRelatedModelsId",
+        "get_field_nullability"
+      ],
+      "upstream_prs": [
+        634
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/base.py#L502",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/fields/__init__.py#L1066",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/models.py#L274",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/models.py#L317",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/tests/typecheck/models/test_primary_key.yml",
+        "https://github.com/typeddjango/django-stubs/pull/634"
+      ]
+    },
+    {
+      "identity": "models.save-update-fields/save-invalid-field",
+      "family": "save",
+      "category": "historical-feature-gap",
+      "cause": "Old stubs accept Iterable[str] without model-field validation. The later save hook checks literal update_fields collections.",
+      "intent_evidence": "Historical missing validation, added by PR 3444. Dynamic collections remain deliberately outside the literal check.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "models.save-update-fields",
+          "case": "save-invalid-field",
+          "path": "cases/extras.py",
+          "line": 26,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/instances/#specifying-which-fields-to-save",
+          "runtime_proof": "save-invalid-field",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "models.save-update-fields",
+          "case": "save-invalid-field",
+          "path": "cases/extras.py",
+          "line": 26,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/instances/#specifying-which-fields-to-save",
+          "runtime_proof": "save-invalid-field",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "models.save-update-fields",
+          "case": "save-invalid-field",
+          "path": "cases/extras.py",
+          "line": 26,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#specifying-which-fields-to-save",
+          "runtime_proof": "save-invalid-field",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "Model.save",
+        "update_fields validation"
+      ],
+      "plugin_pipeline": [
+        "validate_save_update_fields"
+      ],
+      "upstream_prs": [
+        3444
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/base.py#L841",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/save.py",
+        "https://github.com/typeddjango/django-stubs/pull/3444"
+      ]
+    },
+    {
+      "identity": "querysets.bulk-operations/bulk-update-invalid-field",
+      "family": "bulk",
+      "category": "historical-feature-gap",
+      "cause": "Old bulk_update declarations do not validate model-specific field names. The later plugin hook mirrors Django field checks without executing an update.",
+      "intent_evidence": "Historical missing validation, added by PR 2808.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "querysets.bulk-operations",
+          "case": "bulk-update-invalid-field",
+          "path": "cases/managers_querysets.py",
+          "line": 55,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#bulk-update",
+          "runtime_proof": "bulk-update-invalid-field",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "querysets.bulk-operations",
+          "case": "bulk-update-invalid-field",
+          "path": "cases/managers_querysets.py",
+          "line": 55,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-update",
+          "runtime_proof": "bulk-update-invalid-field",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.bulk_update",
+        "Options.get_field"
+      ],
+      "plugin_pipeline": [
+        "validate_bulk_update"
+      ],
+      "upstream_prs": [
+        2808
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L991",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/querysets.py#L1100",
+        "https://github.com/typeddjango/django-stubs/pull/2808"
+      ]
+    },
+    {
+      "identity": "querysets.ordering-field-validation/order-by-invalid",
+      "family": "ordering",
+      "category": "historical-feature-gap",
+      "cause": "Old order_by accepts strings without resolving fields. The later hook validates literal ordering paths.",
+      "intent_evidence": "Historical missing validation, added by PR 3158.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "querysets.ordering-field-validation",
+          "case": "order-by-invalid",
+          "path": "cases/managers_querysets.py",
+          "line": 52,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#order-by",
+          "runtime_proof": "order-by-invalid",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "querysets.ordering-field-validation",
+          "case": "order-by-invalid",
+          "path": "cases/managers_querysets.py",
+          "line": 52,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#order-by",
+          "runtime_proof": "order-by-invalid",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "querysets.ordering-field-validation",
+          "case": "order-by-invalid",
+          "path": "cases/managers_querysets.py",
+          "line": 52,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#order-by",
+          "runtime_proof": "order-by-invalid",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.order_by",
+        "Query.add_ordering",
+        "Query.names_to_path"
+      ],
+      "plugin_pipeline": [
+        "validate_order_by"
+      ],
+      "upstream_prs": [
+        3158
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1934",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/sql/query.py#L2326",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/querysets.py#L1185",
+        "https://github.com/typeddjango/django-stubs/pull/3158"
+      ]
+    },
+    {
+      "identity": "querysets.ordering-field-validation/only-invalid",
+      "family": "only",
+      "category": "historical-feature-gap",
+      "cause": "Old only accepts strings without field resolution. The later hook forces get_select_mask to validate selected fields.",
+      "intent_evidence": "Historical missing validation, added by PR 3165.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3",
+        "5.2.9"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "querysets.ordering-field-validation",
+          "case": "only-invalid",
+          "path": "cases/managers_querysets.py",
+          "line": 53,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#only",
+          "runtime_proof": "only-invalid",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "querysets.ordering-field-validation",
+          "case": "only-invalid",
+          "path": "cases/managers_querysets.py",
+          "line": 53,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#only",
+          "runtime_proof": "only-invalid",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        },
+        {
+          "feature": "querysets.ordering-field-validation",
+          "case": "only-invalid",
+          "path": "cases/managers_querysets.py",
+          "line": 53,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "mypy-missed-error",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#only",
+          "runtime_proof": "only-invalid",
+          "django": "5.2.17",
+          "reference_environment": {
+            "checker": "mypy 1.19.1",
+            "django_stubs": "5.2.9",
+            "django_stubs_commit": "2825810e143a0377e3261fef658e1a59f7e0cf90",
+            "django": "5.2.17"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.14"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "QuerySet.only",
+        "Query.add_immediate_loading",
+        "Query.get_select_mask",
+        "Query._get_only_select_mask",
+        "Options.get_field"
+      ],
+      "plugin_pipeline": [
+        "validate_defer_only",
+        "_validate_defer_only_fields"
+      ],
+      "upstream_prs": [
+        3165
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L1998",
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/sql/query.py#L860",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/querysets.py#L1206",
+        "https://github.com/typeddjango/django-stubs/pull/3165"
+      ]
+    },
+    {
+      "identity": "querysets.prefetch-annotations/to-attr-list",
+      "family": "prefetch",
+      "category": "historical-feature-gap",
+      "cause": "Old plugin releases lack inference for attributes created by Prefetch(to_attr=...). Later releases add list-valued annotations and generic Prefetch inference.",
+      "intent_evidence": "Historical missing feature, requested in issue 795 and added by PRs 2779 and 2786.",
+      "recorded_disagreement_stubs": [
+        "5.0.4",
+        "5.1.3"
+      ],
+      "snapshot_observations": [
+        {
+          "feature": "querysets.prefetch-annotations",
+          "case": "to-attr-list",
+          "path": "cases/managers_querysets.py",
+          "line": 49,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#prefetch-related",
+          "runtime_proof": "prefetch-list",
+          "django": "5.0.14",
+          "reference_environment": {
+            "checker": "mypy 1.11.2",
+            "django_stubs": "5.0.4",
+            "django_stubs_commit": "d60e31ed0ac4e4115f9ef20041521c201391d592",
+            "django": "5.0.14"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12"
+          ]
+        },
+        {
+          "feature": "querysets.prefetch-annotations",
+          "case": "to-attr-list",
+          "path": "cases/managers_querysets.py",
+          "line": 49,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "mypy-false-positive",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#prefetch-related",
+          "runtime_proof": "prefetch-list",
+          "django": "5.1.15",
+          "reference_environment": {
+            "checker": "mypy 1.15.0",
+            "django_stubs": "5.1.3",
+            "django_stubs_commit": "7e50d7bdb16372ecb4a5d913748eba101082120b",
+            "django": "5.1.15"
+          },
+          "tested_python_versions": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ]
+        }
+      ],
+      "django_pipeline": [
+        "prefetch_related_objects",
+        "prefetch_one_level",
+        "setattr(obj, to_attr, vals)"
+      ],
+      "plugin_pipeline": [
+        "specialize_prefetch_type",
+        "extract_prefetch_related_annotations"
+      ],
+      "upstream_prs": [
+        2779,
+        2786
+      ],
+      "references": [
+        "https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/query.py#L2874",
+        "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/querysets.py#L904",
+        "https://github.com/typeddjango/django-stubs/issues/795",
+        "https://github.com/typeddjango/django-stubs/pull/2779",
+        "https://github.com/typeddjango/django-stubs/pull/2786"
+      ]
+    }
+  ],
+  "upstream_pr_history": {
+    "634": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/634",
+      "title": "Should be possible to set AutoField (e.g. id) to None",
+      "merge_commit": "29e971ed9d9ddce70331ceb3acfc5c903edbe183",
+      "merged_at": "2021-06-28T00:23:54Z",
+      "included_in_tags": {
+        "5.0.4": true,
+        "5.1.3": true,
+        "5.2.9": true,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "2377": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/2377",
+      "title": "Break what apparently is a cycle involving custom User model and `QuerySet.as_manager()`",
+      "merge_commit": "0fb3bfd952cca74c2b96e94afd6646e37f21e8f6",
+      "merged_at": "2024-09-21T05:08:54Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": true,
+        "5.2.9": true,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "2779": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/2779",
+      "title": "Initial support for `to_attr` inference in `Prefetch` calls",
+      "merge_commit": "f90729e519d70e4f5ccafa77ae49d972692be9c0",
+      "merged_at": "2025-08-23T20:30:57Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": true,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "2786": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/2786",
+      "title": "Declare `Prefetch` as generic and do specialization in the plugin",
+      "merge_commit": "f3427b11699aa68d0a0c37374004ec276b3bd286",
+      "merged_at": "2025-08-27T18:19:02Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": true,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "2808": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/2808",
+      "title": "Validation of the `fields` argument to `bulk_update` ",
+      "merge_commit": "736e30f591d59d044248c15097bfd999ae659985",
+      "merged_at": "2025-10-05T13:23:11Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": true,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "3158": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/3158",
+      "title": "Validate `earliest` / `latest` / `orderby`",
+      "merge_commit": "6e0a6f494cb41dac64ea2d3b33c8a8c7984d0125",
+      "merged_at": "2026-03-06T11:07:08Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": false,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "3165": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/3165",
+      "title": "Validate `only` / `defer`",
+      "merge_commit": "c9570c54172c71814b1d5c2ef89ed67d40c6a552",
+      "merged_at": "2026-03-08T06:32:19Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": false,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "3309": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/3309",
+      "title": "Type-check (a)get_or_create and (a)update_or_create kwargs",
+      "merge_commit": "6dd79432cc6979519f8006bc7e7384d6eedcdb7e",
+      "merged_at": "2026-04-15T12:57:36Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": false,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "3314": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/3314",
+      "title": "Fix type checking of `__in` lookup",
+      "merge_commit": "d97f08b3c2b9c963232839a1b906d702700b21ea",
+      "merged_at": "2026-05-12T11:49:39Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": false,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "3326": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/3326",
+      "title": "Type-check defaults and create_defaults dict literals",
+      "merge_commit": "94a4b09b8778b43f67969bf53bdba6e8af154f3a",
+      "merged_at": "2026-04-29T07:17:39Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": false,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "3444": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/3444",
+      "title": "Typecheck save()/asave() update_fields against model fields",
+      "merge_commit": "c78e1060c24c6f36ec128e6264cab523b7954c52",
+      "merged_at": "2026-06-23T08:07:02Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": false,
+        "6.0.6": true,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "3511": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/3511",
+      "title": "Add plugin support for `apps.get_model()`",
+      "merge_commit": "c91c838b76f2b96bd4ca317c11977131a68efeac",
+      "merged_at": "2026-07-24T09:26:53Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": false,
+        "6.0.6": false,
+        "6.0.9": true,
+        "6.1.1": true
+      }
+    },
+    "3642": {
+      "url": "https://github.com/typeddjango/django-stubs/pull/3642",
+      "title": "Add a mutable HttpRequest typing helper",
+      "merge_commit": "5ea1b9977bec281488f0deabd39bfb0f7f2f56a4",
+      "merged_at": "2026-09-09T06:27:48Z",
+      "included_in_tags": {
+        "5.0.4": false,
+        "5.1.3": false,
+        "5.2.9": false,
+        "6.0.6": false,
+        "6.0.9": false,
+        "6.1.1": true
+      }
+    }
+  },
+  "full_corpus_reproductions": [
+    {
+      "stubs": "5.0.4",
+      "django": "5.0.14",
+      "mypy": "mypy 1.11.2",
+      "python": "3.12",
+      "targets": [
+        "conformance_project",
+        "conformance_models",
+        "cases"
+      ],
+      "exit": 1,
+      "diagnostics": "conformance_models/models.py:100:5: error: Could not resolve manager type for \"conformance_models.models.Publication.objects\"  [django-manager-missing]\ncases/settings_metadata.py:14:1: error: Book has no field named 'missing'  [misc]\ncases/relations.py:7:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/relations.py:20:1: error: Cannot resolve keyword 'unknown_book' into field. Choices are: age, authored_book, id, name  [misc]\ncases/models_fields.py:11:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:12:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:16:16: error: Incompatible types in assignment (expression has type \"list[str]\", variable has type \"str | int | Combinable\")  [assignment]\ncases/models_fields.py:19:1: error: Incompatible type for \"title\" of \"Book\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:20:1: error: Unexpected attribute \"unknown_field\" for model \"Book\"  [misc]\ncases/models_fields.py:23:1: error: Incompatible type for \"title\" of \"Article\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:32:15: error: Incompatible types in assignment (expression has type \"int\", variable has type \"str\")  [assignment]\ncases/managers_querysets.py:23:1: error: Expression is of type \"Any\", not \"PublishedQuerySet\"  [assert-type]\ncases/managers_querysets.py:24:1: error: Expression is of type \"Any\", not \"int\"  [assert-type]\ncases/managers_querysets.py:49:1: error: Expression is of type \"Any\", not \"list[Tag]\"  [assert-type]\ncases/managers_querysets.py:49:13: error: \"Book\" has no attribute \"loaded_tags\"  [attr-defined]\ncases/managers_querysets.py:56:27: error: List item 0 has incompatible type \"Tag\"; expected \"Book\"  [list-item]\ncases/lookups.py:9:1: error: Incompatible type for lookup 'age': (got \"Book\", expected \"str | int | None\")  [misc]\ncases/lookups.py:15:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:16:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/apps.py:6:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:7:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:8:1: error: Expression is of type \"type[Any]\", not \"type[User]\"  [assert-type]\ncases/extras.py:39:5: error: This QueryDict is immutable.  [misc]\nFound 23 errors in 8 files (checked 13 source files)\n",
+      "verified_disagreement_identities": [
+        "apps.model-registry/case-insensitive-reference",
+        "apps.model-registry/keyword-reference",
+        "apps.model-registry/qualified-reference",
+        "apps.model-registry/wrong-model",
+        "lookups.creation-defaults/callable-invalid-result",
+        "lookups.creation-defaults/get-or-create-default",
+        "lookups.creation-defaults/update-or-create-default",
+        "lookups.field-traversal/unknown-related-field",
+        "lookups.value-validation/integer-in-wrong-container",
+        "lookups.value-validation/string-integer-invalid",
+        "managers.custom-queryset-methods/copied-chain-method",
+        "managers.custom-queryset-methods/copied-scalar-method",
+        "models.default-primary-key/default-id",
+        "models.default-primary-key/default-pk",
+        "models.save-update-fields/save-invalid-field",
+        "querysets.bulk-operations/bulk-update-invalid-field",
+        "querysets.ordering-field-validation/only-invalid",
+        "querysets.ordering-field-validation/order-by-invalid",
+        "querysets.prefetch-annotations/to-attr-list",
+        "relations.foreign-key-one-to-one/foreign-key-id"
+      ],
+      "command": "<reference-environment>/bin/mypy --config-file mypy.ini --cache-dir <isolated-cache> --no-error-summary conformance_project conformance_models cases",
+      "cwd": "<django-ty-root>/conformance"
+    },
+    {
+      "stubs": "5.1.3",
+      "django": "5.1.15",
+      "mypy": "mypy 1.15.0",
+      "python": "3.12",
+      "targets": [
+        "conformance_project",
+        "conformance_models",
+        "cases"
+      ],
+      "exit": 1,
+      "diagnostics": "cases/settings_metadata.py:14:1: error: Book has no field named 'missing'  [misc]\ncases/relations.py:7:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/relations.py:20:1: error: Cannot resolve keyword 'unknown_book' into field. Choices are: age, authored_book, id, name  [misc]\ncases/models_fields.py:11:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:12:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:16:16: error: Incompatible types in assignment (expression has type \"list[str]\", variable has type \"str | int | Combinable\")  [assignment]\ncases/models_fields.py:19:1: error: Incompatible type for \"title\" of \"Book\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:20:1: error: Unexpected attribute \"unknown_field\" for model \"Book\"  [misc]\ncases/models_fields.py:23:1: error: Incompatible type for \"title\" of \"Article\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:32:15: error: Incompatible types in assignment (expression has type \"int\", variable has type \"str\")  [assignment]\ncases/managers_querysets.py:49:1: error: Expression is of type \"Any\", not \"list[Tag]\"  [assert-type]\ncases/managers_querysets.py:49:13: error: \"Book\" has no attribute \"loaded_tags\"  [attr-defined]\ncases/managers_querysets.py:56:27: error: List item 0 has incompatible type \"Tag\"; expected \"Book\"  [list-item]\ncases/lookups.py:9:1: error: Incompatible type for lookup 'age': (got \"Book\", expected \"str | int | None\")  [misc]\ncases/lookups.py:15:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:16:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/apps.py:6:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:7:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:8:1: error: Expression is of type \"type[Any]\", not \"type[User]\"  [assert-type]\ncases/extras.py:39:5: error: This QueryDict is immutable.  [misc]\nFound 20 errors in 7 files (checked 13 source files)\n",
+      "verified_disagreement_identities": [
+        "apps.model-registry/case-insensitive-reference",
+        "apps.model-registry/keyword-reference",
+        "apps.model-registry/qualified-reference",
+        "apps.model-registry/wrong-model",
+        "lookups.creation-defaults/callable-invalid-result",
+        "lookups.creation-defaults/get-or-create-default",
+        "lookups.creation-defaults/update-or-create-default",
+        "lookups.field-traversal/unknown-related-field",
+        "lookups.value-validation/integer-in-wrong-container",
+        "lookups.value-validation/string-integer-invalid",
+        "models.default-primary-key/default-id",
+        "models.default-primary-key/default-pk",
+        "models.save-update-fields/save-invalid-field",
+        "querysets.bulk-operations/bulk-update-invalid-field",
+        "querysets.ordering-field-validation/only-invalid",
+        "querysets.ordering-field-validation/order-by-invalid",
+        "querysets.prefetch-annotations/to-attr-list",
+        "relations.foreign-key-one-to-one/foreign-key-id"
+      ],
+      "command": "<reference-environment>/bin/mypy --config-file mypy.ini --cache-dir <isolated-cache> --no-error-summary conformance_project conformance_models cases",
+      "cwd": "<django-ty-root>/conformance"
+    },
+    {
+      "stubs": "5.2.9",
+      "django": "5.2.17",
+      "mypy": "mypy 1.19.1",
+      "python": "3.12",
+      "targets": [
+        "conformance_project",
+        "conformance_models",
+        "cases"
+      ],
+      "exit": 1,
+      "diagnostics": "cases/settings_metadata.py:14:1: error: Book has no field named 'missing'  [misc]\ncases/relations.py:7:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/relations.py:20:1: error: Cannot resolve keyword 'unknown_book' into field. Choices are: age, authored_book, id, name  [misc]\ncases/models_fields.py:11:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:12:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:16:16: error: Incompatible types in assignment (expression has type \"list[str]\", variable has type \"str | int | Combinable\")  [assignment]\ncases/models_fields.py:19:1: error: Incompatible type for \"title\" of \"Book\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:20:1: error: Unexpected attribute \"unknown_field\" for model \"Book\"  [misc]\ncases/models_fields.py:23:1: error: Incompatible type for \"title\" of \"Article\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:32:15: error: Incompatible types in assignment (expression has type \"int\", variable has type \"str\")  [assignment]\ncases/managers_querysets.py:55:1: error: Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:56:27: error: List item 0 has incompatible type \"Tag\"; expected \"Book\"  [list-item]\ncases/lookups.py:9:1: error: Incompatible type for lookup 'age': (got \"Book\", expected \"str | int | None\")  [misc]\ncases/lookups.py:15:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:16:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/apps.py:6:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:7:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:8:1: error: Expression is of type \"type[Any]\", not \"type[User]\"  [assert-type]\ncases/extras.py:39:5: error: This QueryDict is immutable.  [misc]\nFound 19 errors in 7 files (checked 13 source files)\n",
+      "verified_disagreement_identities": [
+        "apps.model-registry/case-insensitive-reference",
+        "apps.model-registry/keyword-reference",
+        "apps.model-registry/qualified-reference",
+        "apps.model-registry/wrong-model",
+        "lookups.creation-defaults/callable-invalid-result",
+        "lookups.creation-defaults/get-or-create-default",
+        "lookups.creation-defaults/update-or-create-default",
+        "lookups.field-traversal/unknown-related-field",
+        "lookups.value-validation/integer-in-wrong-container",
+        "lookups.value-validation/string-integer-invalid",
+        "models.default-primary-key/default-id",
+        "models.default-primary-key/default-pk",
+        "models.save-update-fields/save-invalid-field",
+        "querysets.ordering-field-validation/only-invalid",
+        "querysets.ordering-field-validation/order-by-invalid",
+        "relations.foreign-key-one-to-one/foreign-key-id"
+      ],
+      "command": "<reference-environment>/bin/mypy --config-file mypy.ini --cache-dir <isolated-cache> --no-error-summary conformance_project conformance_models cases",
+      "cwd": "<django-ty-root>/conformance"
+    },
+    {
+      "stubs": "6.0.6",
+      "django": "6.0.8",
+      "mypy": "mypy 2.3.1",
+      "python": "3.12",
+      "targets": [
+        "conformance_project",
+        "conformance_models",
+        "cases"
+      ],
+      "exit": 1,
+      "diagnostics": "cases/settings_metadata.py:14:1: error: Book has no field named 'missing'  [misc]\ncases/relations.py:7:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/relations.py:20:1: error: Cannot resolve keyword 'unknown_book' into field. Choices are: age, authored_book, id, name  [misc]\ncases/models_fields.py:11:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:12:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:16:16: error: Incompatible types in assignment (expression has type \"list[str]\", variable has type \"str | int | Combinable\")  [assignment]\ncases/models_fields.py:19:1: error: Incompatible type for \"title\" of \"Book\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:20:1: error: Unexpected attribute \"unknown_field\" for model \"Book\"  [misc]\ncases/models_fields.py:23:1: error: Incompatible type for \"title\" of \"Article\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:32:15: error: Incompatible types in assignment (expression has type \"int\", variable has type \"str\")  [assignment]\ncases/managers_querysets.py:52:1: error: Cannot resolve keyword 'missing' into field. Choices are: author, author_id, code, editor, editor_id, id, pages, published_at, status, tags, title  [misc]\ncases/managers_querysets.py:53:1: error: Invalid field in \"only()\": Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:55:1: error: Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:56:27: error: List item 0 has incompatible type \"Tag\"; expected \"Book\"  [list-item]\ncases/lookups.py:7:1: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\ncases/lookups.py:9:1: error: Incompatible type for lookup 'age': (got \"Book\", expected \"str | int | None\")  [misc]\ncases/lookups.py:10:1: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\ncases/lookups.py:12:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:13:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:15:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:16:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:20:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:21:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:23:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/apps.py:6:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:7:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:8:1: error: Expression is of type \"type[Any]\", not \"type[User]\"  [assert-type]\ncases/extras.py:26:1: error: Book has no field named 'missing'  [misc]\ncases/extras.py:39:5: error: This QueryDict is immutable.  [misc]\nFound 29 errors in 7 files (checked 13 source files)\n",
+      "verified_disagreement_identities": [
+        "apps.model-registry/case-insensitive-reference",
+        "apps.model-registry/keyword-reference",
+        "apps.model-registry/qualified-reference",
+        "apps.model-registry/wrong-model",
+        "lookups.creation-defaults/callable-create-default",
+        "lookups.creation-defaults/callable-update-default",
+        "lookups.value-validation/string-integer-invalid",
+        "models.default-primary-key/default-id",
+        "models.default-primary-key/default-pk",
+        "relations.foreign-key-one-to-one/foreign-key-id"
+      ],
+      "command": "<reference-environment>/bin/mypy --config-file mypy.ini --cache-dir <isolated-cache> --no-error-summary conformance_project conformance_models cases",
+      "cwd": "<django-ty-root>/conformance"
+    },
+    {
+      "stubs": "6.1.1",
+      "django": "6.1.1",
+      "mypy": "mypy 2.3.1",
+      "python": "3.12",
+      "targets": [
+        "conformance_project",
+        "conformance_models",
+        "cases"
+      ],
+      "exit": 1,
+      "diagnostics": "cases/settings_metadata.py:14:1: error: Book has no field named 'missing'  [misc]\ncases/relations.py:7:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/relations.py:20:1: error: Cannot resolve keyword 'unknown_book' into field. Choices are: age, authored_book, id, name  [misc]\ncases/models_fields.py:11:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:12:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:16:16: error: Incompatible types in assignment (expression has type \"list[str]\", variable has type \"str | int | Combinable\")  [assignment]\ncases/models_fields.py:19:1: error: Incompatible type for \"title\" of \"Book\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:20:1: error: Unexpected attribute \"unknown_field\" for model \"Book\"  [misc]\ncases/models_fields.py:23:1: error: Incompatible type for \"title\" of \"Article\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:32:15: error: Incompatible types in assignment (expression has type \"int\", variable has type \"str\")  [assignment]\ncases/managers_querysets.py:52:1: error: Cannot resolve keyword 'missing' into field. Choices are: author, author_id, code, editor, editor_id, id, pages, published_at, status, tags, title  [misc]\ncases/managers_querysets.py:53:1: error: Invalid field in \"only()\": Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:55:1: error: Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:56:27: error: List item 0 has incompatible type \"Tag\"; expected \"Book\"  [list-item]\ncases/lookups.py:7:1: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\ncases/lookups.py:9:1: error: Incompatible type for lookup 'age': (got \"Book\", expected \"str | int | None\")  [misc]\ncases/lookups.py:10:1: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\ncases/lookups.py:12:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:13:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:15:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:16:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:20:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:21:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:23:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/apps.py:9:21: error: Incompatible types in assignment (expression has type \"type[Book]\", variable has type \"type[User]\")  [assignment]\ncases/extras.py:26:1: error: Book has no field named 'missing'  [misc]\ncases/extras.py:39:5: error: This QueryDict is immutable.  [misc]\ncases/extras.py:43:5: error: This QueryDict is immutable.  [misc]\ncases/extras.py:47:5: error: This QueryDict is immutable.  [misc]\nFound 29 errors in 7 files (checked 13 source files)\n",
+      "verified_disagreement_identities": [
+        "http.querydict-mutability/fresh-get-write",
+        "http.querydict-mutability/fresh-post-write",
+        "lookups.creation-defaults/callable-create-default",
+        "lookups.creation-defaults/callable-update-default",
+        "lookups.value-validation/string-integer-invalid",
+        "models.default-primary-key/default-id",
+        "models.default-primary-key/default-pk",
+        "relations.foreign-key-one-to-one/foreign-key-id"
+      ],
+      "command": "<reference-environment>/bin/mypy --config-file mypy.ini --cache-dir <isolated-cache> --no-error-summary conformance_project conformance_models cases",
+      "cwd": "<django-ty-root>/conformance"
+    }
+  ],
+  "focused_reproductions": {
+    "isolated-5.0.4.log": "conformance_models/models.py:100:5: error: Could not resolve manager type for \"conformance_models.models.Publication.objects\"  [django-manager-missing]\n<research-root>/repros/requests.py:14:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:16:13: note: Revealed type is \"django.http.request._MutableHttpRequest\"\n<research-root>/repros/requests.py:17:13: note: Revealed type is \"django.http.request.QueryDict\"\n<research-root>/repros/requests.py:18:13: note: Revealed type is \"requests.CustomRequest\"\n<research-root>/repros/lookups.py:10:5: error: Cannot resolve keyword 'missing' into field. Choices are: children, id, name, parent, parent_id  [misc]\n",
+    "isolated-5.1.3.log": "<research-root>/repros/requests.py:14:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:16:13: note: Revealed type is \"django.http.request._MutableHttpRequest\"\n<research-root>/repros/requests.py:17:13: note: Revealed type is \"django.http.request.QueryDict\"\n<research-root>/repros/requests.py:18:13: note: Revealed type is \"requests.CustomRequest\"\n<research-root>/repros/lookups.py:10:5: error: Cannot resolve keyword 'missing' into field. Choices are: children, id, name, parent, parent_id  [misc]\n",
+    "isolated-5.2.9.log": "<research-root>/repros/requests.py:14:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:16:13: note: Revealed type is \"django.http.request._MutableHttpRequest\"\n<research-root>/repros/requests.py:17:13: note: Revealed type is \"django.http.request.QueryDict\"\n<research-root>/repros/requests.py:18:13: note: Revealed type is \"requests.CustomRequest\"\n<research-root>/repros/lookups.py:10:5: error: Cannot resolve keyword 'missing' into field. Choices are: children, id, name, parent, parent_id  [misc]\n",
+    "isolated-6.0.6.log": "<research-root>/repros/requests.py:14:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:16:13: note: Revealed type is \"django.http.request._MutableHttpRequest\"\n<research-root>/repros/requests.py:17:13: note: Revealed type is \"django.http.request.QueryDict\"\n<research-root>/repros/requests.py:18:13: note: Revealed type is \"django.http.request._MutableHttpRequest\"\n<research-root>/repros/lookups.py:7:5: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\n<research-root>/repros/lookups.py:10:5: error: Cannot resolve keyword 'missing' into field. Choices are: children, id, name, parent, parent_id  [misc]\n<research-root>/repros/lookups.py:13:5: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\n<research-root>/repros/defaults.py:5:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n<research-root>/repros/defaults.py:9:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n",
+    "isolated-6.1.1.log": "<research-root>/repros/requests.py:8:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:11:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:14:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:16:13: note: Revealed type is \"django.http.request.HttpRequest\"\n<research-root>/repros/requests.py:17:13: note: Revealed type is \"django.http.request._ImmutableQueryDict\"\n<research-root>/repros/requests.py:18:13: note: Revealed type is \"requests.CustomRequest\"\n<research-root>/repros/lookups.py:7:5: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\n<research-root>/repros/lookups.py:10:5: error: Cannot resolve keyword 'missing' into field. Choices are: children, id, name, parent, parent_id  [misc]\n<research-root>/repros/lookups.py:13:5: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\n<research-root>/repros/defaults.py:5:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n<research-root>/repros/defaults.py:9:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n"
+  },
+  "supported_controls": {
+    "control-5.2-current.log": "<research-root>/repros/defaults.py:5:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n<research-root>/repros/defaults.py:9:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n<research-root>/repros/lookups.py:7:5: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\n<research-root>/repros/lookups.py:10:5: error: Cannot resolve keyword 'missing' into field. Choices are: children, id, name, parent, parent_id  [misc]\n<research-root>/repros/lookups.py:13:5: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\n<research-root>/repros/requests.py:8:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:11:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:14:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:16:13: note: Revealed type is \"django.http.request.HttpRequest\"\n<research-root>/repros/requests.py:17:13: note: Revealed type is \"django.http.request._ImmutableQueryDict\"\n<research-root>/repros/requests.py:18:13: note: Revealed type is \"requests.CustomRequest\"\n<research-root>/repros/requests.py:20:13: note: Revealed type is \"str\"\n",
+    "control-6.0.6-supported.log": "<research-root>/repros/defaults.py:5:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n<research-root>/repros/defaults.py:9:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n<research-root>/repros/lookups.py:7:5: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\n<research-root>/repros/lookups.py:10:5: error: Cannot resolve keyword 'missing' into field. Choices are: children, id, name, parent, parent_id  [misc]\n<research-root>/repros/lookups.py:13:5: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\n<research-root>/repros/requests.py:14:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:16:13: note: Revealed type is \"django.http.request._MutableHttpRequest\"\n<research-root>/repros/requests.py:17:13: note: Revealed type is \"django.http.request.QueryDict\"\n<research-root>/repros/requests.py:18:13: note: Revealed type is \"requests.CustomRequest\"\n<research-root>/repros/requests.py:20:13: note: Revealed type is \"str\"\n",
+    "control-6.0.9-current.log": "<research-root>/repros/defaults.py:5:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n<research-root>/repros/defaults.py:9:5: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\n<research-root>/repros/lookups.py:7:5: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\n<research-root>/repros/lookups.py:10:5: error: Cannot resolve keyword 'missing' into field. Choices are: children, id, name, parent, parent_id  [misc]\n<research-root>/repros/lookups.py:13:5: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\n<research-root>/repros/requests.py:8:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:11:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:14:5: error: This QueryDict is immutable.  [misc]\n<research-root>/repros/requests.py:16:13: note: Revealed type is \"django.http.request.HttpRequest\"\n<research-root>/repros/requests.py:17:13: note: Revealed type is \"django.http.request._ImmutableQueryDict\"\n<research-root>/repros/requests.py:18:13: note: Revealed type is \"requests.CustomRequest\"\n<research-root>/repros/requests.py:20:13: note: Revealed type is \"str\"\n",
+    "control-corpus-5.2-current.log": "cases/settings_metadata.py:14:1: error: Book has no field named 'missing'  [misc]\ncases/relations.py:7:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/relations.py:20:1: error: Cannot resolve keyword 'unknown_book' into field. Choices are: age, authored_book, id, name  [misc]\ncases/models_fields.py:11:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:12:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:16:16: error: Incompatible types in assignment (expression has type \"list[str]\", variable has type \"str | int | Combinable\")  [assignment]\ncases/models_fields.py:19:1: error: Incompatible type for \"title\" of \"Book\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:20:1: error: Unexpected attribute \"unknown_field\" for model \"Book\"  [misc]\ncases/models_fields.py:23:1: error: Incompatible type for \"title\" of \"Article\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:32:15: error: Incompatible types in assignment (expression has type \"int\", variable has type \"str\")  [assignment]\ncases/managers_querysets.py:52:1: error: Cannot resolve keyword 'missing' into field. Choices are: author, author_id, code, editor, editor_id, id, pages, published_at, status, tags, title  [misc]\ncases/managers_querysets.py:53:1: error: Invalid field in \"only()\": Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:55:1: error: Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:56:27: error: List item 0 has incompatible type \"Tag\"; expected \"Book\"  [list-item]\ncases/lookups.py:7:1: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\ncases/lookups.py:9:1: error: Incompatible type for lookup 'age': (got \"Book\", expected \"str | int | None\")  [misc]\ncases/lookups.py:10:1: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\ncases/lookups.py:12:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:13:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:15:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:16:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:20:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:21:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:23:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/apps.py:9:21: error: Incompatible types in assignment (expression has type \"type[Book]\", variable has type \"type[User]\")  [assignment]\ncases/extras.py:26:1: error: Book has no field named 'missing'  [misc]\ncases/extras.py:39:5: error: This QueryDict is immutable.  [misc]\ncases/extras.py:43:5: error: This QueryDict is immutable.  [misc]\ncases/extras.py:47:5: error: This QueryDict is immutable.  [misc]\n",
+    "control-corpus-6.0.6-supported.log": "cases/settings_metadata.py:14:1: error: Book has no field named 'missing'  [misc]\ncases/relations.py:7:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/relations.py:20:1: error: Cannot resolve keyword 'unknown_book' into field. Choices are: age, authored_book, id, name  [misc]\ncases/models_fields.py:11:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:12:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:16:16: error: Incompatible types in assignment (expression has type \"list[str]\", variable has type \"str | int | Combinable\")  [assignment]\ncases/models_fields.py:19:1: error: Incompatible type for \"title\" of \"Book\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:20:1: error: Unexpected attribute \"unknown_field\" for model \"Book\"  [misc]\ncases/models_fields.py:23:1: error: Incompatible type for \"title\" of \"Article\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:32:15: error: Incompatible types in assignment (expression has type \"int\", variable has type \"str\")  [assignment]\ncases/managers_querysets.py:52:1: error: Cannot resolve keyword 'missing' into field. Choices are: author, author_id, code, editor, editor_id, id, pages, published_at, status, tags, title  [misc]\ncases/managers_querysets.py:53:1: error: Invalid field in \"only()\": Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:55:1: error: Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:56:27: error: List item 0 has incompatible type \"Tag\"; expected \"Book\"  [list-item]\ncases/lookups.py:7:1: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\ncases/lookups.py:9:1: error: Incompatible type for lookup 'age': (got \"Book\", expected \"str | int | None\")  [misc]\ncases/lookups.py:10:1: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\ncases/lookups.py:12:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:13:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:15:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:16:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:20:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:21:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:23:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/apps.py:6:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:7:1: error: Expression is of type \"type[Any]\", not \"type[Book]\"  [assert-type]\ncases/apps.py:8:1: error: Expression is of type \"type[Any]\", not \"type[User]\"  [assert-type]\ncases/extras.py:26:1: error: Book has no field named 'missing'  [misc]\ncases/extras.py:39:5: error: This QueryDict is immutable.  [misc]\n",
+    "control-corpus-6.0.9-current.log": "cases/settings_metadata.py:14:1: error: Book has no field named 'missing'  [misc]\ncases/relations.py:7:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/relations.py:20:1: error: Cannot resolve keyword 'unknown_book' into field. Choices are: age, authored_book, id, name  [misc]\ncases/models_fields.py:11:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:12:1: error: Expression is of type \"int\", not \"int | None\"  [assert-type]\ncases/models_fields.py:16:16: error: Incompatible types in assignment (expression has type \"list[str]\", variable has type \"str | int | Combinable\")  [assignment]\ncases/models_fields.py:19:1: error: Incompatible type for \"title\" of \"Book\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:20:1: error: Unexpected attribute \"unknown_field\" for model \"Book\"  [misc]\ncases/models_fields.py:23:1: error: Incompatible type for \"title\" of \"Article\" (got \"list[Any]\", expected \"str | int | Combinable\")  [misc]\ncases/models_fields.py:32:15: error: Incompatible types in assignment (expression has type \"int\", variable has type \"str\")  [assignment]\ncases/managers_querysets.py:52:1: error: Cannot resolve keyword 'missing' into field. Choices are: author, author_id, code, editor, editor_id, id, pages, published_at, status, tags, title  [misc]\ncases/managers_querysets.py:53:1: error: Invalid field in \"only()\": Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:55:1: error: Book has no field named 'missing'  [misc]\ncases/managers_querysets.py:56:27: error: List item 0 has incompatible type \"Tag\"; expected \"Book\"  [list-item]\ncases/lookups.py:7:1: error: Incompatible type for lookup 'parent__missing__exact': (got \"str\", expected \"Category | int | None\")  [misc]\ncases/lookups.py:9:1: error: Incompatible type for lookup 'age': (got \"Book\", expected \"str | int | None\")  [misc]\ncases/lookups.py:10:1: error: Incompatible type for lookup 'age__in': (got \"int\", expected \"Iterable[str | int | None]\")  [misc]\ncases/lookups.py:12:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:13:1: error: Incompatible type for \"age\" of \"Author\" (got \"Book\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:15:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:16:1: error: Cannot resolve keyword 'missing' into field. Choices are: created_at, id, title  [misc]\ncases/lookups.py:20:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:21:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], int]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/lookups.py:23:1: error: Incompatible type for \"age\" of \"Author\" (got \"Callable[[], Book]\", expected \"float | int | str | Combinable | None\")  [misc]\ncases/apps.py:9:21: error: Incompatible types in assignment (expression has type \"type[Book]\", variable has type \"type[User]\")  [assignment]\ncases/extras.py:26:1: error: Book has no field named 'missing'  [misc]\ncases/extras.py:39:5: error: This QueryDict is immutable.  [misc]\ncases/extras.py:43:5: error: This QueryDict is immutable.  [misc]\ncases/extras.py:47:5: error: This QueryDict is immutable.  [misc]\n"
+  },
+  "reproduction_sources": {
+    "defaults.py": "from collections.abc import Callable\nfrom conformance_models.models import Author\n\ndef valid_callable() -> None:\n    Author.objects.get_or_create(name=\"A\", defaults={\"age\": lambda: 43})\n\ndef typed_callable() -> None:\n    get_age: Callable[[], int] = lambda: 43\n    Author.objects.get_or_create(name=\"B\", defaults={\"age\": get_age})\n\ndef valid_non_callable() -> None:\n    Author.objects.get_or_create(name=\"C\", defaults={\"age\": 43})\n",
+    "lookups.py": "from conformance_models.models import Author, Category\n\ndef related_bad_name_good_rhs() -> None:\n    Category.objects.filter(parent__missing__exact=1)\n\ndef related_bad_name_original_rhs() -> None:\n    Category.objects.filter(parent__missing__exact=\"x\")\n\ndef direct_bad_name() -> None:\n    Category.objects.filter(missing__exact=1)\n\ndef integer_bad_in() -> None:\n    Author.objects.filter(age__in=1)\n\ndef integer_string_contents() -> None:\n    Author.objects.filter(age__in=\"x2\")\n",
+    "manager.py": "from typing_extensions import assert_type\nfrom conformance_models.models import Publication, PublishedQuerySet\nassert_type(Publication.objects.published_only(), PublishedQuerySet)\nassert_type(Publication.objects.score(), int)\n",
+    "requests.py": "from django.http import HttpRequest\nfrom typing_extensions import reveal_type\n\nclass CustomRequest(HttpRequest):\n    custom: str\n\ndef fresh_get() -> None:\n    HttpRequest().GET[\"x\"] = \"y\"\n\ndef fresh_post() -> None:\n    HttpRequest().POST[\"x\"] = \"y\"\n\ndef framework(request: HttpRequest) -> None:\n    request.GET[\"x\"] = \"y\"\n\nreveal_type(HttpRequest())\nreveal_type(HttpRequest().GET)\nreveal_type(CustomRequest())\n\nreveal_type(CustomRequest().custom)\n"
+  },
+  "manager_control": {
+    "original": {
+      "exit": 1,
+      "output": "conformance_models/models.py:100:5: error: Could not resolve manager type for \"conformance_models.models.Publication.objects\"  [django-manager-missing]\n<research-root>/repros/manager.py:3:1: error: Expression is of type \"Any\", not \"PublishedQuerySet\"  [assert-type]\n<research-root>/repros/manager.py:4:1: error: Expression is of type \"Any\", not \"int\"  [assert-type]\n"
+    },
+    "2377-concept-backport": {
+      "exit": 0,
+      "output": ""
+    },
+    "patch": "--- original/mypy_django_plugin/transformers/managers.py\n+++ patched/mypy_django_plugin/transformers/managers.py\n@@ -499,20 +499,19 @@\n         return\n \n     base_as_manager = queryset_info.get(\"as_manager\")\n-    if (\n-        base_as_manager is None\n-        or not isinstance(base_as_manager.type, CallableType)\n-        or not isinstance(base_as_manager.type.ret_type, Instance)\n-    ):\n-        return\n-\n-    base_ret_type = base_as_manager.type.ret_type.type\n+    if base_as_manager is None:\n+        return\n \n     manager_sym = semanal_api.lookup_fully_qualified_or_none(fullnames.MANAGER_CLASS_FULLNAME)\n     if manager_sym is None or not isinstance(manager_sym.node, TypeInfo):\n         return _defer()\n \n     manager_base = manager_sym.node\n+    base_ret_type = manager_base\n+    if base_as_manager.fullname != f\"{fullnames.QUERYSET_CLASS_FULLNAME}.as_manager\":\n+        if not isinstance(base_as_manager.type, CallableType) or not isinstance(base_as_manager.type.ret_type, Instance):\n+            return\n+        base_ret_type = base_as_manager.type.ret_type.type\n     manager_class_name = f\"{manager_base.name}From{queryset_info.name}\"\n     current_module = semanal_api.modules[semanal_api.cur_mod_id]\n     existing_sym = current_module.names.get(manager_class_name)\n",
+    "method": "Copy the installed mypy_django_plugin directory into <research-root>/patched-5.0.4, apply this patch to the independent copy, then prepend that directory and <django-ty-root>/conformance to PYTHONPATH for the same manager.py check. Do not modify the installed package in place."
+  },
+  "ty_request_subclass_control": {
+    "artifact": "published django-ty 0.4.0 + ty-extended 0.84.2",
+    "exit": 1,
+    "output": "<research-root>/repros/requests.py:14:5: error[plugin-configuration] Django request query parameters are immutable: django-ty.immutable-querydict-write\n<research-root>/repros/requests.py:16:13: info[revealed-type] Revealed type: `_MutableHttpRequest`\n<research-root>/repros/requests.py:17:13: info[revealed-type] Revealed type: `QueryDict`\n<research-root>/repros/requests.py:18:13: info[revealed-type] Revealed type: `_MutableHttpRequest`\n<research-root>/repros/requests.py:20:13: error[unresolved-attribute] Object of type `_MutableHttpRequest` has no attribute `custom`\n<research-root>/repros/requests.py:20:13: info[revealed-type] Revealed type: `Unknown`\nFound 6 diagnostics\n",
+    "adaptation_unchanged_in_audited_commit": true
+  },
+  "official_source_matches": [
+    {
+      "django": "5.0.14",
+      "commit": "7c128112a6adff20b6d67a02c4098a2c10f88191",
+      "files": {
+        "django/apps/registry.py": {
+          "sha256": "add7b138de49ba1280316019bf89360c7d1f45229d3d9a22ebfb538ce5201510",
+          "matches_installed": true
+        },
+        "django/db/models/base.py": {
+          "sha256": "e53af6f16cf926923bd5399cd518ab07dfd412952927841fd9f86f3f5532733f",
+          "matches_installed": true
+        },
+        "django/db/models/fields/__init__.py": {
+          "sha256": "360eedb9ac2bb5e0f6d0205ddea8c85075a3461ea91802289fd294056baa4763",
+          "matches_installed": true
+        },
+        "django/db/models/manager.py": {
+          "sha256": "9fdee9e2ad2db70988d57705f5d025f0f7e0e59b3c8ae76e7e159e6d0ed76aed",
+          "matches_installed": true
+        },
+        "django/db/models/query.py": {
+          "sha256": "88d1269315b9d03384e5d76e5d79aa5d460a71b0342444df16c04461a16541dd",
+          "matches_installed": true
+        },
+        "django/db/models/lookups.py": {
+          "sha256": "f0da3f0f74be900aff1a67901953547f7bcce673438992c32e3858d3167d5e11",
+          "matches_installed": true
+        },
+        "django/db/models/sql/query.py": {
+          "sha256": "c4acf2dfe74a5217a25ddd2ab259da893ffe0f5c16dadb0c224f4339d2133a1d",
+          "matches_installed": true
+        },
+        "django/http/request.py": {
+          "sha256": "48f28b669ac2435fad75241abaca52f437838d2f7b5c2a68b1483a2502c393cc",
+          "matches_installed": true
+        }
+      }
+    },
+    {
+      "django": "5.1.15",
+      "commit": "6ef1f6fbe33e9882f82dae026b527800ecb78c36",
+      "files": {
+        "django/apps/registry.py": {
+          "sha256": "add7b138de49ba1280316019bf89360c7d1f45229d3d9a22ebfb538ce5201510",
+          "matches_installed": true
+        },
+        "django/db/models/base.py": {
+          "sha256": "5111315089ede12c9db39ec70b9ede9d6ad98a16e9f92cf873fc8f153f1d63c5",
+          "matches_installed": true
+        },
+        "django/db/models/fields/__init__.py": {
+          "sha256": "1eef8ed073980d2358c1564849d9c325c858468452f5f48a5131d381ae138828",
+          "matches_installed": true
+        },
+        "django/db/models/manager.py": {
+          "sha256": "9fdee9e2ad2db70988d57705f5d025f0f7e0e59b3c8ae76e7e159e6d0ed76aed",
+          "matches_installed": true
+        },
+        "django/db/models/query.py": {
+          "sha256": "1b7e846ed2f982f088c63dced2079a0d09ded57b7849f3a10c603449840aa839",
+          "matches_installed": true
+        },
+        "django/db/models/lookups.py": {
+          "sha256": "d2416bbcf3a0f5d799d8d37ebd2346b01e792b50f2287e7bef43625f59cdd60c",
+          "matches_installed": true
+        },
+        "django/db/models/sql/query.py": {
+          "sha256": "f562e0d78a0d06cfe65ead3e7eaadf073401a2bd8165da42fe3aa57bf1f2830d",
+          "matches_installed": true
+        },
+        "django/http/request.py": {
+          "sha256": "48f28b669ac2435fad75241abaca52f437838d2f7b5c2a68b1483a2502c393cc",
+          "matches_installed": true
+        }
+      }
+    },
+    {
+      "django": "5.2.17",
+      "commit": "e802ada38b3ecf345915163bb6d7f008be411664",
+      "files": {
+        "django/apps/registry.py": {
+          "sha256": "add7b138de49ba1280316019bf89360c7d1f45229d3d9a22ebfb538ce5201510",
+          "matches_installed": true
+        },
+        "django/db/models/base.py": {
+          "sha256": "ce0ede738855ed6477e5dd5b5d4e1d1a083271d51df7c18d8c497480f350dcfd",
+          "matches_installed": true
+        },
+        "django/db/models/fields/__init__.py": {
+          "sha256": "28b0dae4acf4fc0217d10048e8c387f504678e77217e62ee88135c7f13ce329c",
+          "matches_installed": true
+        },
+        "django/db/models/manager.py": {
+          "sha256": "9fdee9e2ad2db70988d57705f5d025f0f7e0e59b3c8ae76e7e159e6d0ed76aed",
+          "matches_installed": true
+        },
+        "django/db/models/query.py": {
+          "sha256": "c9b07861fa6805428906c9bea32ffe8b48c376ed08b9eca47328e38f4df12efb",
+          "matches_installed": true
+        },
+        "django/db/models/lookups.py": {
+          "sha256": "b5e7e1751fc7aef605dc83e75d5c5428ba6b40bc17cd73da4ebbddc4890ad54e",
+          "matches_installed": true
+        },
+        "django/db/models/sql/query.py": {
+          "sha256": "d47e25029eb71eadd6c108ab199dfff16f46c6a1512d81ea0c5b842cecfafa61",
+          "matches_installed": true
+        },
+        "django/http/request.py": {
+          "sha256": "bbdd7e5bdb6e38932f4559fb53aff24239d7b1d2520444df8ceb1c6e579f788a",
+          "matches_installed": true
+        }
+      }
+    },
+    {
+      "django": "6.0.8",
+      "commit": "b2821457e8bfa9e9066837b9f9b3a3955224ab19",
+      "files": {
+        "django/apps/registry.py": {
+          "sha256": "ec931677450952aad787249d5582cc3fe0cb0bdb2a9a7ee7fdd817c4263a0d66",
+          "matches_installed": true
+        },
+        "django/db/models/base.py": {
+          "sha256": "3a387fb69469d93a7a1e27e16d93d5258d2e4c5e637bca8dbfb767a851e154ab",
+          "matches_installed": true
+        },
+        "django/db/models/fields/__init__.py": {
+          "sha256": "a3e34e9156a619030257c4f99bd9eb984b6225016a0ef93a9263a2488056ebf5",
+          "matches_installed": true
+        },
+        "django/db/models/manager.py": {
+          "sha256": "9fdee9e2ad2db70988d57705f5d025f0f7e0e59b3c8ae76e7e159e6d0ed76aed",
+          "matches_installed": true
+        },
+        "django/db/models/query.py": {
+          "sha256": "1de5c1381abfd0692e30ec41244940a1a3995686c26f2cb928e0b80bb10348a0",
+          "matches_installed": true
+        },
+        "django/db/models/lookups.py": {
+          "sha256": "b62a2168cecfaa80df3ef6fcc8db2d7b3bab57195f8fe53d2d31ed2550ef923e",
+          "matches_installed": true
+        },
+        "django/db/models/sql/query.py": {
+          "sha256": "ae0c180014cb5e675b44ad0b450d0af3a4c373f86eebe330ece30585f5121987",
+          "matches_installed": true
+        },
+        "django/http/request.py": {
+          "sha256": "6ad362eba6fb2c5b51b7f81944abf2613a9bc9a42b964a28d8271ad124270d0b",
+          "matches_installed": true
+        }
+      }
+    },
+    {
+      "django": "6.1.1",
+      "commit": "249b13d6e93ee3164dee8ed1775395622a50c337",
+      "files": {
+        "django/apps/registry.py": {
+          "sha256": "ec931677450952aad787249d5582cc3fe0cb0bdb2a9a7ee7fdd817c4263a0d66",
+          "matches_installed": true
+        },
+        "django/db/models/base.py": {
+          "sha256": "6dc2179eb23eacd9bcc58561ebc30bf9eab180844235c4e1ec5af251b02ab62f",
+          "matches_installed": true
+        },
+        "django/db/models/fields/__init__.py": {
+          "sha256": "744392031020fc9599ec341132f8c793a8c0ce1e3981b4b304d3b3fcccb8535f",
+          "matches_installed": true
+        },
+        "django/db/models/manager.py": {
+          "sha256": "9fdee9e2ad2db70988d57705f5d025f0f7e0e59b3c8ae76e7e159e6d0ed76aed",
+          "matches_installed": true
+        },
+        "django/db/models/query.py": {
+          "sha256": "73c95adfcb56e18924dcf11d24f5feacbfe8175ec8492c4282865462fd606108",
+          "matches_installed": true
+        },
+        "django/db/models/lookups.py": {
+          "sha256": "821457dd4115467270b61c79291cad0723c191da1dd22dae1e477d634e5aabe6",
+          "matches_installed": true
+        },
+        "django/db/models/sql/query.py": {
+          "sha256": "dc599140baef8c28a832279007873f8dfd42c5b8aa0d4451c95aae2076425a01",
+          "matches_installed": true
+        },
+        "django/http/request.py": {
+          "sha256": "b508ab0390a82003e7c968d258d45c5d74dfa14b11d463ac2989e6bc9cfc7610",
+          "matches_installed": true
+        }
+      }
+    }
+  ],
+  "runtime_reproductions": {
+    "5.0.14": {
+      "cases": {
+        "bulk-create-wrong-model": {
+          "exception": "AttributeError",
+          "passed": true
+        },
+        "bulk-update-invalid-field": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "callable-create-default": {
+          "observed": "43",
+          "passed": true
+        },
+        "callable-invalid-result": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "callable-update-default": {
+          "observed": "44",
+          "passed": true
+        },
+        "constructor-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-null-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "constructor-pk": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-relation-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "copied-chain-method": {
+          "observed": "True",
+          "passed": true
+        },
+        "copied-scalar-method": {
+          "observed": "1",
+          "passed": true
+        },
+        "date-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "day-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "fresh-request-get": {
+          "observed": "1",
+          "passed": true
+        },
+        "fresh-request-post": {
+          "observed": "1",
+          "passed": true
+        },
+        "get-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-in-wrong-container": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-wrong-type": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "month-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "null-exact-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "only-invalid": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "order-by-invalid": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "prefetch-list": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-case-insensitive": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-keywords": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-qualified": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-wrong-model": {
+          "observed": "False",
+          "passed": true
+        },
+        "save-invalid-field": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "save-valid-field": {
+          "observed": "D",
+          "passed": true
+        },
+        "string-in-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "string-integer-in": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-integer-invalid": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "string-integer-range": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-range-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "unknown-related-field": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "unsaved-auto-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-auto-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-relation-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "update-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "year-lookup": {
+          "observed": "False",
+          "passed": true
+        }
+      },
+      "django": "5.0.14",
+      "related_lookup_pipeline": {
+        "1": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing' for ForeignKey or join on the field not permitted."
+        },
+        "x": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing' for ForeignKey or join on the field not permitted."
+        }
+      }
+    },
+    "5.1.15": {
+      "cases": {
+        "bulk-create-wrong-model": {
+          "exception": "AttributeError",
+          "passed": true
+        },
+        "bulk-update-invalid-field": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "callable-create-default": {
+          "observed": "43",
+          "passed": true
+        },
+        "callable-invalid-result": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "callable-update-default": {
+          "observed": "44",
+          "passed": true
+        },
+        "constructor-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-null-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "constructor-pk": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-relation-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "copied-chain-method": {
+          "observed": "True",
+          "passed": true
+        },
+        "copied-scalar-method": {
+          "observed": "1",
+          "passed": true
+        },
+        "date-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "day-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "fresh-request-get": {
+          "observed": "1",
+          "passed": true
+        },
+        "fresh-request-post": {
+          "observed": "1",
+          "passed": true
+        },
+        "get-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-in-wrong-container": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-wrong-type": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "month-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "null-exact-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "only-invalid": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "order-by-invalid": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "prefetch-list": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-case-insensitive": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-keywords": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-qualified": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-wrong-model": {
+          "observed": "False",
+          "passed": true
+        },
+        "save-invalid-field": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "save-valid-field": {
+          "observed": "D",
+          "passed": true
+        },
+        "string-in-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "string-integer-in": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-integer-invalid": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "string-integer-range": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-range-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "unknown-related-field": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "unsaved-auto-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-auto-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-relation-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "update-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "year-lookup": {
+          "observed": "False",
+          "passed": true
+        }
+      },
+      "django": "5.1.15",
+      "related_lookup_pipeline": {
+        "1": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing' for ForeignKey or join on the field not permitted."
+        },
+        "x": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing' for ForeignKey or join on the field not permitted."
+        }
+      }
+    },
+    "5.2.17": {
+      "cases": {
+        "bulk-create-wrong-model": {
+          "exception": "AttributeError",
+          "passed": true
+        },
+        "bulk-update-invalid-field": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "callable-create-default": {
+          "observed": "43",
+          "passed": true
+        },
+        "callable-invalid-result": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "callable-update-default": {
+          "observed": "44",
+          "passed": true
+        },
+        "constructor-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-null-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "constructor-pk": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-relation-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "copied-chain-method": {
+          "observed": "True",
+          "passed": true
+        },
+        "copied-scalar-method": {
+          "observed": "1",
+          "passed": true
+        },
+        "date-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "day-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "fresh-request-get": {
+          "observed": "1",
+          "passed": true
+        },
+        "fresh-request-post": {
+          "observed": "1",
+          "passed": true
+        },
+        "get-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-in-wrong-container": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-wrong-type": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "month-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "null-exact-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "only-invalid": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "order-by-invalid": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "prefetch-list": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-case-insensitive": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-keywords": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-qualified": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-wrong-model": {
+          "observed": "False",
+          "passed": true
+        },
+        "save-invalid-field": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "save-valid-field": {
+          "observed": "D",
+          "passed": true
+        },
+        "string-in-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "string-integer-in": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-integer-invalid": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "string-integer-range": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-range-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "unknown-related-field": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "unsaved-auto-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-auto-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-relation-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "update-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "year-lookup": {
+          "observed": "False",
+          "passed": true
+        }
+      },
+      "django": "5.2.17",
+      "related_lookup_pipeline": {
+        "1": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing__exact' for ForeignKey or join on the field not permitted."
+        },
+        "x": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing__exact' for ForeignKey or join on the field not permitted."
+        }
+      }
+    },
+    "6.0.8": {
+      "cases": {
+        "bulk-create-wrong-model": {
+          "exception": "AttributeError",
+          "passed": true
+        },
+        "bulk-update-invalid-field": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "callable-create-default": {
+          "observed": "43",
+          "passed": true
+        },
+        "callable-invalid-result": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "callable-update-default": {
+          "observed": "44",
+          "passed": true
+        },
+        "constructor-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-null-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "constructor-pk": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-relation-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "copied-chain-method": {
+          "observed": "True",
+          "passed": true
+        },
+        "copied-scalar-method": {
+          "observed": "1",
+          "passed": true
+        },
+        "date-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "day-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "fresh-request-get": {
+          "observed": "1",
+          "passed": true
+        },
+        "fresh-request-post": {
+          "observed": "1",
+          "passed": true
+        },
+        "get-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-in-wrong-container": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-wrong-type": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "month-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "null-exact-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "only-invalid": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "order-by-invalid": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "prefetch-list": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-case-insensitive": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-keywords": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-qualified": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-wrong-model": {
+          "observed": "False",
+          "passed": true
+        },
+        "save-invalid-field": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "save-valid-field": {
+          "observed": "D",
+          "passed": true
+        },
+        "string-in-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "string-integer-in": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-integer-invalid": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "string-integer-range": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-range-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "unknown-related-field": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "unsaved-auto-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-auto-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-relation-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "update-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "year-lookup": {
+          "observed": "False",
+          "passed": true
+        }
+      },
+      "django": "6.0.8",
+      "related_lookup_pipeline": {
+        "1": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing__exact' for ForeignKey or join on the field not permitted."
+        },
+        "x": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing__exact' for ForeignKey or join on the field not permitted."
+        }
+      }
+    },
+    "6.1.1": {
+      "cases": {
+        "bulk-create-wrong-model": {
+          "exception": "AttributeError",
+          "passed": true
+        },
+        "bulk-update-invalid-field": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "callable-create-default": {
+          "observed": "43",
+          "passed": true
+        },
+        "callable-invalid-result": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "callable-update-default": {
+          "observed": "44",
+          "passed": true
+        },
+        "constructor-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-null-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "constructor-pk": {
+          "observed": "1",
+          "passed": true
+        },
+        "constructor-relation-id": {
+          "observed": "1",
+          "passed": true
+        },
+        "copied-chain-method": {
+          "observed": "True",
+          "passed": true
+        },
+        "copied-scalar-method": {
+          "observed": "1",
+          "passed": true
+        },
+        "date-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "day-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "fresh-request-get": {
+          "observed": "1",
+          "passed": true
+        },
+        "fresh-request-post": {
+          "observed": "1",
+          "passed": true
+        },
+        "get-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-in-wrong-container": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "integer-wrong-type": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "month-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "null-exact-lookup": {
+          "observed": "False",
+          "passed": true
+        },
+        "only-invalid": {
+          "exception": "FieldDoesNotExist",
+          "passed": true
+        },
+        "order-by-invalid": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "prefetch-list": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-case-insensitive": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-keywords": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-qualified": {
+          "observed": "True",
+          "passed": true
+        },
+        "registry-wrong-model": {
+          "observed": "False",
+          "passed": true
+        },
+        "save-invalid-field": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "save-valid-field": {
+          "observed": "D",
+          "passed": true
+        },
+        "string-in-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "string-integer-in": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-integer-invalid": {
+          "exception": "ValueError",
+          "passed": true
+        },
+        "string-integer-range": {
+          "observed": "0",
+          "passed": true
+        },
+        "string-range-lookup": {
+          "observed": "['D']",
+          "passed": true
+        },
+        "unknown-related-field": {
+          "exception": "FieldError",
+          "passed": true
+        },
+        "unsaved-auto-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-auto-pk": {
+          "observed": "True",
+          "passed": true
+        },
+        "unsaved-relation-id": {
+          "observed": "True",
+          "passed": true
+        },
+        "update-or-create-default": {
+          "exception": "TypeError",
+          "passed": true
+        },
+        "year-lookup": {
+          "observed": "False",
+          "passed": true
+        }
+      },
+      "django": "6.1.1",
+      "related_lookup_pipeline": {
+        "1": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing__exact' for ForeignKey or join on the field not permitted."
+        },
+        "x": {
+          "parsed_parts": "(['missing', 'exact'], ['parent'], False)",
+          "exception": "FieldError",
+          "message": "Unsupported lookup 'missing__exact' for ForeignKey or join on the field not permitted."
+        }
+      }
+    }
+  },
+  "limits": [
+    "Research reruns use Python 3.12 except the explicitly identified Python 3.14 supported control; the previous 18-pair candidate matrix was not rerun in this research-only change.",
+    "The ty request control uses the released 0.4.0 wheel; identical source in the PR proves the constructor adaptation has not changed, but this is not a build of the unreleased candidate.",
+    "No exact upstream issue was found for callable defaults or the invalid intermediate transform in the queries performed; absence of a found issue does not prove none exists.",
+    "Explicit/inherited ID policy and migration StateApps guard concerns are source-review followups, not demonstrated checker regressions."
+  ],
+  "reproduction_instructions": {
+    "source_commit": "a27fd274aa574f497f599543ba7230be39918c06",
+    "reference": "Create environments with the exact packages in environments. Write reproduction_sources files to <research-root>/repros. Run mypy from conformance using its mypy.ini, PYTHONPATH=<django-ty-root>/conformance, and a separate --cache-dir for each run. Check requests.py, lookups.py, and defaults.py together for the focused controls; manager.py separately.",
+    "ty": "Use the ty-040 environment package versions and run <environment>/bin/ty check <research-root>/repros/requests.py --project <django-ty-root>/conformance --python <environment>/bin/python --output-format concise.",
+    "runtime": "Use scripts/django_runtime_contracts.py::run_contracts from the audited commit inside each exact Django environment with PYTHONPATH pointing to scripts and conformance. The extra related_lookup_pipeline control uses Query(Category).solve_lookup_type and Category.objects.filter(parent__missing__exact=rhs) for rhs 1 and x."
+  },
+  "artifact_validation": {
+    "all_24_recorded_identities_covered": true,
+    "five_exact_comparator_runs_match_original_disagreement_sets": true,
+    "source_links_verified_from_git": 48,
+    "all_200_runtime_contract_executions_passed": true,
+    "all_40_inspected_source_files_match_official_tags": true
+  }
+}

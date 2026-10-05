@@ -7,7 +7,7 @@ upstream_stub_root = "django-stubs"
 vendored_stub_root = "python/django_ty/stubs/django"
 expected_stub_files = 712
 expected_public_symbols = 16879
-expected_static_tree_sha256 = "7fba47e3ecdef02cedafb0f555ce3db732aaf4ef7ec8fe469a297ea70e9c542d"
+expected_static_tree_sha256 = "fc4a572a925776c7b2e45364dd22c44a91089c0ed82ad291ca8c45a228f3523f"
 expected_transformers = [
     "apps",
     "auth",
@@ -40,7 +40,7 @@ django = "6.1.1"
 mypy = "2.3.1"
 ty_extended = "0.84.2"
 ty_extended_commit = "0c1c84c1340ab818faa328a32a48048ebf06d105"
-django_ty = "0.4.0"
+django_ty = "0.5.0"
 minimum_cases_per_feature = 2
 
 [[feature]]
