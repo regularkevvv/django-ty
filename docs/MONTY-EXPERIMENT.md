@@ -69,7 +69,8 @@ published version.
 
 The normal wheel also contains the Python artifact and `ty-plugin-monty.json`
 for explicit configuration. If selecting it manually, disable auto-discovery
-and set `path`, `manifest-path`, `runtime = "monty"`, `trusted = true`, and
+and set `plugins.enabled = true`, `path`, `manifest-path`, `runtime = "monty"`,
+`trusted = true`, and
 `stub-overlay-path` to the installed package's `stubs` directory.
 
 ## Evidence and limits
@@ -84,7 +85,9 @@ and set `path`, `manifest-path`, `runtime = "monty"`, `trusted = true`, and
   QueryDict cases. The baseline retains 100% official-contract coverage and
   93.8% mypy agreement.
 - Installed-wheel E2E checks cover positive, expected-negative and static API
-  fixtures. The WASM default passes the same E2E checks.
+  fixtures. The WASM default passes the same E2E checks. Disabled-plugin/state
+  controls reject the expected assertions; explicit selection from the default
+  wheel succeeds. The Python source archive rebuilds an identical package payload.
 
 These results establish parity for the existing corpus, not every possible
 Django program. Independent runtime proofs still check Django itself; they do
@@ -102,6 +105,24 @@ cap. WASM has a 64 MiB guest-memory limit and traps guest stack overflows.
 Worker mode offers process isolation at an additional deployment cost. See the
 [actual host limits](https://github.com/regularkevvv/ruff-extended/blob/4da08f0a01d9f2611c20b77be8db84a919eceae3/crates/ty_plugin_host/src/monty.rs)
 and the checker's [runtime safety model](https://github.com/regularkevvv/ty-extended/blob/1e7e01dc34da874f494db30a49323e570ef8974a/docs/plugin-runtime.md#safety-model).
+
+## Size and timing
+
+Measured locally on macOS arm64 with Python 3.14.2, Django 6.1.2 and ty-extended
+0.84.4, using identical fixture sources and seven alternating fresh checker
+processes. [Raw measurements](../compatibility/monty-experiment-benchmark.json)
+and [`benchmark_runtimes.py`](../scripts/benchmark_runtimes.py) preserve the method.
+
+| Measurement | WASM default on this branch | Python-only alternative |
+| --- | ---: | ---: |
+| Plugin wheel | 796,615 bytes | 496,910 bytes |
+| Positive + static API fixture, median | 3.39 s | 0.93 s |
+| Observed timing range | 1.86–3.48 s | 0.83–2.68 s |
+
+The Python source is 87,249 bytes, compressed to 14,680 bytes in the alternative
+wheel. The packaged stub tree is shared. The checker/runtime package does not
+change. Timings vary by over a second between runs; this one fixture does not
+establish general throughput or memory use.
 
 The practical tradeoff is easier rule maintenance and a compiler-free plugin
 build, while retaining the checker's Rust/Monty runtime and its sandbox limits.

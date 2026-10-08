@@ -53,8 +53,8 @@ jobs:
       - name: Check Monty source and packaging
         run: |
           python3 scripts/build-monty.py --check
-          uv run --no-project --with ruff==0.16.10 ruff check --isolated --select E4,E7,E9,F,I python/django_ty/monty.py scripts/build-monty.py scripts/build-monty-wheel.py scripts/check_monty_parity.py
-          uv run --no-project --with ruff==0.16.10 ruff format --isolated --check python/django_ty/monty.py scripts/build-monty.py scripts/build-monty-wheel.py scripts/check_monty_parity.py
+          uv run --no-project --with ruff==0.16.10 ruff check --isolated --select E4,E7,E9,F,I python/django_ty/monty.py scripts/build-monty.py scripts/build-monty-wheel.py scripts/check_monty_parity.py scripts/benchmark_runtimes.py
+          uv run --no-project --with ruff==0.16.10 ruff format --isolated --check python/django_ty/monty.py scripts/build-monty.py scripts/build-monty-wheel.py scripts/check_monty_parity.py scripts/benchmark_runtimes.py
       - name: Verify Python and Monty response parity
         run: bash scripts/check-monty-parity.sh
         working-directory: django-ty
