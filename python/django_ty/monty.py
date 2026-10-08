@@ -8,7 +8,10 @@ import json
 import typing
 
 if typing.TYPE_CHECKING:
-    from ty.plugin_sdk import (
+    from collections.abc import Collection
+    from typing import Literal, overload
+
+    from django_ty._monty_sdk import (
         call_return_patch,
         call_signature_patch,
         call_state_patch,
@@ -49,6 +52,49 @@ if typing.TYPE_CHECKING:
         virtual_type,
         virtual_typed_dict,
     )
+    from django_ty._monty_types import (
+        Argument,
+        CallRequest,
+        CallReturnResponse,
+        CallSignatureResponse,
+        CallStateResponse,
+        CallSummary,
+        ClassRequest,
+        ClassResponse,
+        ClassSummary,
+        Contribution,
+        Diagnostic,
+        FieldData,
+        FieldPatch,
+        FieldSummary,
+        ImportBinding,
+        IndexedRequest,
+        JsonValue,
+        LiteralValue,
+        LocalModelIndex,
+        MemberPatch,
+        ModelIndex,
+        MutationRequest,
+        MutationResponse,
+        ProjectIndexRequest,
+        ProjectIndexResponse,
+        RelationKind,
+        SymbolRef,
+        SymbolSource,
+        TypeExpr,
+        TypeSnapshot,
+        VirtualType,
+    )
+
+    @overload
+    def typed_literal(arg: "Argument | None", kind: Literal["str"]) -> str | None: ...
+
+    @overload
+    def typed_literal(arg: "Argument | None", kind: Literal["bool"]) -> bool | None: ...
+
+    @overload
+    def typed_literal(arg: "Argument | None", kind: Literal["int"]) -> int | None: ...
+
 
 MODEL_BASES = [
     "django.db.models.base.Model",
@@ -125,7 +171,7 @@ SCALAR_FIELDS = {
 }
 
 
-def ann(text):
+def ann(text: str) -> "TypeExpr":
     imports = []
     for qualified, alias in [
         ("datetime.datetime", "__django_ty_datetime"),
@@ -142,7 +188,7 @@ def ann(text):
     return type_annotation(text, imports=imports)
 
 
-def canonical(ty):
+def canonical(ty: "TypeExpr") -> "str":
     text = ty["expression"]
     for binding in ty.get("imports", []):
         if binding.get("alias"):
@@ -152,13 +198,13 @@ def canonical(ty):
     return text
 
 
-def snap(ty):
+def snap(ty: "TypeExpr") -> "TypeSnapshot":
     return ty.get("snapshot") or snapshot_expression(
         ty["expression"], mode=ty.get("mode", "expression"), imports=ty.get("imports")
     )
 
 
-def merge_imports(types):
+def merge_imports(types: "list[TypeExpr]") -> "list[ImportBinding]":
     bindings = {}
     for ty in types:
         for binding in ty.get("imports", []):
@@ -167,7 +213,7 @@ def merge_imports(types):
     return [bindings[key] for key in sorted(bindings)]
 
 
-def qs_type(model, row):
+def qs_type(model: "TypeExpr", row: "TypeExpr") -> "TypeExpr":
     result = ann(
         "django.db.models.query.QuerySet["
         + model["expression"]
@@ -180,7 +226,7 @@ def qs_type(model, row):
     return result
 
 
-def tuple_type(elements):
+def tuple_type(elements: "list[TypeExpr]") -> "TypeExpr":
     result = ann(
         "tuple[" + ", ".join([element["expression"] for element in elements]) + "]"
     )
@@ -189,62 +235,71 @@ def tuple_type(elements):
     return result
 
 
-def module_of(name):
+def module_of(name: str) -> "str":
     return name.rsplit(".", 1)[0] if "." in name else ""
 
 
-def short(name):
+def short(name: str) -> "str":
     return name.rsplit(".", 1)[-1]
 
 
-def virtual_name(model, suffix):
+def virtual_name(model: str, suffix: str) -> "str":
     return "django_ty.virtual." + model + "." + suffix
 
 
-def replace_member(name, ty):
+def replace_member(name: str, ty: "TypeExpr") -> "MemberPatch":
     return member(name, ty, mode="replace-existing")
 
 
-def named(args, name):
+def named(args: "list[Argument]", name: str) -> "Argument | None":
     for arg in args:
         if arg.get("name") == name:
             return arg
     return None
 
 
-def typed_literal(arg, kind):
-    value = (arg or {}).get("value") or {}
-    return value.get("value") if value.get("kind") == kind else None
+def typed_literal(arg: "Argument | None", kind: str) -> "bool | int | str | None":
+    value = (arg or {}).get("value")
+    if value is None:
+        return None
+    if kind == "str" and value["kind"] == "str":
+        return value["value"]
+    if kind == "bool" and value["kind"] == "bool":
+        return value["value"]
+    if kind == "int" and value["kind"] == "int":
+        return value["value"]
+    return None
 
 
-def call_of(field):
+def call_of(field: "FieldSummary") -> "CallSummary | None":
     assigned = field.get("assigned-value") or {}
     return assigned if assigned.get("kind") == "call" else None
 
 
-def call_name(call):
+def call_name(call: "CallSummary") -> "str":
     return (call.get("callee") or {}).get("qualified-name", "")
 
 
-def manager_call(call):
+def manager_call(call: "CallSummary") -> "bool":
     name = short(call_name(call))
     return name == "as_manager" or name == "BaseManager" or name.endswith("Manager")
 
 
-def auto_field(call):
+def auto_field(call: "CallSummary") -> "bool":
     return short(call_name(call)) in ["AutoField", "BigAutoField", "SmallAutoField"]
 
 
-def relation_kind(call):
-    return {
+def relation_kind(call: "CallSummary") -> "RelationKind | None":
+    kinds: "dict[str, RelationKind]" = {
         "ForeignKey": "foreign-key",
         "ForeignObject": "foreign-key",
         "OneToOneField": "one-to-one",
         "ManyToManyField": "many-to-many",
-    }.get(short(call_name(call)))
+    }
+    return kinds.get(short(call_name(call)))
 
 
-def resolve_model(module, raw, models):
+def resolve_model(module: str, raw: str, models: "Collection[str]") -> "str":
     if "." not in raw:
         return module + "." + raw
     if raw in models:
@@ -258,7 +313,9 @@ def resolve_model(module, raw, models):
     return raw
 
 
-def relation_target(model, call, settings, models):
+def relation_target(
+    model: str, call: "CallSummary", settings: dict[str, str], models: "Collection[str]"
+) -> "str | None":
     args = call.get("arguments", [])
     target = named(args, "to")
     if target is None:
@@ -266,15 +323,24 @@ def relation_target(model, call, settings, models):
         target = positional[0] if positional else None
     if target is None:
         return None
-    value = target.get("value") or {}
-    kind = value.get("kind")
-    symbol = value.get("qualified-name", "")
+    value = target.get("value")
+    kind = value["kind"] if value is not None else None
+    symbol = (
+        value["qualified-name"]
+        if value is not None
+        and (
+            value["kind"] == "class-ref"
+            or value["kind"] == "symbol-ref"
+            or value["kind"] == "enum-ref"
+        )
+        else ""
+    )
     raw = None
     if kind in ["enum-ref", "symbol-ref"] and symbol in settings:
         raw = settings[symbol]
     elif kind in ["class-ref", "symbol-ref", "enum-ref"]:
         raw = (target.get("type-expr") or {}).get("expression") or symbol
-    elif kind == "str":
+    elif value is not None and value["kind"] == "str":
         raw = value["value"]
         if raw == "self":
             raw = model
@@ -285,15 +351,24 @@ def relation_target(model, call, settings, models):
     return resolve_model(module_of(model), raw, models) if raw is not None else None
 
 
-def choice_target(model, call):
-    value = (named(call.get("arguments", []), "choices") or {}).get("value") or {}
-    if value.get("kind") not in ["class-ref", "enum-ref", "symbol-ref"]:
+def choice_target(model: str, call: "CallSummary") -> "str | None":
+    value = (named(call.get("arguments", []), "choices") or {}).get("value")
+    if value is None or (
+        value["kind"] != "class-ref"
+        and value["kind"] != "enum-ref"
+        and value["kind"] != "symbol-ref"
+    ):
         return None
     target = value["qualified-name"]
     return target if "." in target else model + "." + target
 
 
-def field_data(model, field, settings, models):
+def field_data(
+    model: str,
+    field: "FieldSummary",
+    settings: dict[str, str],
+    models: "Collection[str]",
+) -> "FieldData | None":
     call = call_of(field)
     if call is None or manager_call(call):
         return None
@@ -335,7 +410,7 @@ def field_data(model, field, settings, models):
     }
 
 
-def builtin_id(name, ty):
+def builtin_id(name: str, ty: "TypeExpr") -> "FieldPatch":
     return field_patch(
         name,
         ty,
@@ -346,7 +421,7 @@ def builtin_id(name, ty):
     )
 
 
-def field_patches(data):
+def field_patches(data: "FieldData") -> "list[FieldPatch]":
     name = data["name"]
     if data["relation"] == "many-to-many":
         return []
@@ -376,7 +451,7 @@ def field_patches(data):
     return patches
 
 
-def field_class(model, call):
+def field_class(model: str, call: "CallSummary") -> "str":
     name = call_name(call)
     if name.startswith("models."):
         name = "django.db." + name
@@ -385,12 +460,12 @@ def field_class(model, call):
     return name + "[typing.Any, typing.Any]"
 
 
-def default_members(model):
+def default_members(model: str) -> "list[MemberPatch]":
     ty = ann(virtual_name(model, "Manager"))
     return [replace_member("objects", ty), replace_member("_default_manager", ty)]
 
 
-def default_fields(default):
+def default_fields(default: str | None) -> "list[FieldPatch]":
     return [
         builtin_id("id", ann("int | None")),
         builtin_id(
@@ -402,7 +477,12 @@ def default_fields(default):
     ]
 
 
-def diag(identifier, message, source=None, metadata=None):
+def diag(
+    identifier: str,
+    message: str,
+    source: "SymbolSource | None" = None,
+    metadata: "dict[str, JsonValue] | None" = None,
+) -> "Diagnostic":
     source = source or {}
     loc = None
     if source.get("file-path") and source.get("start") and source.get("end"):
@@ -412,7 +492,7 @@ def diag(identifier, message, source=None, metadata=None):
     )
 
 
-def unknown_lookup_diag(model, lookup, arg):
+def unknown_lookup_diag(model: str, lookup: str, arg: "Argument") -> "Diagnostic":
     return diag(
         "unknown-lookup",
         "Unknown Django lookup `" + lookup + "` for model `" + model + "`",
@@ -420,7 +500,9 @@ def unknown_lookup_diag(model, lookup, arg):
     )
 
 
-def invalid_lookup_diag(model, field, lookup, expected, arg):
+def invalid_lookup_diag(
+    model: str, field: str, lookup: str, expected: str, arg: "Argument"
+) -> "Diagnostic":
     return diag(
         "invalid-lookup-value",
         "Invalid Django lookup value for `"
@@ -436,7 +518,7 @@ def invalid_lookup_diag(model, field, lookup, expected, arg):
     )
 
 
-def resolve_class(owner, text, names):
+def resolve_class(owner: str, text: str, names: "Collection[str]") -> "str | None":
     text = text.split("[", 1)[0]
     if text in names:
         return text
@@ -444,7 +526,9 @@ def resolve_class(owner, text, names):
     return candidate if "." not in text and candidate in names else None
 
 
-def derived_names(classes, bases, generic=False):
+def derived_names(
+    classes: "list[ClassSummary]", bases: list[str], generic: bool = False
+) -> "set[str]":
     names = {cls["qualified-name"] for cls in classes}
     selected = set()
     while True:
@@ -462,7 +546,7 @@ def derived_names(classes, bases, generic=False):
             return selected
 
 
-def meta_flag(cls, flag):
+def meta_flag(cls: "ClassSummary", flag: str) -> "bool":
     return any(
         constant.get("name") == flag
         and (constant.get("value") or {}) == {"kind": "bool", "value": True}
@@ -472,7 +556,9 @@ def meta_flag(cls, flag):
     )
 
 
-def signal_receiver(request, model, decorators):
+def signal_receiver(
+    request: "ProjectIndexRequest", model: str, decorators: "list[CallSummary]"
+) -> "bool":
     for dec in decorators:
         if dec.get("kind") != "call" or short(call_name(dec)) != "receiver":
             continue
@@ -484,13 +570,14 @@ def signal_receiver(request, model, decorators):
             return True
         if any(cls["qualified-name"] == ty for cls in request.get("classes", [])):
             continue
-        value = sender.get("value") or {}
-        kind = value.get("kind")
-        if kind in ["class-ref", "symbol-ref"]:
+        value = sender.get("value")
+        if value is not None and (
+            value["kind"] == "class-ref" or value["kind"] == "symbol-ref"
+        ):
             symbol = value["qualified-name"]
             if symbol == model or ("." not in symbol and symbol == short(model)):
                 return True
-        elif kind == "str":
+        elif value is not None and value["kind"] == "str":
             if short(value["value"]) == short(model):
                 return True
         else:
@@ -498,9 +585,11 @@ def signal_receiver(request, model, decorators):
     return False
 
 
-def local_index(cls, settings, models):
+def local_index(
+    cls: "ClassSummary", settings: dict[str, str], models: "Collection[str]"
+) -> "LocalModelIndex":
     name = cls["qualified-name"]
-    result = {
+    result: "LocalModelIndex" = {
         "fields": {"id": "int", "pk": "int"},
         "field_types": {
             "id": "django.db.models.fields.AutoField[typing.Any, typing.Any]",
@@ -534,10 +623,10 @@ def local_index(cls, settings, models):
             or typed_literal(named(call.get("arguments", []), "primary_key"), "bool")
             is True
         ):
-            primary = field
+            primary = (field, call)
     if primary is not None:
-        call = call_of(primary)
-        result["auto_primary_key"] = primary["name"] if auto_field(call) else None
+        primary_field, call = primary
+        result["auto_primary_key"] = primary_field["name"] if auto_field(call) else None
         result["custom_primary_key"] = not auto_field(call)
         default = named(call.get("arguments", []), "default")
         kind = ((default or {}).get("value") or {}).get("kind")
@@ -561,17 +650,19 @@ def local_index(cls, settings, models):
     return result
 
 
-def inherited_indexes(classes, settings, names):
+def inherited_indexes(
+    classes: "list[ClassSummary]", settings: dict[str, str], names: set[str]
+) -> "dict[str, LocalModelIndex]":
     selected = {
         cls["qualified-name"]: cls for cls in classes if cls["qualified-name"] in names
     }
     local = {name: local_index(cls, settings, names) for name, cls in selected.items()}
     resolved = local
     for iteration in range(len(names)):
-        following = {}
+        following: "dict[str, LocalModelIndex]" = {}
         for name in sorted(selected):
             cls = selected[name]
-            result = {
+            result: "LocalModelIndex" = {
                 "fields": {},
                 "field_types": {},
                 "auto_primary_key": None,
@@ -605,12 +696,9 @@ def inherited_indexes(classes, settings, names):
                     result[field_map].update(indexed[field_map])
             own = local[name]
             if own["auto_primary_key"] is not None or own["custom_primary_key"]:
-                for key in [
-                    "auto_primary_key",
-                    "auto_primary_key_default",
-                    "custom_primary_key",
-                ]:
-                    result[key] = own[key]
+                result["auto_primary_key"] = own["auto_primary_key"]
+                result["auto_primary_key_default"] = own["auto_primary_key_default"]
+                result["custom_primary_key"] = own["custom_primary_key"]
             for flag in ["custom_loading", "custom_save"]:
                 result[flag] = result[flag] or own[flag]
             for field_map in ["fields", "field_types"]:
@@ -625,7 +713,7 @@ def inherited_indexes(classes, settings, names):
     return resolved
 
 
-def queryset_manager_members(cls):
+def queryset_manager_members(cls: "ClassSummary") -> "list[MemberPatch]":
     result = []
     for method in cls.get("methods", []):
         if not method.get("is-public", False):
@@ -646,7 +734,9 @@ def queryset_manager_members(cls):
     return result
 
 
-def model_virtual_types(model, fields, queryset):
+def model_virtual_types(
+    model: str, fields: dict[str, str], queryset: "ClassSummary | None"
+) -> "list[VirtualType]":
     entries = [virtual_field(name, ann(fields[name])) for name in sorted(fields)]
     return [
         virtual_type(
@@ -669,7 +759,9 @@ def model_virtual_types(model, fields, queryset):
     ]
 
 
-def symbol_name(module, symbol, names):
+def symbol_name(
+    module: str, symbol: "SymbolRef | LiteralValue | None", names: "Collection[str]"
+) -> "str | None":
     name = (symbol or {}).get("qualified-name")
     if name in names:
         return name
@@ -677,7 +769,9 @@ def symbol_name(module, symbol, names):
     return local if local in names else None
 
 
-def manager_queryset(cls, querysets, generated):
+def manager_queryset(
+    cls: "ClassSummary", querysets: "dict[str, ClassSummary]", generated: dict[str, str]
+) -> "str | None":
     for field in cls.get("fields", []):
         call = call_of(field)
         if call is None:
@@ -698,13 +792,15 @@ def manager_queryset(cls, querysets, generated):
 
 
 @on_project_index
-def build_django_index(request):
-    settings = {}
-    contributions = []
+def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse":
+    settings: dict[str, str] = {}
+    contributions: "list[Contribution]" = []
     for module in request.get("settings", []):
         for setting in module.get("values", []):
-            value = setting.get("value") or {}
-            if value.get("kind") == "str":
+            value = setting.get("value")
+            if value is None:
+                continue
+            if value["kind"] == "str":
                 for key in [
                     setting["name"],
                     module["module"] + "." + setting["name"],
@@ -786,11 +882,11 @@ def build_django_index(request):
                 "django.http.request.HttpRequest.user",
             )
         )
-    models = {}
-    virtuals = []
+    models: "dict[str, ModelIndex]" = {}
+    virtuals: "list[VirtualType]" = []
     diagnostics = []
-    reverse_sources = {}
-    query_fields = {}
+    reverse_sources: "dict[str, SymbolSource]" = {}
+    query_fields: dict[str, dict[str, str]] = {}
     for cls in classes:
         name = cls["qualified-name"]
         if name not in names:
@@ -938,7 +1034,7 @@ def build_django_index(request):
 
 
 @on_class_transform
-def analyze_django_class(request):
+def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
     cls = request["class"]
     name = cls["qualified-name"]
     indexed = (request.get("project-index") or {}).get("models") or {}
@@ -984,16 +1080,16 @@ def analyze_django_class(request):
     return class_patch(fields=fields, class_members=members, instance_members=instance)
 
 
-def model_entry(request, name):
+def model_entry(request: "IndexedRequest", name: str) -> "ModelIndex | None":
     return ((request.get("project-index") or {}).get("models") or {}).get(name)
 
 
-def model_fields(request, name):
+def model_fields(request: "IndexedRequest", name: str) -> "dict[str, str] | None":
     model = model_entry(request, name)
     return model.get("fields") if model is not None else None
 
 
-def related_model(request, field_type):
+def related_model(request: "IndexedRequest", field_type: str) -> "str | None":
     for candidate in field_type.split("|"):
         candidate = candidate.strip()
         if (
@@ -1029,7 +1125,9 @@ TERMINAL_LOOKUPS = [
 ]
 
 
-def lookup_type(request, model, lookup):
+def lookup_type(
+    request: "CallRequest", model: str, lookup: str
+) -> "tuple[str, str, str | None] | None":
     parts = lookup.split("__")
     if not parts or any(not part for part in parts):
         return None
@@ -1044,18 +1142,19 @@ def lookup_type(request, model, lookup):
         ).get(name)
         if ty is None:
             return None
-        model = related_model(request, ty)
-        if model is None:
+        related = related_model(request, ty)
+        if related is None:
             return None
+        model = related
     ty = (model_fields(request, model) or {}).get(path[-1])
     return (path[-1], ty, terminal) if ty is not None else None
 
 
-def field_allows(expected, actual):
+def field_allows(expected: str, actual: str) -> "bool":
     return actual in [part.strip() for part in expected.split("|")]
 
 
-def literal_matches(expected, value):
+def literal_matches(expected: str, value: "LiteralValue") -> "bool":
     kind = value.get("kind", "unknown")
     if kind in ["unknown", "class-ref", "enum-ref", "symbol-ref"]:
         return True
@@ -1065,7 +1164,7 @@ def literal_matches(expected, value):
     return actual is not None and field_allows(expected, actual)
 
 
-def top_parts(text, delimiter):
+def top_parts(text: str, delimiter: str) -> "list[str]":
     parts = []
     start = 0
     depth = 0
@@ -1094,7 +1193,7 @@ def top_parts(text, delimiter):
     return parts
 
 
-def unparen(text):
+def unparen(text: str) -> "str":
     while text.startswith("(") and text.endswith(")"):
         depth = 0
         enclosed = True
@@ -1112,7 +1211,7 @@ def unparen(text):
     return text
 
 
-def generic_args(text, origin):
+def generic_args(text: str, origin: str) -> "list[str] | None":
     text = text.strip()
     prefix = origin + "["
     if not text.startswith(prefix) or not text.endswith("]"):
@@ -1137,7 +1236,7 @@ def generic_args(text, origin):
     return parts
 
 
-def type_may_match(expected, actual):
+def type_may_match(expected: str, actual: str) -> "bool":
     actual = unparen(actual.strip())
     parts = top_parts(actual, "|")
     if len(parts) > 1:
@@ -1180,7 +1279,7 @@ def type_may_match(expected, actual):
     return not scalar
 
 
-def argument_matches(expected, argument):
+def argument_matches(expected: str, argument: "Argument") -> "bool":
     value = argument.get("value") or {"kind": "unknown"}
     if value.get("kind") != "unknown":
         return literal_matches(expected, value)
@@ -1196,7 +1295,7 @@ def argument_matches(expected, argument):
     return type_may_match(expected, text)
 
 
-def string_items_match(expected, text):
+def string_items_match(expected: str, text: str) -> "bool":
     return all(
         field_allows(expected, "str")
         or (field_allows(expected, "int") and (char in "0123456789" or ord(char) > 127))
@@ -1204,19 +1303,19 @@ def string_items_match(expected, text):
     )
 
 
-def lookup_matches(expected, terminal, arg):
+def lookup_matches(expected: str, terminal: str | None, arg: "Argument") -> "bool":
     lookup = terminal or "exact"
-    value = arg.get("value") or {"kind": "unknown"}
-    kind = value.get("kind")
+    value: "LiteralValue" = arg.get("value") or {"kind": "unknown"}
+    kind = value["kind"]
     if lookup == "isnull":
         return kind in ["bool", "unknown"]
     if lookup in ["in", "range"]:
-        if kind in ["list", "tuple"]:
-            items = value.get("items", [])
+        if value["kind"] == "list" or value["kind"] == "tuple":
+            items = value["items"]
             return (lookup == "in" or len(items) == 2) and all(
                 literal_matches(expected, item) for item in items
             )
-        if kind == "str":
+        if value["kind"] == "str":
             text = value["value"]
             return (lookup == "in" or len(text) == 2) and string_items_match(
                 expected, text
@@ -1242,7 +1341,9 @@ def lookup_matches(expected, terminal, arg):
     return argument_matches(expected, arg)
 
 
-def validate_lookup(request, model, arg):
+def validate_lookup(
+    request: "CallRequest", model: str, arg: "Argument"
+) -> "Diagnostic | None":
     lookup = arg.get("name")
     if lookup is None:
         return None
@@ -1257,7 +1358,9 @@ def validate_lookup(request, model, arg):
     )
 
 
-def validate_field_value(request, model, arg):
+def validate_field_value(
+    request: "CallRequest", model: str, arg: "Argument"
+) -> "Diagnostic | None":
     name = arg.get("name")
     fields = model_fields(request, model)
     if name is None or fields is None:
@@ -1272,7 +1375,7 @@ def validate_field_value(request, model, arg):
     )
 
 
-def callable_result(text):
+def callable_result(text: str) -> "str":
     text = unparen(text.strip())
     parts = top_parts(text, "|")
     if len(parts) > 1:
@@ -1294,13 +1397,16 @@ def callable_result(text):
     return "Unknown" if "Callable[" in text else text
 
 
-def validate_defaults(request, model, arg):
-    value = arg.get("value") or {}
-    if value.get("kind") != "dict":
+def validate_defaults(
+    request: "CallRequest", model: str, arg: "Argument"
+) -> "list[Diagnostic]":
+    value = arg.get("value")
+    if value is None or value["kind"] != "dict":
         return []
     value_type = None
-    if arg.get("type-expr"):
-        text = canonical(arg["type-expr"])
+    argument_type = arg.get("type-expr")
+    if argument_type:
+        text = canonical(argument_type)
         for origin in [
             "dict",
             "builtins.dict",
@@ -1318,16 +1424,16 @@ def validate_defaults(request, model, arg):
     result = []
     for entry in value.get("entries", []):
         key = entry["key"]
-        if key.get("kind") != "str":
+        if key["kind"] != "str":
             continue
-        nested_value = entry["value"]
+        nested_value: "LiteralValue" = entry["value"]
         if resolves and nested_value.get("kind") in [
             "symbol-ref",
             "enum-ref",
             "class-ref",
         ]:
             nested_value = {"kind": "unknown"}
-        nested = {
+        nested: "Argument" = {
             "kind": "keyword",
             "name": key["value"],
             "value": nested_value,
@@ -1342,7 +1448,7 @@ def validate_defaults(request, model, arg):
     return result
 
 
-def creation_defaults(method, arg):
+def creation_defaults(method: str, arg: "Argument") -> "bool":
     name = arg.get("name")
     return (
         name == "defaults"
@@ -1354,7 +1460,9 @@ def creation_defaults(method, arg):
     )
 
 
-def validate_field_name(request, model, arg):
+def validate_field_name(
+    request: "CallRequest", model: str, arg: "Argument"
+) -> "Diagnostic | None":
     fields = model_fields(request, model)
     value = typed_literal(arg, "str")
     if fields is None or value is None or value in fields:
@@ -1362,7 +1470,9 @@ def validate_field_name(request, model, arg):
     return unknown_lookup_diag(model, value, arg)
 
 
-def validate_method_field(request, model, method, arg):
+def validate_method_field(
+    request: "CallRequest", model: str, method: str, arg: "Argument"
+) -> "Diagnostic | None":
     value = typed_literal(arg, "str")
     if value is None:
         return None
@@ -1383,12 +1493,14 @@ def validate_method_field(request, model, method, arg):
             valid = terminal is None and related_model(request, expected) is not None
         if valid:
             return None
-    candidate = dict(arg)
+    candidate: "Argument" = {**arg}
     candidate["value"] = {"kind": "str", "value": value}
     return validate_field_name(request, model, candidate)
 
 
-def validate_field_collection(request, model, arg):
+def validate_field_collection(
+    request: "CallRequest", model: str, arg: "Argument"
+) -> "list[Diagnostic]":
     value = arg.get("value") or {}
     if value.get("kind") not in ["list", "tuple"]:
         return []
@@ -1404,7 +1516,9 @@ def validate_field_collection(request, model, arg):
     return result
 
 
-def validate_arguments(request, model, method):
+def validate_arguments(
+    request: "CallRequest", model: str, method: str
+) -> "list[Diagnostic]":
     if model_fields(request, model) is None:
         return []
     result = []
@@ -1441,16 +1555,16 @@ def validate_arguments(request, model, method):
     return result
 
 
-def positional_strings(request):
-    return [
-        arg["value"]["value"]
-        for arg in request.get("arguments", [])
-        if arg.get("kind") == "positional"
-        and (arg.get("value") or {}).get("kind") == "str"
-    ]
+def positional_strings(request: "CallRequest") -> "list[str]":
+    strings: list[str] = []
+    for arg in request.get("arguments", []):
+        value = arg.get("value")
+        if arg["kind"] == "positional" and value is not None and value["kind"] == "str":
+            strings.append(value["value"])
+    return strings
 
 
-def bool_keyword(request, name):
+def bool_keyword(request: "CallRequest", name: str) -> "bool | None":
     return typed_literal(
         named(
             [
@@ -1464,7 +1578,7 @@ def bool_keyword(request, name):
     )
 
 
-def values_row(request, model):
+def values_row(request: "CallRequest", model: str) -> "TypeExpr | None":
     fields = model_fields(request, model)
     if fields is None:
         return None
@@ -1480,7 +1594,9 @@ def values_row(request, model):
     )
 
 
-def values_list_row(request, model, valid):
+def values_list_row(
+    request: "CallRequest", model: str, valid: bool
+) -> "TypeExpr | None":
     names = positional_strings(request)
     flat = bool_keyword(request, "flat") is True
     named_row = bool_keyword(request, "named") is True
@@ -1510,7 +1626,7 @@ def values_list_row(request, model, valid):
     return tuple_type([ann((fields or {}).get(name, "object")) for name in names])
 
 
-def qualified_model(request, name):
+def qualified_model(request: "CallRequest", name: str) -> "str":
     models = (request.get("project-index") or {}).get("models") or {}
     if name in models:
         return name
@@ -1518,7 +1634,7 @@ def qualified_model(request, name):
     return matches[0] if len(matches) == 1 else name
 
 
-def prefetched_row(request, row):
+def prefetched_row(request: "CallRequest", row: "TypeExpr") -> "TypeExpr | None":
     entries = []
     for arg in request.get("arguments", []):
         ty = arg.get("type-expr")
@@ -1551,7 +1667,7 @@ def prefetched_row(request, row):
     )
 
 
-def query_return(request, method):
+def query_return(request: "CallRequest", method: str) -> "CallReturnResponse | None":
     receiver_value = request.get("receiver") or {}
     arguments = receiver_value.get("generic-arguments", [])
     if not arguments:
@@ -1649,7 +1765,7 @@ def query_return(request, method):
     return call_return_patch(result, diagnostics)
 
 
-def get_registry_model(request):
+def get_registry_model(request: "CallRequest") -> "CallReturnResponse | None":
     args = request.get("arguments", [])
     positional = [arg for arg in args if arg.get("kind") == "positional"]
     app = named(args, "app_label") or (positional[0] if positional else None)
@@ -1686,7 +1802,7 @@ def get_registry_model(request):
 
 
 @on_call_return
-def django_call_return(request):
+def django_call_return(request: "CallRequest") -> "CallReturnResponse | None":
     callee_text = request["callee"]["expression"]
     if callee_text == "django.http.request.HttpRequest":
         return call_return_patch(ann("django.http.request._MutableHttpRequest"))
@@ -1755,7 +1871,7 @@ def django_call_return(request):
 
 
 @on_call_signature
-def django_signature(request):
+def django_signature(request: "CallRequest") -> "CallSignatureResponse | None":
     if short(request["callee"]["expression"]) != "from_queryset":
         return None
     ret = (request.get("receiver") or {}).get("type-expr") or ann(
@@ -1778,7 +1894,7 @@ def django_signature(request):
 
 
 @on_mutation
-def django_mutation(request):
+def django_mutation(request: "MutationRequest") -> "MutationResponse | None":
     if request.get("operation") != "item-set":
         return None
     return mutation_diagnostics(
@@ -1792,26 +1908,28 @@ def django_mutation(request):
     )
 
 
-def definitely_saves(value):
-    kind = value.get("kind")
+def definitely_saves(value: "LiteralValue | None") -> "bool":
+    if value is None:
+        return False
+    kind = value["kind"]
     return kind == "none" or (kind in ["list", "tuple"] and bool(value.get("items")))
 
 
 @on_call_state
-def django_state(request):
+def django_state(request: "CallRequest") -> "CallStateResponse | None":
     if ((request.get("context") or {}).get("config") or {}).get("model-state") is False:
         return None
     receiver_value = request.get("receiver")
     if receiver_value is None:
         model = model_entry(request, request["callee"]["expression"])
+        key = model.get("auto_primary_key") if model is not None else None
         if (
             model is None
-            or not isinstance(model.get("auto_primary_key"), str)
+            or not isinstance(key, str)
             or model.get("custom_loading") is True
             or model.get("signal_receivers") is True
         ):
             return None
-        key = model["auto_primary_key"]
         uncertain = (
             "int | None | " + DB_DEFAULT
             if model.get("auto_primary_key_default") == DB_DEFAULT
@@ -1855,7 +1973,8 @@ def django_state(request):
     else:
         return None
     model = model_entry(request, name)
-    if model is None or not isinstance(model.get("auto_primary_key"), str):
+    key = model.get("auto_primary_key") if model is not None else None
+    if model is None or not isinstance(key, str):
         return None
     if not model_method and model.get("custom_loading") is True:
         return None
@@ -1867,13 +1986,13 @@ def django_state(request):
         arg.get("kind") in ["positional", "star-args", "star-kwargs"]
         or (
             arg.get("name") == "update_fields"
-            and not definitely_saves(arg.get("value") or {})
+            and not definitely_saves(arg.get("value"))
         )
         for arg in request.get("arguments", [])
     ):
         return None
     ty = ann("None" if method == "delete" else "int")
-    members = {model["auto_primary_key"]: ty, "pk": ty}
+    members = {key: ty, "pk": ty}
     return (
         call_state_patch(receiver_members=members)
         if model_method

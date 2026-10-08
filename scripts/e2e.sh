@@ -34,6 +34,8 @@ cp -R "$ROOT/e2e/django5_fixture/." "$WORK_DIR/"
 
   package_dir="$(uv run python -c 'import pathlib, django_ty; print(pathlib.Path(django_ty.__file__).parent)')"
   test -f "$package_dir/monty.py"
+  test -f "$package_dir/_monty_types.pyi"
+  test -f "$package_dir/_monty_sdk.pyi"
   test -f "$package_dir/django_ty.wasm"
   test -f "$package_dir/ty-plugin-monty.json"
   uv run python -c 'import importlib.metadata as metadata; names = {d.metadata.get("Name", "").lower() for d in metadata.distributions()}; assert not any(name.startswith("pydantic-monty") for name in names)'

@@ -65,6 +65,20 @@ third-party imports. Wildcard imports are rejected even inside a type-checking
 block. See [authoring constraints](https://github.com/regularkevvv/ty-extended/blob/1e7e01dc34da874f494db30a49323e570ef8974a/docs/plugin-authoring.md#python-sandbox-constraints)
 and [Monty documentation](https://pydantic.dev/docs/monty/).
 
+All helpers and hooks have parameter and return annotations. Static-only
+[`TypedDict` schemas](../python/django_ty/_monty_types.pyi) describe requests,
+responses and model indexes; [SDK declarations](../python/django_ty/_monty_sdk.pyi)
+refine the SDK's broad JSON aliases. Monty skips their `TYPE_CHECKING` imports.
+Annotations do not validate runtime payloads.
+
+CI runs ty on the implementation and schemas, verifies all 39 SDK signatures,
+and checks that seven invalid payloads, SDK arguments, index writes and return
+types are rejected. Repeat it with:
+
+```sh
+uv run --no-project --python 3.13 --with ty-extended==0.84.4 python scripts/check_monty_types.py
+```
+
 ## Compatibility evidence
 
 - 151 full protocol responses match Rust after SDK deserialization, in both

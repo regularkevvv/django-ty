@@ -61,10 +61,13 @@ jobs:
         working-directory: django-ty
         run: |
           python3 scripts/build-monty.py --check
-          uv run --no-project --with ruff==0.16.10 ruff check --isolated --select E4,E7,E9,F,I python/django_ty/monty.py scripts/build-monty.py scripts/check_monty_parity.py scripts/benchmark_runtimes.py scripts/runtime_config.py python/django_ty/runtime.py python/django_ty/__main__.py tests/test_runtime_config.py tests/test_benchmark_runtimes.py
-          uv run --no-project --with ruff==0.16.10 ruff format --isolated --check python/django_ty/monty.py scripts/build-monty.py scripts/check_monty_parity.py scripts/benchmark_runtimes.py scripts/runtime_config.py python/django_ty/runtime.py python/django_ty/__main__.py tests/test_runtime_config.py tests/test_benchmark_runtimes.py
+          uv run --no-project --with ruff==0.16.10 ruff check --isolated --select E4,E7,E9,F,I python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi scripts/check_monty_types.py scripts/build-monty.py scripts/check_monty_parity.py scripts/benchmark_runtimes.py scripts/runtime_config.py python/django_ty/runtime.py python/django_ty/__main__.py tests/test_runtime_config.py tests/test_benchmark_runtimes.py
+          uv run --no-project --with ruff==0.16.10 ruff format --isolated --check python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi scripts/check_monty_types.py scripts/build-monty.py scripts/check_monty_parity.py scripts/benchmark_runtimes.py scripts/runtime_config.py python/django_ty/runtime.py python/django_ty/__main__.py tests/test_runtime_config.py tests/test_benchmark_runtimes.py
       - name: Verify Python and Monty response parity
         run: bash scripts/check-monty-parity.sh
+        working-directory: django-ty
+      - name: Check Monty types and SDK declarations
+        run: uv run --no-project --python 3.13 --with ty-extended==0.84.4 python scripts/check_monty_types.py
         working-directory: django-ty
       - name: Verify Monty official contracts
         run: DJANGO_TY_RUNTIME=monty bash scripts/differential-conformance.sh --check
