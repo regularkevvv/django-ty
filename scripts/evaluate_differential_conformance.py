@@ -16,6 +16,11 @@ from pathlib import Path
 from typing import Any
 
 try:
+    from .runtime_config import checker_options
+except ImportError:
+    from runtime_config import checker_options
+
+try:
     import tomllib
 except ModuleNotFoundError:
     import tomli as tomllib
@@ -435,6 +440,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     ty_command = [
         str(args.ty_bin),
         "check",
+        *checker_options(args.ty_python, settings_module="conformance_project.settings"),
         *CHECK_PATHS,
         "--project",
         ".",

@@ -24,16 +24,20 @@ uv pip install \
   --python "$WORK_DIR/reference/bin/python" \
   --requirement "$ROOT/conformance/reference-requirements.txt"
 
-DIST_DIR="$WORK_DIR/django-ty-dist" \
-  CARGO_TARGET_DIR="$BUILD_DIR/django-ty-target" \
-  bash "$ROOT/scripts/build-wheel.sh"
+if [ -z "${DJANGO_TY_WHEEL:-}" ]; then
+  DIST_DIR="$WORK_DIR/django-ty-dist" \
+    CARGO_TARGET_DIR="$BUILD_DIR/django-ty-target" \
+    bash "$ROOT/scripts/build-wheel.sh"
+  DJANGO_TY_WHEEL="$(find "$WORK_DIR/django-ty-dist" -maxdepth 1 -name 'django_ty-*.whl' -print -quit)"
+fi
+test -f "$DJANGO_TY_WHEEL"
 
 uv venv --python 3.13 "$WORK_DIR/candidate"
 uv pip install \
   --python "$WORK_DIR/candidate/bin/python" \
   --requirement "$ROOT/conformance/candidate-requirements.txt" \
   "ty-extended==$TY_EXTENDED_VERSION" \
-  "$WORK_DIR"/django-ty-dist/*.whl
+  "$DJANGO_TY_WHEEL"
 
 if ! "$WORK_DIR/candidate/bin/python" -c \
   'import importlib.metadata as metadata, importlib.util; assert importlib.util.find_spec("django_stubs_ext") is None; files = {str(path) for path in metadata.distribution("django-ty").files or ()}; assert not any(path.startswith("django_stubs_ext/") for path in files); assert not any(distribution.metadata.get("Name", "").lower() in {"django-stubs", "django-stubs-ext", "mypy"} for distribution in metadata.distributions())'

@@ -63,7 +63,7 @@ every Django API, custom AppConfig label, or dynamically registered model.
 
 This branch includes an experimental Python plugin for the embedded Monty
 runtime. WASM remains the default. See [the analysis and checks](docs/MONTY-EXPERIMENT.md)
-for building the Python-only wheel.
+for selecting either backend from the same wheel and benchmarking them.
 
 ## Development
 

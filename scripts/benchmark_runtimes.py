@@ -1,79 +1,277 @@
-"""Compare fresh checker processes on two installed E2E fixture copies."""
+"""Benchmark both backends in one installed environment, with generated stress cases."""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
+import platform
+import shutil
+import signal
 import statistics
 import subprocess
+import sys
+import tempfile
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
+try:
+    from .runtime_config import checker_options
+except ImportError:
+    from runtime_config import checker_options
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--wasm-project", type=Path, required=True)
-    parser.add_argument("--monty-project", type=Path, required=True)
-    parser.add_argument("--runs", type=int, default=7)
-    args = parser.parse_args()
-    if args.runs < 1:
-        parser.error("--runs must be positive")
-    results = {}
-    projects = {
-        "wasm": args.wasm_project.resolve(),
-        "monty": args.monty_project.resolve(),
-    }
-    paths = [
-        "accounts",
-        "library",
-        "commerce",
-        "auditlog",
-        "typechecks/positive.py",
-        "typechecks/static_api.py",
-    ]
-    expected_versions = None
-    for runtime, project in projects.items():
-        python = project / ".venv/bin/python"
-        code = 'import json,sys,importlib.metadata as m;print(json.dumps([sys.version, m.version("Django"), m.version("ty-extended"), m.version("django-ty")]))'
-        versions = json.loads(
-            subprocess.check_output([str(python), "-c", code], text=True)
+PATHS = [
+    "accounts",
+    "library",
+    "commerce",
+    "auditlog",
+    "typechecks/positive.py",
+    "typechecks/static_api.py",
+]
+
+
+def stress_source(models: int, fields: int, queries: int, relations: str) -> str:
+    lines = ["from django.db import models", "from typing import assert_type", ""]
+    for index in range(models):
+        lines += [f"class Model{index}(models.Model):"]
+        lines += [
+            f"    field{field} = models.CharField(max_length=100)"
+            for field in range(fields)
+        ]
+        lines += ["    amount = models.IntegerField()"]
+        if index and relations != "none":
+            target = f"Model{index - 1}" if relations == "chain" else "Model0"
+            related = "" if relations == "chain" else ', related_name="+"'
+            lines += [
+                f'    parent = models.ForeignKey("{target}", on_delete=models.CASCADE{related})'
+            ]
+        body = [f"obj{index} = Model{index}()", f"assert_type(obj{index}.id, None)"]
+        body += [f"obj{index}.save()", f"assert_type(obj{index}.id, int)"]
+        for query in range(queries):
+            body += [
+                f"loaded{index}_{query} = Model{index}.objects.get(pk={query + 1})",
+                f"assert_type(loaded{index}_{query}.id, int)",
+                f'Model{index}.objects.filter(amount__gte={query}).values("field0", "amount")',
+            ]
+        body += [
+            f"alias{index} = obj{index}",
+            f"alias{index}.delete()",
+            f"assert_type(obj{index}.pk, None)",
+        ]
+        lines += ["", f"def exercise_model{index}() -> None:"]
+        lines += ["    " + line for line in body]
+        lines += [""]
+    return "\n".join(lines)
+
+
+def measure(command: list[str], project: Path, timeout: float) -> dict:
+    # wait4 reports this child's peak RSS, rather than a cumulative high-water mark
+    # from earlier runs. Redirect output to a file so a full pipe cannot deadlock.
+    with tempfile.TemporaryFile() as output:
+        start = time.perf_counter()
+        child = subprocess.Popen(
+            command,
+            cwd=project,
+            stdout=output,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
         )
-        if expected_versions is not None and versions != expected_versions:
-            raise RuntimeError("Benchmark environments have different versions")
-        expected_versions = versions
-        files = {
-            str(p.relative_to(project)): p.read_bytes()
-            for path in paths
-            for p in (
-                [project / path]
-                if (project / path).is_file()
-                else sorted((project / path).rglob("*.py"))
+        timed_out = False
+        while True:
+            pid, status, usage = os.wait4(child.pid, os.WNOHANG)
+            if pid:
+                break
+            if time.perf_counter() - start >= timeout:
+                try:
+                    os.killpg(child.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                _, status, usage = os.wait4(child.pid, 0)
+                timed_out = True
+                break
+            time.sleep(0.01)
+        elapsed = time.perf_counter() - start
+        child.returncode = os.waitstatus_to_exitcode(status)
+        output.seek(0)
+        text = output.read().decode(errors="replace")
+    rss_bytes = usage.ru_maxrss * (1 if sys.platform == "darwin" else 1024)
+    return {
+        "seconds": elapsed,
+        "cpu_seconds": usage.ru_utime + usage.ru_stime,
+        "peak_rss_bytes": rss_bytes,
+        "exit_code": child.returncode,
+        "timed_out": timed_out,
+        "output": text.strip(),
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--project",
+        type=Path,
+        required=True,
+        help="Installed wheel E2E directory containing .venv",
+    )
+    parser.add_argument("--runs", type=int, default=7)
+    parser.add_argument("--models", type=int, nargs="+", default=[0, 5, 25])
+    parser.add_argument("--fields", type=int, default=8)
+    parser.add_argument("--queries", type=int, default=3)
+    parser.add_argument(
+        "--relations",
+        choices=("shallow", "chain", "none"),
+        default="shallow",
+        help="Chain includes reverse relations and stresses recursive type graphs",
+    )
+    parser.add_argument("--timeout", type=float, default=120)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--allow-failures",
+        action="store_true",
+        help="Keep failure evidence and return success during limit exploration",
+    )
+    args = parser.parse_args()
+    if (
+        args.runs < 1
+        or args.fields < 1
+        or args.queries < 1
+        or min(args.models) < 0
+        or args.timeout <= 0
+    ):
+        parser.error(
+            "runs, fields, queries and timeout must be positive; models must be nonnegative"
+        )
+    if not hasattr(os, "wait4"):
+        parser.error("peak RSS measurement requires macOS or Linux")
+    project = args.project.resolve()
+    environment = project / ".venv"
+    code = """import hashlib, json, sys
+from importlib import metadata
+from pathlib import Path
+import django_ty
+root = Path(django_ty.__file__).parent
+files = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.rglob("*")) if p.is_file() and "__pycache__" not in p.parts}
+print(json.dumps({"python": sys.version, "python_minor": f"{sys.version_info.major}.{sys.version_info.minor}", "Django": metadata.version("Django"), "ty-extended": metadata.version("ty-extended"), "django-ty": metadata.version("django-ty"), "package_payload_sha256": hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest(), "artifact_sha256": {name: files[name] for name in ("django_ty.wasm", "monty.py", "ty-plugin.json", "ty-plugin-monty.json")}}))"""
+    versions = json.loads(
+        subprocess.check_output(
+            [str(environment / "bin/python"), "-c", code], text=True
+        )
+    )
+    options = {
+        runtime: checker_options(
+            environment, runtime, settings_module="config.settings"
+        )
+        for runtime in ("wasm", "monty")
+    }
+    result = {
+        "method": {
+            "measured_at": datetime.now(timezone.utc).isoformat(),
+            "platform": platform.platform(),
+            "machine": platform.machine(),
+            "logical_cpus": os.cpu_count(),
+            "ty_max_parallelism": os.environ.get("TY_MAX_PARALLELISM"),
+            "runs": args.runs,
+            "order": "alternating backend order; fresh checker processes; shared installed wheel and environment; OS caches uncontrolled",
+            "memory": "peak RSS of checker process, including embedded plugin runtime; not incremental plugin memory",
+            "relations": args.relations,
+            "fields_per_model": args.fields,
+            "queries_per_model": args.queries,
+            "timeout_seconds": args.timeout,
+        },
+        "environment": versions,
+        "workloads": [],
+    }
+    failed = False
+    with tempfile.TemporaryDirectory(prefix="django-ty-benchmark-") as temporary:
+        fixture = Path(temporary).resolve()
+        for name in [
+            "accounts",
+            "library",
+            "commerce",
+            "auditlog",
+            "typechecks",
+            "config",
+        ]:
+            shutil.copytree(
+                project / name,
+                fixture / name,
+                ignore=shutil.ignore_patterns("__pycache__"),
             )
-        }
-        if runtime == "wasm":
-            expected_files = files
-        elif files != expected_files:
-            raise RuntimeError("Benchmark fixture sources differ")
-        results[runtime] = {"seconds": [], "versions": versions}
-    # Alternate process launches to reduce order-related CPU/cache effects.
-    for iteration in range(args.runs):
-        runtimes = ["wasm", "monty"] if iteration % 2 == 0 else ["monty", "wasm"]
-        for runtime in runtimes:
-            project = projects[runtime]
-            start = time.perf_counter()
-            completed = subprocess.run(
-                [str(project / ".venv/bin/ty"), "check", *paths],
-                cwd=project,
-                capture_output=True,
-                text=True,
+        shutil.copyfile(project / "pyproject.toml", fixture / "pyproject.toml")
+        settings = fixture / "config/settings.py"
+        settings.write_text(
+            settings.read_text()
+            + '\nINSTALLED_APPS = [*INSTALLED_APPS, "benchmark_app"]\n'
+        )
+        app = fixture / "benchmark_app"
+        app.mkdir()
+        (app / "__init__.py").write_text("")
+        for models in args.models:
+            (app / "models.py").write_text(
+                stress_source(models, args.fields, args.queries, args.relations)
             )
-            if completed.returncode:
-                raise RuntimeError(completed.stdout + completed.stderr)
-            results[runtime]["seconds"].append(time.perf_counter() - start)
-    for result in results.values():
-        result["median_seconds"] = statistics.median(result["seconds"])
-    print(json.dumps(results, indent=2))
+            sources = {
+                str(p.relative_to(fixture)): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in sorted(fixture.rglob("*.py"))
+            }
+            workload = {
+                "models": models,
+                "source_hashes": sources,
+                "runtimes": {"wasm": {"samples": []}, "monty": {"samples": []}},
+            }
+            paths = PATHS + (["benchmark_app"] if models else [])
+            for iteration in range(args.runs):
+                for runtime in (
+                    ["wasm", "monty"] if iteration % 2 == 0 else ["monty", "wasm"]
+                ):
+                    command = [
+                        str(environment / "bin/ty"),
+                        "check",
+                        *paths,
+                        "--project",
+                        str(fixture),
+                        "--python",
+                        str(environment),
+                        "--python-version",
+                        versions["python_minor"],
+                        "--color",
+                        "never",
+                        "--no-progress",
+                        "--error-on-warning",
+                        *options[runtime],
+                    ]
+                    sample = measure(command, fixture, args.timeout)
+                    workload["runtimes"][runtime]["samples"].append(sample)
+                    failed |= sample["exit_code"] != 0
+                    print(
+                        f"{models} models / {runtime}: {sample['seconds']:.3f}s, {sample['peak_rss_bytes'] / 1048576:.1f} MiB, exit {sample['exit_code']}",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+            for stats in workload["runtimes"].values():
+                samples = stats["samples"]
+                stats["successful_runs"] = sum(s["exit_code"] == 0 for s in samples)
+                for key in ("seconds", "cpu_seconds", "peak_rss_bytes"):
+                    stats[f"median_{key}"] = statistics.median(s[key] for s in samples)
+            workload["all_runs_passed"] = all(
+                stats["successful_runs"] == args.runs
+                for stats in workload["runtimes"].values()
+            )
+            if workload["all_runs_passed"]:
+                workload["wasm_over_monty_wall_time"] = (
+                    workload["runtimes"]["wasm"]["median_seconds"]
+                    / workload["runtimes"]["monty"]["median_seconds"]
+                )
+            result["workloads"].append(workload)
+    encoded = json.dumps(result, indent=2) + "\n"
+    if args.output:
+        args.output.write_text(encoded)
+    else:
+        print(encoded, end="")
+    return int(failed and not args.allow_failures)
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

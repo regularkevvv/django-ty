@@ -1,139 +1,151 @@
 # Python/Monty alternative
 
-**A complete Python alternative is possible with ty-extended 0.84.4.** No checker
-changes are required. `python/django_ty/monty.py` implements the same rules as the
-Rust plugin; the existing WASM implementation remains the default.
+The Python port implements the Rust plugin's rules on ty-extended 0.84.4. **One
+wheel contains both implementations and the shared stub tree.** WASM remains the
+usual auto-discovery default; Monty is an explicit configuration choice. This
+branch is an experiment, not a published release.
 
-## What was ported
+## Hooks
 
-| Django behavior | Monty hook | Rust reference |
+| Behavior | Hook | Rust reference |
 | --- | --- | --- |
-| Models, inheritance, managers, reverse relations, settings, choices, virtual rows | `build-project-index` | [`index.rs`](../src/index.rs) |
-| Field descriptors and constructors | `analyze-class` | [`fields.rs`](../src/fields.rs), [`plugin.rs`](../src/plugin.rs) |
-| Querysets, lookups, projections, annotations, prefetching, metadata, lazy strings, auth and app registry | `adjust-call-return` | [`querysets.rs`](../src/querysets.rs), [`apps.rs`](../src/apps.rs) |
-| `Manager.from_queryset` | `adjust-call-signature` | [`plugin.rs`](../src/plugin.rs) |
-| Constructor/load/save/delete ID facts | `adjust-call-state` | [`state.rs`](../src/state.rs) |
-| Immutable QueryDict writes | `validate-mutation` | [`diagnostics.rs`](../src/diagnostics.rs) |
+| Models, inheritance, managers, relations, settings, choices, virtual rows | `build-project-index` | [index.rs](../src/index.rs) |
+| Fields and constructors | `analyze-class` | [fields.rs](../src/fields.rs), [plugin.rs](../src/plugin.rs) |
+| Querysets, lookups, projections, prefetching, metadata, auth, app registry | `adjust-call-return` | [querysets.rs](../src/querysets.rs), [apps.rs](../src/apps.rs) |
+| `Manager.from_queryset` | `adjust-call-signature` | [plugin.rs](../src/plugin.rs) |
+| Constructor/load/save/delete ID facts | `adjust-call-state` | [state.rs](../src/state.rs) |
+| Immutable QueryDict writes | `validate-mutation` | [diagnostics.rs](../src/diagnostics.rs) |
 
-Both runtimes receive the same protocol data and use the same stub tree. Alias
-tracking, branch joins and invalidation still belong to the checker. Python
-retains the conservative rules for overridden methods, uncertain saves, signal
-receivers, custom loading, non-auto IDs and multi-table inheritance.
+Alias tracking, branch joins and invalidation remain checker responsibilities.
+Both plugins retain conservative rules for overrides, signals, uncertain saves,
+custom loading, non-auto IDs and multi-table inheritance.
 
-The [Python SDK](https://github.com/regularkevvv/ty-extended/blob/1e7e01dc34da874f494db30a49323e570ef8974a/python/ty/plugin_sdk.py)
-exposes these hooks and their complete response shapes, including structural type
-snapshots, cross-symbol contributions and constructor state claims. The port
-uses those public builders; it does not call the Rust Django plugin.
+## Select a backend
 
-## Python means the Monty subset
+Build and install once:
 
-This is sandboxed Python, not a normal CPython Django plugin. It cannot import
-Django, read project files, inspect live model classes or access the network.
-The host supplies class summaries, literal arguments, settings and the project
-index. That is sufficient because the Rust implementation already works from
-those summaries.
+```sh
+DIST_DIR=/tmp/django-ty-dist bash scripts/build-wheel.sh
+uv add /tmp/django-ty-dist/django_ty-0.5.0-py3-none-any.whl
+uv run python -m django_ty --runtime wasm check .
+uv run python -m django_ty --runtime monty check .
+```
 
-The host prepends the SDK to a single source file. Imports from `ty.plugin_sdk`
-are guarded by `typing.TYPE_CHECKING` for editors. The port uses functions and
-plain dictionaries rather than Rust structs/enums. It avoids inheritance,
-`match`, generators and third-party imports. Wildcard imports are rejected by
-the pinned interpreter, even inside an unexecuted type-checking block.
-See the checker's [authoring constraints](https://github.com/regularkevvv/ty-extended/blob/1e7e01dc34da874f494db30a49323e570ef8974a/docs/plugin-authoring.md#python-sandbox-constraints)
+The wrapper selects one plugin through ty's existing configuration options. If
+your project configures `django-settings-module`, pass it to the explicit entry:
+
+```sh
+uv run python -m django_ty --runtime monty --settings-module project.settings check .
+```
+
+For a persistent configuration, print the entry and add it to `ty.toml`:
+
+```sh
+uv run python -m django_ty --runtime monty --settings-module project.settings --print-config
+```
+
+Printed artifact paths refer to the current environment; regenerate them after
+moving it. Use the printed plugin entry's `config` for Django settings: the
+`plugins.config.django-ty` table applies to auto-discovered packages. The wrapper
+replaces the explicit plugin list and disables auto-discovery; include other
+plugins manually if your project uses them. Other ty settings remain in effect.
+
+No wheel replacement, manifest rewriting or `pydantic-monty` installation is
+needed. The optional worker mode still uses `ty-extended[monty-workers]`.
+
+## Python constraints
+
+[monty.py](../python/django_ty/monty.py) uses the checker's
+[public SDK](https://github.com/regularkevvv/ty-extended/blob/1e7e01dc34da874f494db30a49323e570ef8974a/python/ty/plugin_sdk.py).
+It consumes host summaries; it cannot import Django, inspect live models, read
+files or access the network. The host prepends the SDK to this single file.
+Imports are guarded by `typing.TYPE_CHECKING`; runtime rules use functions and
+plain dictionaries. The port avoids inheritance, `match`, generators and
+third-party imports. Wildcard imports are rejected even inside a type-checking
+block. See [authoring constraints](https://github.com/regularkevvv/ty-extended/blob/1e7e01dc34da874f494db30a49323e570ef8974a/docs/plugin-authoring.md#python-sandbox-constraints)
 and [Monty documentation](https://pydantic.dev/docs/monty/).
 
-The default embedded runtime requires **no `pydantic-monty` installation**. The
-parity tests install version 1.0.0 only to run an independent Monty worker with
-the same interpreter version. That is a development dependency. Explicit ty
-worker mode requires the existing `ty-extended[monty-workers]` extra.
+## Compatibility evidence
 
-## Try it
+- 151 full protocol responses match Rust after SDK deserialization, in both
+  CPython and pinned Monty 1.0.0. `pydantic-monty` is used only for this test.
+- Both backends from the **same wheel** pass all 18 Django/Python pairs: 166/166
+  assertions, 83 independent Django runtime contracts and nine QueryDict cases
+  per pair. The baseline retains 100% official-contract coverage and 93.8%
+  mypy agreement.
+- Both pass positive, expected-negative and static API installed-wheel E2E.
+  E2E also verifies that default auto-discovery still loads WASM and that both
+  artifacts are installed without a Python Monty runtime dependency.
+- Existing Rust tests and coverage remain CI gates; 32 Python tooling tests
+  include backend configuration, path escaping and explicit settings forwarding.
 
-Build the alternative without a Rust compiler or WASM artifact:
+This proves parity for the corpus, not all possible Django programs.
 
-```sh
-DJANGO_TY_RUNTIME=monty DIST_DIR=/tmp/django-ty-monty-dist bash scripts/build-wheel.sh
-uv add /tmp/django-ty-monty-dist/django_ty-0.5.0-py3-none-any.whl
-```
+Both host runtimes cap responses at 8 MiB. The standalone 2,501-model Rust test
+exceeds that cap; its protocol parity is not evidence of host support at that
+size. Monty uses a five-second feed budget and recursion limit of 1,000 by
+default, with no memory cap. Embedded Monty handles Python errors, execution
+limits and unwinding panics, but cannot isolate native allocator/stack aborts.
+WASM limits guest memory to 64 MiB and traps guest stack overflows. Worker mode
+adds process isolation. See [host limits](https://github.com/regularkevvv/ruff-extended/blob/4da08f0a01d9f2611c20b77be8db84a919eceae3/crates/ty_plugin_host/src/monty.rs)
+and [runtime safety](https://github.com/regularkevvv/ty-extended/blob/1e7e01dc34da874f494db30a49323e570ef8974a/docs/plugin-runtime.md#safety-model).
 
-Use the usual configuration:
+## Benchmark and stress test
 
-```toml
-[tool.ty.plugins]
-auto-discover = true
-```
-
-The alternative wheel registers Monty through its canonical `ty-plugin.json`.
-It replaces the WASM wheel in that environment; it does not register a second
-plugin with competing claims. It is an experiment on this branch, not a new
-published version.
-
-The normal wheel also contains the Python artifact and `ty-plugin-monty.json`
-for explicit configuration. If selecting it manually, disable auto-discovery
-and set `plugins.enabled = true`, `path`, `manifest-path`, `runtime = "monty"`,
-`trusted = true`, and
-`stub-overlay-path` to the installed package's `stubs` directory.
-
-## Evidence and limits
-
-- All 50 existing Rust tests and 26 Python tooling tests pass; Rust line coverage
-  remains 98.23%.
-- The regression recorder captures 150 hook requests. CPython and Monty replay
-  them plus the packaged manifest. All **151 responses** equal Rust after SDK
-  deserialization, including defaults, diagnostics, imports and nested snapshots.
-- The Python-only installed wheel passes all **18 Django/Python pairs**, each
-  with **166/166 assertions**, 83 independent Django runtime contracts and nine
-  QueryDict cases. The baseline retains 100% official-contract coverage and
-  93.8% mypy agreement.
-- Installed-wheel E2E checks cover positive, expected-negative and static API
-  fixtures. The WASM default passes the same E2E checks. Disabled-plugin/state
-  controls reject the expected assertions; explicit selection from the default
-  wheel succeeds. The Python source archive rebuilds an identical package payload.
-
-These results establish parity for the existing corpus, not every possible
-Django program. Independent runtime proofs still check Django itself; they do
-not treat either plugin as the specification.
-
-Both checker runtimes reject responses over **8 MiB**. The 2,501-model native
-stress test generates a response larger than that: it passes standalone
-protocol parity but is not proof that either checker runtime can load that
-project unchanged. Monty replay uses ty's default five-second feed budget and
-recursion limit of 1,000. No memory cap is set by default.
-
-Embedded Monty handles Python errors, execution limits and unwinding panics,
-but cannot isolate native allocator/stack aborts or enforce an allocator memory
-cap. WASM has a 64 MiB guest-memory limit and traps guest stack overflows.
-Worker mode offers process isolation at an additional deployment cost. See the
-[actual host limits](https://github.com/regularkevvv/ruff-extended/blob/4da08f0a01d9f2611c20b77be8db84a919eceae3/crates/ty_plugin_host/src/monty.rs)
-and the checker's [runtime safety model](https://github.com/regularkevvv/ty-extended/blob/1e7e01dc34da874f494db30a49323e570ef8974a/docs/plugin-runtime.md#safety-model).
-
-## Size and timing
-
-Measured locally on macOS arm64 with Python 3.14.2, Django 6.1.2 and ty-extended
-0.84.4, using identical fixture sources and seven alternating fresh checker
-processes. [Raw measurements](../compatibility/monty-experiment-benchmark.json)
-and [`benchmark_runtimes.py`](../scripts/benchmark_runtimes.py) preserve the method.
-
-| Measurement | WASM default on this branch | Python-only alternative |
-| --- | ---: | ---: |
-| Plugin wheel | 796,615 bytes | 496,910 bytes |
-| Positive + static API fixture, median | 3.39 s | 0.93 s |
-| Observed timing range | 1.86–3.48 s | 0.83–2.68 s |
-
-The Python source is 87,249 bytes, compressed to 14,680 bytes in the alternative
-wheel. The packaged stub tree is shared. The checker/runtime package does not
-change. Timings vary by over a second between runs; this one fixture does not
-establish general throughput or memory use.
-
-The practical tradeoff is easier rule maintenance and a compiler-free plugin
-build, while retaining the checker's Rust/Monty runtime and its sandbox limits.
-Two implementations also create maintenance work: CI must require response
-parity and run both installed wheels. This branch adds those gates.
-
-## Repeat the checks
+[benchmark_runtimes.py](../scripts/benchmark_runtimes.py) selects both backends in
+one installed E2E environment. It alternates backend order and launches fresh
+checker processes, including startup and plugin initialization. Generated models
+exercise fields, relations, queries and constructor/save/delete ID assertions.
+It records wall time, CPU time, each checker's peak RSS, exit status and output.
+Peak RSS includes the whole checker; it is not incremental plugin memory.
 
 ```sh
+export DJANGO_TY_WHEEL=/tmp/django-ty-dist/django_ty-0.5.0-py3-none-any.whl
+export DJANGO_TY_E2E_DIR=/tmp/django-ty-benchmark-e2e
+bash scripts/e2e.sh
+uv run --no-project --python 3.11 python scripts/benchmark_runtimes.py \
+  --project "$DJANGO_TY_E2E_DIR" --runs 7 --models 0 5 25 --output /tmp/benchmark.json
+# Explore limits; failures stay in the report. No speed ratio is produced for failing workloads.
+uv run --no-project --python 3.11 python scripts/benchmark_runtimes.py \
+  --project "$DJANGO_TY_E2E_DIR" --runs 1 --models 25 100 300 --relations chain \
+  --timeout 30 --allow-failures --output /tmp/stress.json
+```
+
+CI runs a small benchmark and uploads raw JSON. It requires successful checks
+but has no timing threshold: shared runners are unsuitable for speed regression
+gates. Local measurements are in [the benchmark report](../compatibility/monty-experiment-benchmark.json).
+OS cache state and machine load affect results. This measures fresh CLI checks,
+not editor/watch-mode updates or isolated hook execution. To fix checker
+parallelism for a comparison, prefix the command with `TY_MAX_PARALLELISM=1`.
+
+On macOS arm64, Python 3.14.2 / Django 6.1.2 / ty-extended 0.84.4, seven runs
+per backend with default checker parallelism gave these medians:
+
+| Extra models | WASM time | Monty time | WASM peak RSS | Monty peak RSS |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 1.85 s | 2.34 s | 252 MiB | 629 MiB |
+| 5 | 1.98 s | 2.76 s | 308 MiB | 768 MiB |
+| 25 | 5.77 s | 2.14 s | 1,222 MiB | 446 MiB |
+
+All 42 checks succeeded. Results are mixed: WASM was faster on the two smaller
+cases, Monty on the larger one. Both showed wide variation between runs; the
+raw samples matter more than a single speed claim.
+
+The [relation-chain stress report](../compatibility/monty-experiment-stress.json)
+records one attempt per backend at 25, 100 and 300 extra models. Both passed at
+25 and 100. Both reached the benchmark's 30-second deadline at 300; peak checker
+RSS was 3.34 GiB for WASM and 6.19 GiB for Monty. These are benchmark timeouts,
+not evidence of plugin crashes or universal model-count limits.
+
+## Repeat compatibility checks on one wheel
+
+```sh
+export DJANGO_TY_WHEEL=/tmp/django-ty-dist/django_ty-0.5.0-py3-none-any.whl
 bash scripts/check-monty-parity.sh
-DJANGO_TY_RUNTIME=monty bash scripts/differential-conformance.sh --check
-DJANGO_TY_RUNTIME=monty uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check --reuse
-DJANGO_TY_RUNTIME=monty bash scripts/e2e.sh
+for runtime in wasm monty; do
+  export DJANGO_TY_RUNTIME="$runtime"
+  bash scripts/differential-conformance.sh --check
+  uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check --reuse
+  bash scripts/e2e.sh
+done
 ```

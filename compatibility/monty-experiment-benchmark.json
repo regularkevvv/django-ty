@@ -1,47 +1,560 @@
 {
-  "wasm": {
-    "seconds": [
-      3.4836387500108685,
-      1.8652358330000425,
-      3.3855462089995854,
-      3.3880042920063715,
-      3.4232980830129236,
-      3.173020375004853,
-      1.8638835829915479
-    ],
-    "versions": [
-      "3.14.2 (main, Dec 17 2025, 20:54:49) [Clang 21.1.4 ]",
-      "6.1.2",
-      "0.84.4",
-      "0.5.0"
-    ],
-    "median_seconds": 3.3855462089995854,
-    "wheel_bytes": 796615
-  },
-  "monty": {
-    "seconds": [
-      0.927714166988153,
-      2.447643249994144,
-      0.8508414999960223,
-      0.8565390829899115,
-      0.8320186249911785,
-      2.4969524159969296,
-      2.682123042002786
-    ],
-    "versions": [
-      "3.14.2 (main, Dec 17 2025, 20:54:49) [Clang 21.1.4 ]",
-      "6.1.2",
-      "0.84.4",
-      "0.5.0"
-    ],
-    "median_seconds": 0.927714166988153,
-    "wheel_bytes": 496910
-  },
   "method": {
+    "measured_at": "2026-10-08T07:47:50.396832+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
     "runs": 7,
-    "order": "alternating fresh ty processes",
-    "fixture": "e2e/django5_fixture positive + static API",
-    "platform": "macOS arm64",
-    "measured_utc_date": "2026-10-08"
-  }
+    "order": "alternating backend order; fresh checker processes; shared installed wheel and environment; OS caches uncontrolled",
+    "memory": "peak RSS of checker process, including embedded plugin runtime; not incremental plugin memory",
+    "relations": "shallow",
+    "fields_per_model": 8,
+    "queries_per_model": 3,
+    "timeout_seconds": 30.0,
+    "logical_cpus": 10,
+    "ty_max_parallelism": null
+  },
+  "environment": {
+    "python": "3.14.2 (main, Dec 17 2025, 20:54:49) [Clang 21.1.4 ]",
+    "python_minor": "3.14",
+    "Django": "6.1.2",
+    "ty-extended": "0.84.4",
+    "django-ty": "0.5.0",
+    "package_payload_sha256": "a80eb5e826d7f98b7aa78dfdba43444f603de19ba02ddb76240bde6cd98497be",
+    "artifact_sha256": {
+      "django_ty.wasm": "aff549d2361d71a5d9efe3edfe5636966b93d7c3428ccc032c694f2061e960be",
+      "monty.py": "0b22c4c1d5f0a1664e44c1445619ca3cebba816fd7fb83ffc0b77f74bed6d79f",
+      "ty-plugin.json": "670dd961d06e16f068e90f0b54f72c81db422913907da0111cb1441455687578",
+      "ty-plugin-monty.json": "2b9e31fc9f7d5a809b17f8719c31e17ccb97908f94bee096069a5a290c6dc55d"
+    }
+  },
+  "workloads": [
+    {
+      "models": 0,
+      "source_hashes": {
+        "accounts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "accounts/apps.py": "c7f97d7d89f2a45fff24699ddeae1d727b473ebe5074d1ae05b8427c354a92e8",
+        "accounts/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/models.py": "f6a9b1dbe65ab43ee7d090bad20c27050903f04da8c798b0851a760c98694ebc",
+        "accounts/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "accounts/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "auditlog/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "auditlog/apps.py": "ca5259fceabd21b98cf8cddba0bb26097bf110595ee53fb2f712abf9d5638a60",
+        "auditlog/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/models.py": "64d53f00790ccaa2a5ce52aac9e512a02a5dda8fa534f980861d92968a5c3e0c",
+        "auditlog/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "auditlog/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "benchmark_app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "benchmark_app/models.py": "114401381a5ed41e83917a2a51d2bd1b92db110630dd2ede14bdc353bb951b8b",
+        "commerce/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "commerce/apps.py": "55391c25833b922753520dc421c9048bd4d23c8082dfc771193f19b734de668c",
+        "commerce/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/models.py": "d33996a388289823c6e5fee25d31d119de583ce3406e60a54aba82c93fc81385",
+        "commerce/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "commerce/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "config/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "config/asgi.py": "a180de69cb0447f2f4302e3cd19c5be9a107acf276e5475a01f1e42ef95a059f",
+        "config/settings.py": "2be566f634ceced4f9a0894928943a18ce76a59511c0076b12e2ae3eff11785e",
+        "config/urls.py": "8c9714679d8dd043be3a7f8031a7ac507f04af31d26c23c66741ad90321797a6",
+        "config/wsgi.py": "e7e10c2904695355f47ce94b834a001713cfe635248bee5edb09817cc023d1b8",
+        "library/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "library/apps.py": "bb38af62e1528eb1c39aff090908565186b2e5ba5f45aa2e841553ac4dcccbe3",
+        "library/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/models.py": "99cf9919f58ef2e1eb9cc1a85da66215ed87dffdb2b56ffe0580295bed5335ea",
+        "library/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "library/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "typechecks/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "typechecks/negative.py": "77d8dc89d146c18dd75a0d1c814cbcab9763d630da357bb70e49d94aedf2a2bc",
+        "typechecks/positive.py": "6409529dfaa89d142189d4b6e08fd18a823b405755ea878e29f8b564164d6311",
+        "typechecks/static_api.py": "29444280f92cb4a426577c8ac54d4feffb7247fbaa850c61d3197988a25bbef2"
+      },
+      "runtimes": {
+        "wasm": {
+          "samples": [
+            {
+              "seconds": 3.3060089999926277,
+              "cpu_seconds": 3.330613,
+              "peak_rss_bytes": 663191552,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.7937114160013152,
+              "cpu_seconds": 1.82176,
+              "peak_rss_bytes": 251068416,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.8506117499928223,
+              "cpu_seconds": 1.8683509999999999,
+              "peak_rss_bytes": 261554176,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.281422707994352,
+              "cpu_seconds": 3.30251,
+              "peak_rss_bytes": 664698880,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.7742337079980643,
+              "cpu_seconds": 1.803406,
+              "peak_rss_bytes": 251297792,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.2917935409932397,
+              "cpu_seconds": 3.320523,
+              "peak_rss_bytes": 663781376,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.805860833992483,
+              "cpu_seconds": 1.830409,
+              "peak_rss_bytes": 264650752,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 1.8506117499928223,
+          "median_cpu_seconds": 1.8683509999999999,
+          "median_peak_rss_bytes": 264650752
+        },
+        "monty": {
+          "samples": [
+            {
+              "seconds": 0.8076265830022749,
+              "cpu_seconds": 0.8313869999999999,
+              "peak_rss_bytes": 244187136,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.391968750001979,
+              "cpu_seconds": 2.4176729999999997,
+              "peak_rss_bytes": 662503424,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 0.7190215829905355,
+              "cpu_seconds": 0.737585,
+              "peak_rss_bytes": 217628672,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.0859083339892095,
+              "cpu_seconds": 2.102115,
+              "peak_rss_bytes": 574062592,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.3500655829993775,
+              "cpu_seconds": 2.372074,
+              "peak_rss_bytes": 678346752,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.341148916995735,
+              "cpu_seconds": 2.366935,
+              "peak_rss_bytes": 663044096,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.3482716660073493,
+              "cpu_seconds": 2.35913,
+              "peak_rss_bytes": 659881984,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 2.341148916995735,
+          "median_cpu_seconds": 2.35913,
+          "median_peak_rss_bytes": 659881984
+        }
+      },
+      "all_runs_passed": true,
+      "wasm_over_monty_wall_time": 0.790471608430449
+    },
+    {
+      "models": 5,
+      "source_hashes": {
+        "accounts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "accounts/apps.py": "c7f97d7d89f2a45fff24699ddeae1d727b473ebe5074d1ae05b8427c354a92e8",
+        "accounts/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/models.py": "f6a9b1dbe65ab43ee7d090bad20c27050903f04da8c798b0851a760c98694ebc",
+        "accounts/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "accounts/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "auditlog/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "auditlog/apps.py": "ca5259fceabd21b98cf8cddba0bb26097bf110595ee53fb2f712abf9d5638a60",
+        "auditlog/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/models.py": "64d53f00790ccaa2a5ce52aac9e512a02a5dda8fa534f980861d92968a5c3e0c",
+        "auditlog/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "auditlog/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "benchmark_app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "benchmark_app/models.py": "4c6c00d7d0f747b6c9e787bb61bb9955d0c76e7e41a3d929dcb8f5486b121764",
+        "commerce/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "commerce/apps.py": "55391c25833b922753520dc421c9048bd4d23c8082dfc771193f19b734de668c",
+        "commerce/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/models.py": "d33996a388289823c6e5fee25d31d119de583ce3406e60a54aba82c93fc81385",
+        "commerce/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "commerce/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "config/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "config/asgi.py": "a180de69cb0447f2f4302e3cd19c5be9a107acf276e5475a01f1e42ef95a059f",
+        "config/settings.py": "2be566f634ceced4f9a0894928943a18ce76a59511c0076b12e2ae3eff11785e",
+        "config/urls.py": "8c9714679d8dd043be3a7f8031a7ac507f04af31d26c23c66741ad90321797a6",
+        "config/wsgi.py": "e7e10c2904695355f47ce94b834a001713cfe635248bee5edb09817cc023d1b8",
+        "library/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "library/apps.py": "bb38af62e1528eb1c39aff090908565186b2e5ba5f45aa2e841553ac4dcccbe3",
+        "library/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/models.py": "99cf9919f58ef2e1eb9cc1a85da66215ed87dffdb2b56ffe0580295bed5335ea",
+        "library/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "library/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "typechecks/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "typechecks/negative.py": "77d8dc89d146c18dd75a0d1c814cbcab9763d630da357bb70e49d94aedf2a2bc",
+        "typechecks/positive.py": "6409529dfaa89d142189d4b6e08fd18a823b405755ea878e29f8b564164d6311",
+        "typechecks/static_api.py": "29444280f92cb4a426577c8ac54d4feffb7247fbaa850c61d3197988a25bbef2"
+      },
+      "runtimes": {
+        "wasm": {
+          "samples": [
+            {
+              "seconds": 3.6622340000030817,
+              "cpu_seconds": 3.69205,
+              "peak_rss_bytes": 808009728,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.012086125003407,
+              "cpu_seconds": 2.036288,
+              "peak_rss_bytes": 322633728,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.9670489159907447,
+              "cpu_seconds": 2.002601,
+              "peak_rss_bytes": 319930368,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.9838307500031078,
+              "cpu_seconds": 2.024242,
+              "peak_rss_bytes": 326385664,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.9736949159996584,
+              "cpu_seconds": 2.000808,
+              "peak_rss_bytes": 322633728,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.8243150829948718,
+              "cpu_seconds": 1.863667,
+              "peak_rss_bytes": 249741312,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.693324083011248,
+              "cpu_seconds": 3.714454,
+              "peak_rss_bytes": 806780928,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 1.9838307500031078,
+          "median_cpu_seconds": 2.024242,
+          "median_peak_rss_bytes": 322633728
+        },
+        "monty": {
+          "samples": [
+            {
+              "seconds": 2.7607215409952914,
+              "cpu_seconds": 2.7990880000000002,
+              "peak_rss_bytes": 805683200,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.0377097919990774,
+              "cpu_seconds": 1.067791,
+              "peak_rss_bytes": 322764800,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.0125987080100458,
+              "cpu_seconds": 1.045917,
+              "peak_rss_bytes": 321126400,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.782580541999778,
+              "cpu_seconds": 2.820513,
+              "peak_rss_bytes": 805617664,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.7870981250016484,
+              "cpu_seconds": 2.823805,
+              "peak_rss_bytes": 806404096,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.8085393750079675,
+              "cpu_seconds": 2.8354909999999998,
+              "peak_rss_bytes": 807206912,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.0212052499991842,
+              "cpu_seconds": 1.054098,
+              "peak_rss_bytes": 319946752,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 2.7607215409952914,
+          "median_cpu_seconds": 2.7990880000000002,
+          "median_peak_rss_bytes": 805617664
+        }
+      },
+      "all_runs_passed": true,
+      "wasm_over_monty_wall_time": 0.7185913974097873
+    },
+    {
+      "models": 25,
+      "source_hashes": {
+        "accounts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "accounts/apps.py": "c7f97d7d89f2a45fff24699ddeae1d727b473ebe5074d1ae05b8427c354a92e8",
+        "accounts/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/models.py": "f6a9b1dbe65ab43ee7d090bad20c27050903f04da8c798b0851a760c98694ebc",
+        "accounts/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "accounts/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "auditlog/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "auditlog/apps.py": "ca5259fceabd21b98cf8cddba0bb26097bf110595ee53fb2f712abf9d5638a60",
+        "auditlog/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/models.py": "64d53f00790ccaa2a5ce52aac9e512a02a5dda8fa534f980861d92968a5c3e0c",
+        "auditlog/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "auditlog/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "benchmark_app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "benchmark_app/models.py": "38081b7584668b1d5aa5c407f7bd679b0f3a0ee8fc518fe53b5a542776620ddf",
+        "commerce/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "commerce/apps.py": "55391c25833b922753520dc421c9048bd4d23c8082dfc771193f19b734de668c",
+        "commerce/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/models.py": "d33996a388289823c6e5fee25d31d119de583ce3406e60a54aba82c93fc81385",
+        "commerce/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "commerce/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "config/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "config/asgi.py": "a180de69cb0447f2f4302e3cd19c5be9a107acf276e5475a01f1e42ef95a059f",
+        "config/settings.py": "2be566f634ceced4f9a0894928943a18ce76a59511c0076b12e2ae3eff11785e",
+        "config/urls.py": "8c9714679d8dd043be3a7f8031a7ac507f04af31d26c23c66741ad90321797a6",
+        "config/wsgi.py": "e7e10c2904695355f47ce94b834a001713cfe635248bee5edb09817cc023d1b8",
+        "library/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "library/apps.py": "bb38af62e1528eb1c39aff090908565186b2e5ba5f45aa2e841553ac4dcccbe3",
+        "library/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/models.py": "99cf9919f58ef2e1eb9cc1a85da66215ed87dffdb2b56ffe0580295bed5335ea",
+        "library/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "library/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "typechecks/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "typechecks/negative.py": "77d8dc89d146c18dd75a0d1c814cbcab9763d630da357bb70e49d94aedf2a2bc",
+        "typechecks/positive.py": "6409529dfaa89d142189d4b6e08fd18a823b405755ea878e29f8b564164d6311",
+        "typechecks/static_api.py": "29444280f92cb4a426577c8ac54d4feffb7247fbaa850c61d3197988a25bbef2"
+      },
+      "runtimes": {
+        "wasm": {
+          "samples": [
+            {
+              "seconds": 5.790271207995829,
+              "cpu_seconds": 5.8158129999999995,
+              "peak_rss_bytes": 1287159808,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.0376025419973303,
+              "cpu_seconds": 3.068975,
+              "peak_rss_bytes": 457801728,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.0603188750101253,
+              "cpu_seconds": 3.089578,
+              "peak_rss_bytes": 455327744,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 5.765272458011168,
+              "cpu_seconds": 5.788885,
+              "peak_rss_bytes": 1289388032,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.033407041002647,
+              "cpu_seconds": 3.0687439999999997,
+              "peak_rss_bytes": 465895424,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 5.792948292000801,
+              "cpu_seconds": 5.8197350000000005,
+              "peak_rss_bytes": 1281474560,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 5.839339500002097,
+              "cpu_seconds": 5.866967,
+              "peak_rss_bytes": 1283604480,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 5.765272458011168,
+          "median_cpu_seconds": 5.788885,
+          "median_peak_rss_bytes": 1281474560
+        },
+        "monty": {
+          "samples": [
+            {
+              "seconds": 1.801557042010245,
+              "cpu_seconds": 1.8355839999999999,
+              "peak_rss_bytes": 366968832,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.159688040992478,
+              "cpu_seconds": 2.192997,
+              "peak_rss_bytes": 467533824,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.8103045000025304,
+              "cpu_seconds": 1.836124,
+              "peak_rss_bytes": 369197056,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.1378291250002803,
+              "cpu_seconds": 2.173582,
+              "peak_rss_bytes": 469139456,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.8205111249990296,
+              "cpu_seconds": 1.854568,
+              "peak_rss_bytes": 368590848,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 4.914010708002024,
+              "cpu_seconds": 4.937206000000001,
+              "peak_rss_bytes": 1296515072,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 4.9763888330053305,
+              "cpu_seconds": 5.00491,
+              "peak_rss_bytes": 1299169280,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 2.1378291250002803,
+          "median_cpu_seconds": 2.173582,
+          "median_peak_rss_bytes": 467533824
+        }
+      },
+      "all_runs_passed": true,
+      "wasm_over_monty_wall_time": 2.6967882468204336
+    }
+  ]
 }
