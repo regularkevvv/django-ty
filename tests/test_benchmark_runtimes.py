@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.benchmark_runtimes import measure
+from scripts.benchmark_runtimes import check_cache_mode, measure
 
 
 @unittest.skipUnless(
@@ -34,3 +34,25 @@ class BenchmarkRuntimesTest(unittest.TestCase):
             )
         self.assertTrue(result["timed_out"])
         self.assertEqual(result["exit_code"], -9)
+
+    def test_cached_measurements_require_host_cache_hits(self):
+        for output in (
+            "All checks passed!",
+            "Loaded WASM plugin module cache_hits=0 cache_misses=1",
+        ):
+            with self.assertRaises(RuntimeError):
+                check_cache_mode("wasm-cached", {"output": output})
+        sample = {"output": "Loaded WASM plugin module cache_hits=1 cache_misses=0"}
+        check_cache_mode("wasm-cached", sample)
+        self.assertEqual(sample["cache_hits"], 1)
+        self.assertEqual(sample["cache_misses"], 0)
+
+    def test_cold_measurements_require_a_compilation_miss(self):
+        with self.assertRaises(RuntimeError):
+            check_cache_mode(
+                "wasm-cold",
+                {"output": "Loaded WASM plugin module cache_hits=1 cache_misses=0"},
+            )
+        sample = {"output": "Loaded WASM plugin module cache_hits=0 cache_misses=1"}
+        check_cache_mode("wasm-cold", sample)
+        self.assertEqual(sample["cache_misses"], 1)

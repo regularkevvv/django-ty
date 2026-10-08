@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import shutil
 import signal
 import statistics
@@ -66,7 +67,9 @@ def stress_source(models: int, fields: int, queries: int, relations: str) -> str
     return "\n".join(lines)
 
 
-def measure(command: list[str], project: Path, timeout: float) -> dict:
+def measure(
+    command: list[str], project: Path, timeout: float, env: dict[str, str] | None = None
+) -> dict:
     # wait4 reports this child's peak RSS, rather than a cumulative high-water mark
     # from earlier runs. Redirect output to a file so a full pipe cannot deadlock.
     with tempfile.TemporaryFile() as output:
@@ -77,6 +80,7 @@ def measure(command: list[str], project: Path, timeout: float) -> dict:
             stdout=output,
             stderr=subprocess.STDOUT,
             start_new_session=True,
+            env=env,
         )
         timed_out = False
         while True:
@@ -107,6 +111,34 @@ def measure(command: list[str], project: Path, timeout: float) -> dict:
     }
 
 
+def cache_counts(output: str) -> dict[str, int]:
+    """Read the host's per-module counters; timings alone cannot prove a cache hit."""
+    events = [
+        line for line in output.splitlines() if "Loaded WASM plugin module" in line
+    ]
+    return {
+        key: sum(
+            int(value)
+            for line in events
+            for value in re.findall(rf"\b{key}=(\d+)", line)
+        )
+        for key in ("cache_hits", "cache_misses")
+    }
+
+
+def check_cache_mode(mode: str, sample: dict) -> None:
+    counts = cache_counts(sample["output"])
+    sample.update(counts)
+    if mode == "wasm-cold" and counts["cache_misses"] < 1:
+        raise RuntimeError(f"Cold WASM run did not confirm compilation: {sample}")
+    if mode == "wasm-cached" and (
+        counts["cache_hits"] < 1 or counts["cache_misses"] != 0
+    ):
+        raise RuntimeError(
+            f"Cached WASM run did not confirm native-code reuse: {sample}"
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -116,6 +148,14 @@ def main() -> int:
         help="Installed wheel E2E directory containing .venv",
     )
     parser.add_argument("--runs", type=int, default=7)
+    parser.add_argument(
+        "--ty-bin", type=Path, help="Use an experimental checker binary"
+    )
+    parser.add_argument(
+        "--wasm-cache",
+        action="store_true",
+        help="Compare empty WASM cache, verified compiled-cache hits and Monty; requires a cache-enabled checker",
+    )
     parser.add_argument("--models", type=int, nargs="+", default=[0, 5, 25])
     parser.add_argument("--fields", type=int, default=8)
     parser.add_argument("--queries", type=int, default=3)
@@ -147,6 +187,9 @@ def main() -> int:
         parser.error("peak RSS measurement requires macOS or Linux")
     project = args.project.resolve()
     environment = project / ".venv"
+    checker = (args.ty_bin or environment / "bin/ty").resolve()
+    if not checker.is_file():
+        parser.error(f"checker does not exist: {checker}")
     code = """import hashlib, json, sys
 from importlib import metadata
 from pathlib import Path
@@ -173,7 +216,10 @@ print(json.dumps({"python": sys.version, "python_minor": f"{sys.version_info.maj
             "logical_cpus": os.cpu_count(),
             "ty_max_parallelism": os.environ.get("TY_MAX_PARALLELISM"),
             "runs": args.runs,
-            "order": "alternating backend order; fresh checker processes; shared installed wheel and environment; OS caches uncontrolled",
+            "order": "rotating backend order; fresh checker processes; shared installed wheel and environment; OS caches uncontrolled",
+            "wasm_cache": "separate empty caches per cold sample; one primed cache for cached samples; verified host counters"
+            if args.wasm_cache
+            else "not controlled",
             "memory": "peak RSS of checker process, including embedded plugin runtime; not incremental plugin memory",
             "relations": args.relations,
             "fields_per_model": args.fields,
@@ -181,6 +227,13 @@ print(json.dumps({"python": sys.version, "python_minor": f"{sys.version_info.maj
             "timeout_seconds": args.timeout,
         },
         "environment": versions,
+        "checker": {
+            "path": str(checker),
+            "sha256": hashlib.sha256(checker.read_bytes()).hexdigest(),
+            "version": subprocess.check_output(
+                [str(checker), "--version"], text=True
+            ).strip(),
+        },
         "workloads": [],
     }
     failed = False
@@ -208,6 +261,13 @@ print(json.dumps({"python": sys.version, "python_minor": f"{sys.version_info.maj
         app = fixture / "benchmark_app"
         app.mkdir()
         (app / "__init__.py").write_text("")
+        modes = (
+            ["wasm-cold", "wasm-cached", "monty"]
+            if args.wasm_cache
+            else ["wasm", "monty"]
+        )
+        cached_directory = fixture / "compiled-cache"
+        primed = False
         for models in args.models:
             (app / "models.py").write_text(
                 stress_source(models, args.fields, args.queries, args.relations)
@@ -219,15 +279,15 @@ print(json.dumps({"python": sys.version, "python_minor": f"{sys.version_info.maj
             workload = {
                 "models": models,
                 "source_hashes": sources,
-                "runtimes": {"wasm": {"samples": []}, "monty": {"samples": []}},
+                "runtimes": {mode: {"samples": []} for mode in modes},
             }
             paths = PATHS + (["benchmark_app"] if models else [])
             for iteration in range(args.runs):
-                for runtime in (
-                    ["wasm", "monty"] if iteration % 2 == 0 else ["monty", "wasm"]
-                ):
+                offset = iteration % len(modes)
+                for mode in modes[offset:] + modes[:offset]:
+                    runtime = "monty" if mode == "monty" else "wasm"
                     command = [
-                        str(environment / "bin/ty"),
+                        str(checker),
                         "check",
                         *paths,
                         "--project",
@@ -242,11 +302,33 @@ print(json.dumps({"python": sys.version, "python_minor": f"{sys.version_info.maj
                         "--error-on-warning",
                         *options[runtime],
                     ]
-                    sample = measure(command, fixture, args.timeout)
-                    workload["runtimes"][runtime]["samples"].append(sample)
+                    env = None
+                    if args.wasm_cache:
+                        env = {**os.environ, "TY_LOG": "ty_plugin_host::wasm=debug"}
+                        cache_directory = (
+                            cached_directory
+                            if mode == "wasm-cached"
+                            else fixture / f"cache-{mode}-{models}-{iteration}"
+                        )
+                        env["XDG_CACHE_HOME"] = str(cache_directory)
+                        if mode == "wasm-cached" and not primed:
+                            prime = measure(command, fixture, args.timeout, env)
+                            if prime["exit_code"] != 0:
+                                raise RuntimeError(f"Cache priming failed: {prime}")
+                            check_cache_mode("wasm-cold", prime)
+                            result["cache_priming"] = prime
+                            primed = True
+                    sample = measure(command, fixture, args.timeout, env)
+                    if (
+                        args.wasm_cache
+                        and runtime == "wasm"
+                        and sample["exit_code"] == 0
+                    ):
+                        check_cache_mode(mode, sample)
+                    workload["runtimes"][mode]["samples"].append(sample)
                     failed |= sample["exit_code"] != 0
                     print(
-                        f"{models} models / {runtime}: {sample['seconds']:.3f}s, {sample['peak_rss_bytes'] / 1048576:.1f} MiB, exit {sample['exit_code']}",
+                        f"{models} models / {mode}: {sample['seconds']:.3f}s, {sample['peak_rss_bytes'] / 1048576:.1f} MiB, exit {sample['exit_code']}",
                         file=sys.stderr,
                         flush=True,
                     )
@@ -260,10 +342,12 @@ print(json.dumps({"python": sys.version, "python_minor": f"{sys.version_info.maj
                 for stats in workload["runtimes"].values()
             )
             if workload["all_runs_passed"]:
-                workload["wasm_over_monty_wall_time"] = (
-                    workload["runtimes"]["wasm"]["median_seconds"]
-                    / workload["runtimes"]["monty"]["median_seconds"]
-                )
+                for mode in modes:
+                    if mode != "monty":
+                        workload[mode.replace("-", "_") + "_over_monty_wall_time"] = (
+                            workload["runtimes"][mode]["median_seconds"]
+                            / workload["runtimes"]["monty"]["median_seconds"]
+                        )
             result["workloads"].append(workload)
     encoded = json.dumps(result, indent=2) + "\n"
     if args.output:

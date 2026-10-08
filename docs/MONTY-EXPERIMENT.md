@@ -151,6 +151,50 @@ records one attempt per backend at 25, 100 and 300 extra models. Both passed at
 RSS was 3.34 GiB for WASM and 6.19 GiB for Monty. These are benchmark timeouts,
 not evidence of plugin crashes or universal model-count limits.
 
+### Compiled WASM cache
+
+The cache implementation in [ruff-extended PR #41](https://github.com/regularkevvv/ruff-extended/pull/41)
+and [ty-extended PR #37](https://github.com/regularkevvv/ty-extended/pull/37) compiles
+WASM once into the trusted user cache. Subsequent checker launches load native
+code directly. Plugin wheels still contain portable `.wasm` files.
+
+The [controlled report](../compatibility/monty-cwasm-benchmark-single-thread.json)
+compares fresh processes with an empty WASM cache, a primed compiled cache and
+embedded Monty. Each size has seven runs per mode in rotating order. Host counters
+confirm compilation misses for cold runs and hits without misses for cached runs.
+The priming check is excluded from the medians.
+
+On macOS arm64, with `TY_MAX_PARALLELISM=1`:
+
+| Extra models | Cold WASM | Cached WASM | Monty |
+| ---: | ---: | ---: | ---: |
+| 0 | 2.08 s | 0.85 s | 0.87 s |
+| 5 | 2.24 s | 1.01 s | 1.06 s |
+| 25 | 3.17 s | 1.95 s | 2.04 s |
+
+All 63 checks passed. Caching saves about 1.2 seconds here. Cached WASM has
+roughly 3–4% lower medians than Monty; their full-check times are close.
+
+The [default-parallelism report](../compatibility/monty-cwasm-benchmark-default.json)
+also passes all 63 checks, but timings vary substantially. Cached WASM/Monty
+medians are 0.96/2.22 s, 1.14/1.17 s and 4.86/2.36 s for 0/5/25 extra models.
+The larger case favors Monty. These results do not establish a universal winner
+or isolate individual hook execution.
+
+Both reports use the same installed wheel and optimized checker built from the
+reviewed cache source with release LTO disabled. Checker/source hashes and build
+settings are recorded. These are experimental builds, not measurements of a
+published cache-enabled release. Repeat with a cache-enabled checker:
+
+```sh
+TY_MAX_PARALLELISM=1 uv run --no-project --python 3.11 python scripts/benchmark_runtimes.py \
+  --project "$DJANGO_TY_E2E_DIR" --ty-bin /path/to/cache-enabled/ty \
+  --wasm-cache --runs 7 --models 0 5 25 --output /tmp/cwasm-benchmark.json
+```
+
+The published 0.84.4 checker cannot run the `--wasm-cache` comparison; missing
+cache-hit evidence makes the benchmark fail instead of reporting a cached result.
+
 ## Repeat compatibility checks on one wheel
 
 ```sh
