@@ -50,3 +50,20 @@ jobs:
       - name: Verify wheel installation
         run: bash scripts/e2e.sh
         working-directory: django-ty
+      - name: Check Monty source and packaging
+        run: |
+          python3 scripts/build-monty.py --check
+          uv run --no-project --with ruff==0.16.10 ruff check --isolated --select E4,E7,E9,F,I python/django_ty/monty.py scripts/build-monty.py scripts/build-monty-wheel.py scripts/check_monty_parity.py
+          uv run --no-project --with ruff==0.16.10 ruff format --isolated --check python/django_ty/monty.py scripts/build-monty.py scripts/build-monty-wheel.py scripts/check_monty_parity.py
+      - name: Verify Python and Monty response parity
+        run: bash scripts/check-monty-parity.sh
+        working-directory: django-ty
+      - name: Verify Monty official contracts
+        run: DJANGO_TY_RUNTIME=monty bash scripts/differential-conformance.sh --check
+        working-directory: django-ty
+      - name: Verify Monty Django and Python matrix
+        run: DJANGO_TY_RUNTIME=monty uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check --reuse
+        working-directory: django-ty
+      - name: Verify Monty wheel installation
+        run: DJANGO_TY_RUNTIME=monty bash scripts/e2e.sh
+        working-directory: django-ty

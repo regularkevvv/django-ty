@@ -31,7 +31,13 @@ cp -R "$ROOT/e2e/django5_fixture/." "$WORK_DIR/"
   uv add "$DJANGO_TY_WHEEL"
 
   package_dir="$(uv run python -c 'import pathlib, django_ty; print(pathlib.Path(django_ty.__file__).parent)')"
-  test -f "$package_dir/django_ty.wasm"
+  if [ "${DJANGO_TY_RUNTIME:-wasm}" = "monty" ]; then
+    test -f "$package_dir/monty.py"
+    test ! -e "$package_dir/django_ty.wasm"
+    uv run python -c 'import importlib.metadata as metadata; names = {d.metadata.get("Name", "").lower() for d in metadata.distributions()}; assert not any(name.startswith("pydantic-monty") for name in names)'
+  else
+    test -f "$package_dir/django_ty.wasm"
+  fi
   test -f "$package_dir/ty-plugin.json"
   test -f "$package_dir/stubs/django/db/models/query.pyi"
   test ! -e "$package_dir/stubs/django_stubs_ext"
