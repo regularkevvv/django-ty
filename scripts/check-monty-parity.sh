@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
 WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/django-ty-monty-parity.XXXXXX")"
 trap 'rm -rf "$WORK_DIR"' EXIT
 uv venv --python 3.13 "$WORK_DIR/env"

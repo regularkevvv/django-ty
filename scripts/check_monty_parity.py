@@ -1,7 +1,7 @@
 """Replay Rust regression requests through CPython or the pinned Monty sandbox.
 
-Usage: python scripts/check_monty_parity.py oracle.jsonl responses.jsonl --runtime monty
-Pass responses.jsonl to `cargo run --example compare_monty` for SDK-level equality.
+scripts/check-monty-parity.sh generates the corpus, runs both interpreters and
+compares responses with the Rust SDK through tests/monty_parity.rs.
 """
 
 from __future__ import annotations
