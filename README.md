@@ -59,6 +59,12 @@ is generated from the same checks.
 These results cover the tested corpus. They do not establish compatibility with
 every Django API, custom AppConfig label, or dynamically registered model.
 
+## Python alternative
+
+This branch includes an experimental Python plugin for the embedded Monty
+runtime. WASM remains the default. See [the analysis and checks](docs/MONTY-EXPERIMENT.md)
+for selecting either backend from the same wheel and benchmarking them.
+
 ## Development
 
 ```sh

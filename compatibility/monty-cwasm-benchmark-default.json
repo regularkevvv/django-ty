@@ -1,0 +1,871 @@
+{
+  "method": {
+    "measured_at": "2026-10-08T09:17:30.251498+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "logical_cpus": 10,
+    "ty_max_parallelism": null,
+    "runs": 7,
+    "order": "rotating backend order; fresh checker processes; shared installed wheel and environment; OS caches uncontrolled",
+    "wasm_cache": "separate empty caches per cold sample; one primed cache for cached samples; verified host counters",
+    "memory": "peak RSS of checker process, including embedded plugin runtime; not incremental plugin memory",
+    "relations": "shallow",
+    "fields_per_model": 8,
+    "queries_per_model": 3,
+    "timeout_seconds": 120
+  },
+  "environment": {
+    "python": "3.14.2 (main, Dec 17 2025, 20:54:49) [Clang 21.1.4 ]",
+    "python_minor": "3.14",
+    "Django": "6.1.2",
+    "ty-extended": "0.84.4",
+    "django-ty": "0.5.0",
+    "package_payload_sha256": "bdb830af103e997eb7ac268604e9d63d9768d21aa3db3cd8cfb6b5b644e0e5d3",
+    "artifact_sha256": {
+      "django_ty.wasm": "aff549d2361d71a5d9efe3edfe5636966b93d7c3428ccc032c694f2061e960be",
+      "monty.py": "288dbec1b392434e0587bbc8d80942ce14b2ea7d502bd80bb780611669b85a3e",
+      "ty-plugin.json": "670dd961d06e16f068e90f0b54f72c81db422913907da0111cb1441455687578",
+      "ty-plugin-monty.json": "2b9e31fc9f7d5a809b17f8719c31e17ccb97908f94bee096069a5a290c6dc55d"
+    }
+  },
+  "checker": {
+    "path": "/private/tmp/ty-cwasm-build/release/ty",
+    "sha256": "3f0b445edb7fd7b117164530ecad993735ec3194ffaba2a3dc2df6a93fba418e",
+    "version": "ty ruff/0.16.8+276 (dd843c782 2026-10-08)"
+  },
+  "workloads": [
+    {
+      "models": 0,
+      "source_hashes": {
+        "accounts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "accounts/apps.py": "c7f97d7d89f2a45fff24699ddeae1d727b473ebe5074d1ae05b8427c354a92e8",
+        "accounts/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/models.py": "f6a9b1dbe65ab43ee7d090bad20c27050903f04da8c798b0851a760c98694ebc",
+        "accounts/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "accounts/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "auditlog/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "auditlog/apps.py": "ca5259fceabd21b98cf8cddba0bb26097bf110595ee53fb2f712abf9d5638a60",
+        "auditlog/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/models.py": "64d53f00790ccaa2a5ce52aac9e512a02a5dda8fa534f980861d92968a5c3e0c",
+        "auditlog/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "auditlog/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "benchmark_app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "benchmark_app/models.py": "114401381a5ed41e83917a2a51d2bd1b92db110630dd2ede14bdc353bb951b8b",
+        "commerce/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "commerce/apps.py": "55391c25833b922753520dc421c9048bd4d23c8082dfc771193f19b734de668c",
+        "commerce/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/models.py": "d33996a388289823c6e5fee25d31d119de583ce3406e60a54aba82c93fc81385",
+        "commerce/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "commerce/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "config/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "config/asgi.py": "a180de69cb0447f2f4302e3cd19c5be9a107acf276e5475a01f1e42ef95a059f",
+        "config/settings.py": "2be566f634ceced4f9a0894928943a18ce76a59511c0076b12e2ae3eff11785e",
+        "config/urls.py": "8c9714679d8dd043be3a7f8031a7ac507f04af31d26c23c66741ad90321797a6",
+        "config/wsgi.py": "e7e10c2904695355f47ce94b834a001713cfe635248bee5edb09817cc023d1b8",
+        "library/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "library/apps.py": "bb38af62e1528eb1c39aff090908565186b2e5ba5f45aa2e841553ac4dcccbe3",
+        "library/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/models.py": "99cf9919f58ef2e1eb9cc1a85da66215ed87dffdb2b56ffe0580295bed5335ea",
+        "library/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "library/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "typechecks/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "typechecks/negative.py": "77d8dc89d146c18dd75a0d1c814cbcab9763d630da357bb70e49d94aedf2a2bc",
+        "typechecks/positive.py": "6409529dfaa89d142189d4b6e08fd18a823b405755ea878e29f8b564164d6311",
+        "typechecks/static_api.py": "29444280f92cb4a426577c8ac54d4feffb7247fbaa850c61d3197988a25bbef2"
+      },
+      "runtimes": {
+        "wasm-cold": {
+          "samples": [
+            {
+              "seconds": 2.167232874999172,
+              "cpu_seconds": 2.196164,
+              "peak_rss_bytes": 283328512,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 2.1673935420112684,
+              "cpu_seconds": 2.2079649999999997,
+              "peak_rss_bytes": 289914880,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 4.01921399999992,
+              "cpu_seconds": 4.050768,
+              "peak_rss_bytes": 709099520,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 3.9582808749983087,
+              "cpu_seconds": 3.9936239999999996,
+              "peak_rss_bytes": 708558848,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 3.9813197500043316,
+              "cpu_seconds": 4.006679999999999,
+              "peak_rss_bytes": 708624384,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 3.9899102079943987,
+              "cpu_seconds": 4.016689,
+              "peak_rss_bytes": 708165632,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 2.037196249992121,
+              "cpu_seconds": 2.069113,
+              "peak_rss_bytes": 244645888,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 3.9582808749983087,
+          "median_cpu_seconds": 3.9936239999999996,
+          "median_peak_rss_bytes": 708165632
+        },
+        "wasm-cached": {
+          "samples": [
+            {
+              "seconds": 0.8165767499885987,
+              "cpu_seconds": 0.8519809999999999,
+              "peak_rss_bytes": 219971584,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 0.8436060829990311,
+              "cpu_seconds": 0.868843,
+              "peak_rss_bytes": 219840512,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 0.9583362499979557,
+              "cpu_seconds": 1.001538,
+              "peak_rss_bytes": 263815168,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 0.8269367080065422,
+              "cpu_seconds": 0.856375,
+              "peak_rss_bytes": 219873280,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 0.9627413330017589,
+              "cpu_seconds": 0.9996349999999999,
+              "peak_rss_bytes": 263749632,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 2.7471310830005677,
+              "cpu_seconds": 2.769148,
+              "peak_rss_bytes": 682164224,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 2.740056333001121,
+              "cpu_seconds": 2.773481,
+              "peak_rss_bytes": 665092096,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 0.9583362499979557,
+          "median_cpu_seconds": 0.9996349999999999,
+          "median_peak_rss_bytes": 263749632
+        },
+        "monty": {
+          "samples": [
+            {
+              "seconds": 2.2190839579998283,
+              "cpu_seconds": 2.249452,
+              "peak_rss_bytes": 549453824,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.825868874992011,
+              "cpu_seconds": 2.862482,
+              "peak_rss_bytes": 660111360,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.6835562089981977,
+              "cpu_seconds": 1.719208,
+              "peak_rss_bytes": 418004992,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.8404452090035193,
+              "cpu_seconds": 2.879758,
+              "peak_rss_bytes": 678248448,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 0.9721301660028985,
+              "cpu_seconds": 1.005938,
+              "peak_rss_bytes": 259096576,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 0.848214541998459,
+              "cpu_seconds": 0.872386,
+              "peak_rss_bytes": 214515712,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.832170124995173,
+              "cpu_seconds": 2.8703779999999997,
+              "peak_rss_bytes": 660258816,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 2.2190839579998283,
+          "median_cpu_seconds": 2.249452,
+          "median_peak_rss_bytes": 549453824
+        }
+      },
+      "all_runs_passed": true,
+      "wasm_cold_over_monty_wall_time": 1.7837454327623123,
+      "wasm_cached_over_monty_wall_time": 0.43186119504092685
+    },
+    {
+      "models": 5,
+      "source_hashes": {
+        "accounts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "accounts/apps.py": "c7f97d7d89f2a45fff24699ddeae1d727b473ebe5074d1ae05b8427c354a92e8",
+        "accounts/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/models.py": "f6a9b1dbe65ab43ee7d090bad20c27050903f04da8c798b0851a760c98694ebc",
+        "accounts/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "accounts/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "auditlog/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "auditlog/apps.py": "ca5259fceabd21b98cf8cddba0bb26097bf110595ee53fb2f712abf9d5638a60",
+        "auditlog/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/models.py": "64d53f00790ccaa2a5ce52aac9e512a02a5dda8fa534f980861d92968a5c3e0c",
+        "auditlog/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "auditlog/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "benchmark_app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "benchmark_app/models.py": "4c6c00d7d0f747b6c9e787bb61bb9955d0c76e7e41a3d929dcb8f5486b121764",
+        "commerce/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "commerce/apps.py": "55391c25833b922753520dc421c9048bd4d23c8082dfc771193f19b734de668c",
+        "commerce/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/models.py": "d33996a388289823c6e5fee25d31d119de583ce3406e60a54aba82c93fc81385",
+        "commerce/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "commerce/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "config/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "config/asgi.py": "a180de69cb0447f2f4302e3cd19c5be9a107acf276e5475a01f1e42ef95a059f",
+        "config/settings.py": "2be566f634ceced4f9a0894928943a18ce76a59511c0076b12e2ae3eff11785e",
+        "config/urls.py": "8c9714679d8dd043be3a7f8031a7ac507f04af31d26c23c66741ad90321797a6",
+        "config/wsgi.py": "e7e10c2904695355f47ce94b834a001713cfe635248bee5edb09817cc023d1b8",
+        "library/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "library/apps.py": "bb38af62e1528eb1c39aff090908565186b2e5ba5f45aa2e841553ac4dcccbe3",
+        "library/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/models.py": "99cf9919f58ef2e1eb9cc1a85da66215ed87dffdb2b56ffe0580295bed5335ea",
+        "library/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "library/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "typechecks/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "typechecks/negative.py": "77d8dc89d146c18dd75a0d1c814cbcab9763d630da357bb70e49d94aedf2a2bc",
+        "typechecks/positive.py": "6409529dfaa89d142189d4b6e08fd18a823b405755ea878e29f8b564164d6311",
+        "typechecks/static_api.py": "29444280f92cb4a426577c8ac54d4feffb7247fbaa850c61d3197988a25bbef2"
+      },
+      "runtimes": {
+        "wasm-cold": {
+          "samples": [
+            {
+              "seconds": 2.3331632089975756,
+              "cpu_seconds": 2.379032,
+              "peak_rss_bytes": 349683712,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 4.364924167006393,
+              "cpu_seconds": 4.412961,
+              "peak_rss_bytes": 830210048,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 2.3847172500099987,
+              "cpu_seconds": 2.433273,
+              "peak_rss_bytes": 354533376,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 2.3675516250077635,
+              "cpu_seconds": 2.4108400000000003,
+              "peak_rss_bytes": 355631104,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 2.356305291003082,
+              "cpu_seconds": 2.395647,
+              "peak_rss_bytes": 355057664,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 4.404657584003871,
+              "cpu_seconds": 4.45694,
+              "peak_rss_bytes": 829685760,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 2.391065375006292,
+              "cpu_seconds": 2.4359629999999997,
+              "peak_rss_bytes": 350404608,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 2.3847172500099987,
+          "median_cpu_seconds": 2.433273,
+          "median_peak_rss_bytes": 355057664
+        },
+        "wasm-cached": {
+          "samples": [
+            {
+              "seconds": 1.1405899170058547,
+              "cpu_seconds": 1.179058,
+              "peak_rss_bytes": 329842688,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 3.1673149590060348,
+              "cpu_seconds": 3.213545,
+              "peak_rss_bytes": 804945920,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 0.95875554200029,
+              "cpu_seconds": 0.9990739999999999,
+              "peak_rss_bytes": 238059520,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 1.1443920409947168,
+              "cpu_seconds": 1.1874710000000002,
+              "peak_rss_bytes": 329531392,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 1.131996916999924,
+              "cpu_seconds": 1.186258,
+              "peak_rss_bytes": 330661888,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 0.9804633750027278,
+              "cpu_seconds": 1.0163119999999999,
+              "peak_rss_bytes": 237912064,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 3.153020291007124,
+              "cpu_seconds": 3.193396,
+              "peak_rss_bytes": 804831232,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 1.1405899170058547,
+          "median_cpu_seconds": 1.186258,
+          "median_peak_rss_bytes": 329842688
+        },
+        "monty": {
+          "samples": [
+            {
+              "seconds": 1.0222317499865312,
+              "cpu_seconds": 1.057674,
+              "peak_rss_bytes": 238813184,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.300192499998957,
+              "cpu_seconds": 3.3368909999999996,
+              "peak_rss_bytes": 800374784,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.2732977919949917,
+              "cpu_seconds": 3.310266,
+              "peak_rss_bytes": 801193984,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.0104262910026591,
+              "cpu_seconds": 1.050859,
+              "peak_rss_bytes": 239173632,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 3.3120915000035893,
+              "cpu_seconds": 3.36098,
+              "peak_rss_bytes": 800325632,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 1.1723429169942392,
+              "cpu_seconds": 1.2208899999999998,
+              "peak_rss_bytes": 324009984,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 0.9993596249987604,
+              "cpu_seconds": 1.04448,
+              "peak_rss_bytes": 233881600,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 1.1723429169942392,
+          "median_cpu_seconds": 1.2208899999999998,
+          "median_peak_rss_bytes": 324009984
+        }
+      },
+      "all_runs_passed": true,
+      "wasm_cold_over_monty_wall_time": 2.034146507341177,
+      "wasm_cached_over_monty_wall_time": 0.9729149214550672
+    },
+    {
+      "models": 25,
+      "source_hashes": {
+        "accounts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "accounts/apps.py": "c7f97d7d89f2a45fff24699ddeae1d727b473ebe5074d1ae05b8427c354a92e8",
+        "accounts/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "accounts/models.py": "f6a9b1dbe65ab43ee7d090bad20c27050903f04da8c798b0851a760c98694ebc",
+        "accounts/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "accounts/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "auditlog/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "auditlog/apps.py": "ca5259fceabd21b98cf8cddba0bb26097bf110595ee53fb2f712abf9d5638a60",
+        "auditlog/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "auditlog/models.py": "64d53f00790ccaa2a5ce52aac9e512a02a5dda8fa534f980861d92968a5c3e0c",
+        "auditlog/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "auditlog/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "benchmark_app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "benchmark_app/models.py": "38081b7584668b1d5aa5c407f7bd679b0f3a0ee8fc518fe53b5a542776620ddf",
+        "commerce/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "commerce/apps.py": "55391c25833b922753520dc421c9048bd4d23c8082dfc771193f19b734de668c",
+        "commerce/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commerce/models.py": "d33996a388289823c6e5fee25d31d119de583ce3406e60a54aba82c93fc81385",
+        "commerce/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "commerce/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "config/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "config/asgi.py": "a180de69cb0447f2f4302e3cd19c5be9a107acf276e5475a01f1e42ef95a059f",
+        "config/settings.py": "2be566f634ceced4f9a0894928943a18ce76a59511c0076b12e2ae3eff11785e",
+        "config/urls.py": "8c9714679d8dd043be3a7f8031a7ac507f04af31d26c23c66741ad90321797a6",
+        "config/wsgi.py": "e7e10c2904695355f47ce94b834a001713cfe635248bee5edb09817cc023d1b8",
+        "library/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/admin.py": "b2e328e31f08dc907100505521d13ee6a9ea67a240655d051120011ce49cfaf8",
+        "library/apps.py": "bb38af62e1528eb1c39aff090908565186b2e5ba5f45aa2e841553ac4dcccbe3",
+        "library/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "library/models.py": "99cf9919f58ef2e1eb9cc1a85da66215ed87dffdb2b56ffe0580295bed5335ea",
+        "library/tests.py": "9ab6c6191360e63c1b4c9b5659aef348a743c9e078be68190917369e4e9563e8",
+        "library/views.py": "c5cd48407aec8a3ee3df74d46e8fbfa1ec32defb34de9c3f7ada4159a318265d",
+        "typechecks/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "typechecks/negative.py": "77d8dc89d146c18dd75a0d1c814cbcab9763d630da357bb70e49d94aedf2a2bc",
+        "typechecks/positive.py": "6409529dfaa89d142189d4b6e08fd18a823b405755ea878e29f8b564164d6311",
+        "typechecks/static_api.py": "29444280f92cb4a426577c8ac54d4feffb7247fbaa850c61d3197988a25bbef2"
+      },
+      "runtimes": {
+        "wasm-cold": {
+          "samples": [
+            {
+              "seconds": 6.609672958002193,
+              "cpu_seconds": 6.651817,
+              "peak_rss_bytes": 1310965760,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 3.5163874169957126,
+              "cpu_seconds": 3.5669109999999997,
+              "peak_rss_bytes": 486572032,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 3.4737883750058245,
+              "cpu_seconds": 3.527771,
+              "peak_rss_bytes": 486113280,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 3.5111319160059793,
+              "cpu_seconds": 3.55398,
+              "peak_rss_bytes": 486719488,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 6.690728125002352,
+              "cpu_seconds": 6.7188289999999995,
+              "peak_rss_bytes": 1310900224,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 6.6599725420092,
+              "cpu_seconds": 6.689095,
+              "peak_rss_bytes": 1311719424,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            },
+            {
+              "seconds": 3.5268094159982866,
+              "cpu_seconds": 3.561612,
+              "peak_rss_bytes": 487178240,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+              "cache_hits": 0,
+              "cache_misses": 1
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 3.5268094159982866,
+          "median_cpu_seconds": 3.5669109999999997,
+          "median_peak_rss_bytes": 487178240
+        },
+        "wasm-cached": {
+          "samples": [
+            {
+              "seconds": 2.2819741670100484,
+              "cpu_seconds": 2.318839,
+              "peak_rss_bytes": 461586432,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 5.386330499997712,
+              "cpu_seconds": 5.430212999999999,
+              "peak_rss_bytes": 1286782976,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 2.26571145800699,
+              "cpu_seconds": 2.314739,
+              "peak_rss_bytes": 462487552,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 5.380797250007163,
+              "cpu_seconds": 5.4247440000000005,
+              "peak_rss_bytes": 1287028736,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 5.3667606670060195,
+              "cpu_seconds": 5.404256,
+              "peak_rss_bytes": 1287389184,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 2.2937197090068366,
+              "cpu_seconds": 2.340276,
+              "peak_rss_bytes": 462700544,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            },
+            {
+              "seconds": 4.858243334005238,
+              "cpu_seconds": 4.896793,
+              "peak_rss_bytes": 1084391424,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=1 cache_misses=0\nAll checks passed!",
+              "cache_hits": 1,
+              "cache_misses": 0
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 4.858243334005238,
+          "median_cpu_seconds": 4.896793,
+          "median_peak_rss_bytes": 1084391424
+        },
+        "monty": {
+          "samples": [
+            {
+              "seconds": 5.530209707998438,
+              "cpu_seconds": 5.567227,
+              "peak_rss_bytes": 1284390912,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.3592903330136323,
+              "cpu_seconds": 2.408299,
+              "peak_rss_bytes": 459816960,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.3441825409972807,
+              "cpu_seconds": 2.383654,
+              "peak_rss_bytes": 458899456,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.0143503330036765,
+              "cpu_seconds": 2.056031,
+              "peak_rss_bytes": 357253120,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.3614932500058785,
+              "cpu_seconds": 2.4101310000000002,
+              "peak_rss_bytes": 459587584,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 2.3714971669978695,
+              "cpu_seconds": 2.414267,
+              "peak_rss_bytes": 460521472,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            },
+            {
+              "seconds": 5.587511208999786,
+              "cpu_seconds": 5.619223,
+              "peak_rss_bytes": 1285111808,
+              "exit_code": 0,
+              "timed_out": false,
+              "output": "All checks passed!"
+            }
+          ],
+          "successful_runs": 7,
+          "median_seconds": 2.3614932500058785,
+          "median_cpu_seconds": 2.4101310000000002,
+          "median_peak_rss_bytes": 459816960
+        }
+      },
+      "all_runs_passed": true,
+      "wasm_cold_over_monty_wall_time": 1.4934658043123803,
+      "wasm_cached_over_monty_wall_time": 2.057275977389791
+    }
+  ],
+  "cache_priming": {
+    "seconds": 2.0391701250046026,
+    "cpu_seconds": 2.067212,
+    "peak_rss_bytes": 246415360,
+    "exit_code": 0,
+    "timed_out": false,
+    "output": "DEBUG Loaded WASM plugin module plugin=django-ty cache_enabled=true cache_hits=0 cache_misses=1\nAll checks passed!",
+    "cache_hits": 0,
+    "cache_misses": 1
+  },
+  "build": {
+    "source_repository": "regularkevvv/ruff-extended",
+    "source_commit": "dd843c782ddcf53afcbb5f989ed2702745a94f67",
+    "profile": "release",
+    "lto": "off",
+    "features": [
+      "plugins-wasm",
+      "plugins-monty"
+    ],
+    "source_sha256": {
+      "Cargo.toml": "fa7691e56b9ec8bfb346355cb247e80d0e8de0b21f2b82547d4885002df5b70f",
+      "Cargo.lock": "0e2bdbd71f23387f4f57b340eb593d6ee6fa41104689c1ec3bd01434b97a9b7b",
+      "crates/ty_plugin_host/src/wasm.rs": "70e4f1d5529d0646910984fee9080eea75c1b074ae07c61f766105b720ddd5a3",
+      "crates/ty_project/src/db.rs": "e26c12d30517a44343e23cb5b032b620c99f57dc88997cbd041daa56a27f057c"
+    }
+  }
+}

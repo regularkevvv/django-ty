@@ -26,6 +26,13 @@ jobs:
       - name: Test compatibility tooling
         run: uv run --no-project --python 3.11 python -m unittest discover -s tests
         working-directory: django-ty
+      - name: Build shared wheel
+        working-directory: django-ty
+        run: |
+          DIST_DIR="$GITHUB_WORKSPACE/django-ty-shared-dist" bash scripts/build-wheel.sh
+          wheel="$(find "$GITHUB_WORKSPACE/django-ty-shared-dist" -maxdepth 1 -name 'django_ty-*.whl' -print -quit)"
+          test -f "$wheel"
+          echo "DJANGO_TY_WHEEL=$wheel" >> "$GITHUB_ENV"
       - name: Verify differential conformance
         run: bash scripts/differential-conformance.sh --check
         working-directory: django-ty
@@ -50,3 +57,34 @@ jobs:
       - name: Verify wheel installation
         run: bash scripts/e2e.sh
         working-directory: django-ty
+      - name: Check Monty source and packaging
+        working-directory: django-ty
+        run: |
+          python3 scripts/build-monty.py --check
+          uv run --no-project --with ruff==0.16.10 ruff check --isolated --select E4,E7,E9,F,I python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi scripts/check_monty_types.py scripts/build-monty.py scripts/check_monty_parity.py scripts/benchmark_runtimes.py scripts/runtime_config.py python/django_ty/runtime.py python/django_ty/__main__.py tests/test_runtime_config.py tests/test_benchmark_runtimes.py
+          uv run --no-project --with ruff==0.16.10 ruff format --isolated --check python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi scripts/check_monty_types.py scripts/build-monty.py scripts/check_monty_parity.py scripts/benchmark_runtimes.py scripts/runtime_config.py python/django_ty/runtime.py python/django_ty/__main__.py tests/test_runtime_config.py tests/test_benchmark_runtimes.py
+      - name: Verify Python and Monty response parity
+        run: bash scripts/check-monty-parity.sh
+        working-directory: django-ty
+      - name: Check Monty types and SDK declarations
+        run: uv run --no-project --python 3.13 --with ty-extended==0.84.4 python scripts/check_monty_types.py
+        working-directory: django-ty
+      - name: Verify Monty official contracts
+        run: DJANGO_TY_RUNTIME=monty bash scripts/differential-conformance.sh --check
+        working-directory: django-ty
+      - name: Verify Monty Django and Python matrix
+        run: DJANGO_TY_RUNTIME=monty uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check --reuse
+        working-directory: django-ty
+      - name: Verify Monty wheel installation
+        run: DJANGO_TY_RUNTIME=monty bash scripts/e2e.sh
+        working-directory: django-ty
+      - name: Benchmark both backends on the shared wheel
+        working-directory: django-ty
+        run: uv run --no-project --python 3.11 python scripts/benchmark_runtimes.py --project /tmp/django-ty-wheel-e2e --runs 3 --models 0 5 --output "$GITHUB_WORKSPACE/monty-benchmark.json"
+      - name: Upload benchmark measurements
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: monty-benchmark
+          path: ${{ github.workspace }}/monty-benchmark.json
+          if-no-files-found: ignore

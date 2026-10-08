@@ -23,5 +23,7 @@ cargo run \
   --locked \
   > "$ROOT/python/django_ty/ty-plugin.json"
 
+python3 "$ROOT/scripts/build-monty.py" --from-wasm
+
 rm -rf "$DIST_DIR"
 uv build --no-sources --out-dir "$DIST_DIR" "$ROOT"

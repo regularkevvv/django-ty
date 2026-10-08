@@ -1,4 +1,6 @@
-use django_ty::DjangoTyPlugin;
+#[path = "support/monty_oracle.rs"]
+mod monty_oracle;
+use monty_oracle::DjangoTyPlugin;
 use ty_plugin_sdk::Plugin;
 use ty_plugin_sdk::protocol::{
     AnalyzeClassRequest, ArgumentKind, ArgumentSummary, AssignedValueSummary, AssignmentSummary,

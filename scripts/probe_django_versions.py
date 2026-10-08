@@ -97,8 +97,8 @@ def check_reference_support(
 
 
 def ensure_wheel(args: argparse.Namespace) -> Path:
-    if args.wheel:
-        wheel = args.wheel.resolve()
+    if args.wheel or os.environ.get("DJANGO_TY_WHEEL"):
+        wheel = Path(args.wheel or os.environ["DJANGO_TY_WHEEL"]).resolve()
         if not wheel.is_file():
             raise RuntimeError(f"missing wheel: {wheel}")
         return wheel
