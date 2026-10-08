@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_init, post_save
+from django.dispatch import receiver
 from typing_extensions import Self
 
 
@@ -111,3 +113,67 @@ GeneratedManager = models.Manager.from_queryset(GeneratedQuerySet)  # conformanc
 class GeneratedPublication(models.Model):
     title = models.CharField(max_length=200)
     objects = GeneratedManager()
+
+
+class AutoCounter(models.Model):
+    key = models.BigAutoField(primary_key=True)
+    label = models.CharField(max_length=64)
+
+
+class NoSave(models.Model):
+    def save(self, *args: object, **kwargs: object) -> None:
+        pass
+
+
+class CustomInit(models.Model):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.pk = None
+
+
+class CustomLoader(models.Model):
+    @classmethod
+    def from_db(cls, *args: Any, **kwargs: Any) -> Self:
+        return cls()
+
+
+class SignalInit(models.Model):
+    pass
+
+
+class SignalSave(models.Model):
+    pass
+
+
+@receiver(post_init, sender=SignalInit)
+def clear_initialized_id(sender: Any, instance: SignalInit, **kwargs: Any) -> None:
+    instance.pk = None
+
+
+@receiver(post_save, sender=SignalSave)
+def clear_saved_id(sender: Any, instance: SignalSave, **kwargs: Any) -> None:
+    instance.pk = None
+
+
+class TagChild(Tag):
+    pass
+
+
+class DatabaseDefaultKey(models.Model):
+    id = models.AutoField(primary_key=True, db_default=123)
+
+
+class SignalAlias(models.Model):
+    pass
+
+
+SignalAliasRef = SignalAlias
+
+
+@receiver(post_init, sender=SignalAliasRef)
+def clear_aliased_sender_id(sender: Any, instance: SignalAlias, **kwargs: Any) -> None:
+    instance.pk = None
+
+
+class StaticSignal(models.Model):
+    pass

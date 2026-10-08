@@ -24,7 +24,7 @@ impl Plugin for DjangoTyPlugin {
     fn manifest(&self) -> PluginManifest {
         let mut builder =
             ManifestBuilder::new("django-ty", "Django ty plugin", env!("CARGO_PKG_VERSION"))
-                .ty_compatibility(">=0.84.0,<0.85.0")
+                .ty_compatibility(">=0.84.4,<0.85.0")
                 .settings_module("settings")
                 .settings_module("project.settings")
                 .settings_module_from_config("django-settings-module")
@@ -45,9 +45,12 @@ impl Plugin for DjangoTyPlugin {
         for base in MODEL_BASES {
             builder = builder
                 .claim_subclass_transform(*base)
+                .claim_call_state_constructors_on_subclass(*base)
                 .claim_class_contribution_target(*base)
                 .claim_instance_contribution_target(*base)
-                .claim_call_return_method_on_subclass(*base, "save");
+                .claim_call_return_method_on_subclass(*base, "save")
+                .claim_call_state_method_on_subclass(*base, "save")
+                .claim_call_state_method_on_subclass(*base, "delete");
         }
         for base in CHOICES_BASES {
             builder = builder.claim_instance_contribution_target(*base);
@@ -86,7 +89,14 @@ impl Plugin for DjangoTyPlugin {
             .unwrap_or_default();
 
         let mut patch = ty_plugin_sdk::dsl::ClassPatchBuilder::new();
-        for field in default_model_fields() {
+        let primary_key_default = request
+            .project_index
+            .as_ref()
+            .and_then(|index| index.get("models"))
+            .and_then(|models| models.get(&request.class.qualified_name))
+            .and_then(|model| model.get("auto_primary_key_default"))
+            .and_then(|value| value.as_str());
+        for field in default_model_fields(primary_key_default) {
             patch = patch.field(field);
         }
         for member_patch in default_model_members(&request.class.qualified_name) {
@@ -183,6 +193,10 @@ impl Plugin for DjangoTyPlugin {
             return PluginResponse::NoChange;
         }
         adjust_queryset_return(request, method_name)
+    }
+
+    fn adjust_call_state(&self, request: &CallRequest) -> PluginResponse {
+        crate::state::adjust_call_state(request)
     }
 
     fn adjust_call_signature(&self, request: &CallRequest) -> PluginResponse {

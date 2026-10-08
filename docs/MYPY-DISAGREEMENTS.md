@@ -4,22 +4,36 @@ Examples use the [test models](../conformance/conformance_models/models.py). “
 
 The [original audit](../compatibility/mypy-disagreement-audit.json) records all 24 assertion disagreements, exact versions, diagnostics, source hashes, and reproductions. Cases with the same cause are grouped here. The [current matrix](DJANGO-VERSIONS.md) records the 0.5.0 candidate's results.
 
-## Unsaved model IDs: planned state tracking
+## Model IDs: tracked state versus nonnullable getters
 
 ```python
-book = Book()
-book.id         # Django: None
-book.pk         # Django: None
-book.author_id  # Django: None, although the database field is nonnullable
+book = Book()                       # id/pk: None
+book = Book(id=123)                  # id/pk: int, even before saving
+book.save()                         # id/pk: int after successful save
+alias = book
+alias.delete()                      # book.id/book.pk: None
+book = Book.objects.get(pk=1)        # id/pk: int
 ```
 
-**Disagreement:** mypy types these reads as `int`; django-ty uses `int | None`. All five originally audited releases differ: 5.0.4, 5.1.3, 5.2.9, 6.0.6, and 6.1.1.
+**Disagreement:** mypy keeps auto-ID getters nonnullable (`int`) even before saving and after deletion. django-ty 0.5.0 tracks auto-primary-key values using ty-extended **0.84.4+**. All five originally audited django-stubs releases use the nonnullable policy: 5.0.4, 5.1.3, 5.2.9, 6.0.6, and 6.1.1.
 
-**Which is right?** django-ty represents these unsaved values correctly. Mypy's nonnullable getter is an explicit typing policy, not an accidental validation bug. Neither checker tracks persistence state; django-ty's Optional type also affects saved/loaded objects.
+**Which is right?** django-ty follows Django's lifecycle. Mypy's nonnullable getter is a deliberate typing policy. Branches merge states; aliases share updates; unknown calls discard refinements. `save(update_fields=[])` does not establish an ID.
 
-**Planned work in [ty-extended](https://github.com/regularkevvv/ty-extended):** track whether an ID is set at construction/loading and after calls such as `save()` or `delete()`. The checker and plugin API need support for object changes, branches, and aliases; django-ty will provide the Django-specific rules. This is not implemented yet. Unknown mutations will still require a conservative nullable type.
+An auto key with [`db_default`](https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default) starts as `DatabaseDefault`; a successful save establishes `int`.
 
-**Evidence:** [Django primary-key docs](https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys), [Django initialization](https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/base.py#L502), and [the plugin's explicit nonnullable getters](https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/models.py#L274). Upstream [PR #634](https://github.com/typeddjango/django-stubs/pull/634) permits setting an AutoField to `None` while retaining a nonnullable getter.
+**Limits:** Custom initialization/loading, overridden methods, and uncertain arguments keep broad types. Non-auto keys, foreign-key IDs, concrete multi-table inheritance, async calls, and optional or container results are outside this refinement.
+
+Concrete children use a separate [parent-link primary key](https://docs.djangoproject.com/en/6.1/topics/db/models/#multi-table-inheritance): `Child(id=123).pk` can be `None`. Abstract and proxy inheritance retain tracking.
+
+**Callbacks:** Project `@receiver` handlers keep construction, loading, and saving broad for their sender models. Deletion still clears the ID. External handlers, aliased decorators, and dynamic registration require an opt-out when callbacks change IDs:
+
+```toml
+[tool.ty.plugins.config.django-ty]
+model-state = false
+```
+
+**Evidence:** [Django primary-key docs](https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys), [skipped saves](https://docs.djangoproject.com/en/6.1/ref/models/instances/#specifying-which-fields-to-save), [deletion](https://docs.djangoproject.com/en/6.1/ref/models/instances/#deleting-objects), [runtime tests](../scripts/check_django_runtime_contracts.py), and [static lifecycle tests](../conformance/cases/model_state.py). [Django initialization](https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/base.py#L502) sets field defaults; [mypy's explicit nonnullable getters](https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/models.py#L274) follow [PR #634](https://github.com/typeddjango/django-stubs/pull/634).
+
 
 ## Fresh request parameters: deliberate workaround
 
@@ -98,5 +112,5 @@ For these tested cases, django-ty matches Django. Newer audited plugins agree to
 ## Evidence limits and remaining checks
 
 - The original audit includes unsupported comparator combinations. The current [support catalog](../compatibility/reference-support.toml) prevents them: Django 5.2/6.0 use django-stubs 6.0.9 with mypy 2.3.1; upstream calls Django 5.2 support **partial**. [Upstream support table](https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md)
-- Optional ID behavior across explicit/inherited fields and row results needs broader tests before claiming one consistent state policy.
+- Auto-key lifecycle tests cover explicit/inherited fields and row results. Custom primary keys and foreign-key ID state remain outside this refinement.
 - Migration models need a regression test. Upstream [excludes `StateApps`](https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/main.py#L263) because historical schemas must not resolve to current model classes. This audit identifies an unverified django-ty boundary, not a demonstrated failure. Custom app-label inference is also limited.

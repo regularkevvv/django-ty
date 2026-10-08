@@ -73,6 +73,7 @@ mod tests {
                 file_path: "/project/library/use.py".to_string(),
                 python_version: "3.13".to_string(),
                 platform: "linux".to_string(),
+                config: ty_plugin_sdk::serde_json::json!({}),
                 speculative: false,
             },
             callee: TypeExpr::expression("django.apps.registry.Apps.get_model"),

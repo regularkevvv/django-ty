@@ -18,7 +18,7 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
       - name: Install Rust components
-        run: rustup component add rustfmt llvm-tools-preview && rustup target add wasm32-unknown-unknown
+        run: rustup component add rustfmt clippy llvm-tools-preview && rustup target add wasm32-unknown-unknown
         working-directory: django-ty
       - name: Verify vendored Django compatibility map
         run: uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --check
@@ -37,6 +37,9 @@ jobs:
           tool: cargo-llvm-cov
       - name: Check formatting
         run: cargo fmt --check
+        working-directory: django-ty
+      - name: Run Clippy
+        run: cargo clippy --locked --all-targets -- -D warnings
         working-directory: django-ty
       - name: Run unit tests
         run: cargo test --locked
