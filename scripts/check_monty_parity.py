@@ -57,7 +57,12 @@ def main():
                     try:
                         response = session.feed_run(
                             source + "\n\n__ty_handle__(request_json)",
-                            inputs={"request_json": json.dumps(record["request"])},
+                            inputs={
+                                "request_json": json.dumps(record["request"]),
+                                # Match hosts that provide the full inline index.
+                                # No external lookup or suspension is permitted.
+                                "_ty_project_index_lookup": None,
+                            },
                         )
                     except Exception as exc:
                         raise RuntimeError(
