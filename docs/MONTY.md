@@ -47,13 +47,19 @@ with both backends. See the [editor settings](../README.md#editors).
 Reproduce installed qualification:
 
 ```sh
-uv run --no-project --python 3.13 --with /path/to/django_ty-0.6.0-py3-none-any.whl python scripts/check_companion_install.py --output /tmp/new-django-editor-receipt
+uv venv --python 3.13 /tmp/django-qualification
+uv pip install --python /tmp/django-qualification/bin/python /path/to/django_ty-0.6.0-py3-none-any.whl Django==6.1.3
+/tmp/django-qualification/bin/python scripts/check_companion_install.py --output /tmp/new-django-editor-receipt
 ```
+
+Use an explicit installed environment: `uv run --with` can layer dependencies
+outside `sys.executable`'s environment, which these subprocess checks pass to ty.
+On Windows, use the environment's `Scripts/python.exe` in place of `bin/python`.
 
 ## Large-project regression
 
 ```sh
-uv run --no-project --python 3.13 --with /path/to/django_ty-0.6.0-py3-none-any.whl --with Django==6.1.3 python scripts/check_companion_scalability.py --output /tmp/new-django-scale-receipt
+/tmp/django-qualification/bin/python scripts/check_companion_scalability.py --output /tmp/new-django-scale-receipt
 ```
 
 The default workload contains 7,082 Python files and 2,501 related models. Positive
