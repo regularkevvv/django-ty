@@ -111,12 +111,21 @@ jobs:
         run: bash scripts/differential-conformance.sh --check
       - name: Verify all 21 Django and Python pairs
         run: uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check --clean-environments --wheel "$DJANGO_TY_WHEEL" --work-dir "$RUNNER_TEMP/django-ty-matrix"
+      # uv run --with layers dependencies outside sys.executable's environment.
+      # Explicit installations keep subprocesses and ty in the same environment.
+      - name: Install the wheel into Python 3.15 and 3.13 environments
+        run: |
+          for version in 3.15 3.13; do
+            target="$RUNNER_TEMP/django-ty-python-$version"
+            uv venv --python "$version" "$target"
+            uv pip install --python "$target/bin/python" "$DJANGO_TY_WHEEL" Django==6.1.3
+          done
       - name: Verify latest Python against Django contracts and runtime
-        run: uv run --no-project --python 3.15 --with "$DJANGO_TY_WHEEL" --with Django==6.1.3 python scripts/check_latest_python.py --mypy-bin "$DJANGO_TY_CONFORMANCE_DIR/reference/bin/mypy" --output "$RUNNER_TEMP/django-ty-python315"
+        run: '"$RUNNER_TEMP/django-ty-python-3.15/bin/python" scripts/check_latest_python.py --mypy-bin "$DJANGO_TY_CONFORMANCE_DIR/reference/bin/mypy" --output "$RUNNER_TEMP/django-ty-python315"'
       - name: Check the installed wheel and QueryDict runtime contracts
         run: bash scripts/e2e.sh
       - name: Bound the 7082-file and 2501-model regression
-        run: uv run --no-project --python 3.13 --with "$DJANGO_TY_WHEEL" --with Django==6.1.3 python scripts/check_companion_scalability.py --output "$RUNNER_TEMP/django-ty-scalability"
+        run: '"$RUNNER_TEMP/django-ty-python-3.13/bin/python" scripts/check_companion_scalability.py --output "$RUNNER_TEMP/django-ty-scalability"'
       - name: Preserve qualification receipts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -151,7 +160,15 @@ jobs:
         shell: bash
         run: |
           wheel="$(find "$GITHUB_WORKSPACE/dist" -maxdepth 1 -name '*.whl' -print -quit)"
-          uv run --no-project --python 3.13 --with "$wheel" python scripts/check_companion_install.py --output "$RUNNER_TEMP/django-ty-installed"
+          target="$RUNNER_TEMP/django-ty-runtime"
+          uv venv --python 3.13 "$target"
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            python="$target/Scripts/python.exe"
+          else
+            python="$target/bin/python"
+          fi
+          uv pip install --python "$python" "$wheel"
+          "$python" scripts/check_companion_install.py --output "$RUNNER_TEMP/django-ty-installed"
       - name: Preserve installed editor receipts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

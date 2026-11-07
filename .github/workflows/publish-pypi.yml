@@ -39,7 +39,10 @@ jobs:
         working-directory: django-ty
         run: |
           wheel="$(find "$GITHUB_WORKSPACE/django-ty/dist" -maxdepth 1 -name '*.whl' -print -quit)"
-          uv run --no-project --python 3.13 --with "$wheel" python scripts/check_companion_install.py --output "$RUNNER_TEMP/django-ty-publish-smoke"
+          target="$RUNNER_TEMP/django-ty-runtime"
+          uv venv --python 3.13 "$target"
+          uv pip install --python "$target/bin/python" "$wheel"
+          "$target/bin/python" scripts/check_companion_install.py --output "$RUNNER_TEMP/django-ty-publish-smoke"
       - name: Attest the release distributions
         uses: actions/attest-build-provenance@00014ed6ed5efc5b1ab7f7f34a39eb55d41aa4f8
         with:
