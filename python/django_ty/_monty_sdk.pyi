@@ -1,6 +1,6 @@
 """Precise declarations for the ambient SDK builders used by this plugin.
 
-Runtime implementations are ty_extended.plugin_sdk (companion 0.87.0). This stub refines its
+Runtime implementations are ty_extended.plugin_sdk (companion 0.89.0). This stub refines its
 broad JSON aliases without adding runtime imports or changing the checker SDK.
 """
 
@@ -15,6 +15,8 @@ from ._monty_types import (
     CallStateResponse,
     ClassRequest,
     ClassResponse,
+    ClassBatchRequest,
+    ClassBatchResponse,
     Contribution,
     ContributionPatch,
     ContributionTarget,
@@ -52,6 +54,10 @@ def on_manifest(
 def on_class_transform(
     fn: Callable[[ClassRequest], ClassResponse | None],
 ) -> Callable[[ClassRequest], ClassResponse | None]: ...
+def on_class_batch(
+    fn: Callable[[ClassBatchRequest], ClassBatchResponse],
+) -> Callable[[ClassBatchRequest], ClassBatchResponse]: ...
+def class_batch(responses: list[ClassResponse | None]) -> ClassBatchResponse: ...
 def on_call_return(
     fn: Callable[[CallRequest], CallReturnResponse | None],
 ) -> Callable[[CallRequest], CallReturnResponse | None]: ...

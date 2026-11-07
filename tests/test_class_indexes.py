@@ -62,6 +62,7 @@ class ClassIndexesTest(unittest.TestCase):
     def compare_classes(self, request):
         response = self.response(request)
         self.assertEqual(response["kind"], "project-index", response)
+        records = []
         for model in request["classes"]:
             with self.subTest(model=model["qualified-name"]):
                 call = {
@@ -75,6 +76,28 @@ class ClassIndexesTest(unittest.TestCase):
                     model["qualified-name"]
                 ]
                 self.assertEqual(self.response(call), expected)
+                records.append((call, expected))
+        original = json.dumps(response, sort_keys=True)
+        # Changing item order and batch boundaries must preserve the complete
+        # individual response, including relation targets and descriptor types.
+        for width, ordered in [
+            (1, records),
+            (7, list(reversed(records))),
+            (128, records[::2] + records[1::2]),
+        ]:
+            for offset in range(0, len(ordered), width):
+                chunk = ordered[offset : offset + width]
+                actual = self.response(
+                    {"kind": "analyze-classes", "requests": [call for call, _ in chunk]}
+                )
+                self.assertEqual(
+                    actual,
+                    {
+                        "kind": "class-batch",
+                        "responses": [expected for _, expected in chunk],
+                    },
+                )
+        self.assertEqual(json.dumps(response, sort_keys=True), original)
         return response
 
     def test_relation_resolution_settings_ambiguity_and_inheritance(self):

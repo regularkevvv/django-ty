@@ -1,4 +1,4 @@
-"""Static wire schemas for protocol 0.7 / SDK 0.0.8; never loaded by Monty."""
+"""Static wire schemas for protocol 0.9 / SDK 0.0.11; never loaded by Monty."""
 
 from typing import Literal, TypeAlias, TypedDict
 
@@ -226,6 +226,7 @@ ClassRequest = TypedDict(
     {"class": Required[ClassSummary], "context": Context, "project-index": DjangoIndex},
     total=False,
 )
+ClassBatchRequest = TypedDict("ClassBatchRequest", {"requests": list[ClassRequest]})
 CallRequest = TypedDict(
     "CallRequest",
     {
@@ -418,6 +419,14 @@ ClassResponse = TypedDict(
         "diagnostics": list[Diagnostic],
     },
     total=False,
+)
+NoChangeResponse = TypedDict("NoChangeResponse", {"kind": Literal["no-change"]})
+ClassBatchResponse = TypedDict(
+    "ClassBatchResponse",
+    {
+        "kind": Literal["class-batch"],
+        "responses": list[ClassResponse | NoChangeResponse],
+    },
 )
 CallReturnResponse = TypedDict(
     "CallReturnResponse",

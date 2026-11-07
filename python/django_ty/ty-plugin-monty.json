@@ -4,10 +4,10 @@
   "version": "0.7.0",
   "protocol-version": {
     "major": 0,
-    "minor": 8
+    "minor": 9
   },
   "ty-compatibility": {
-    "requirement": ">=0.88.0,<0.89.0"
+    "requirement": ">=0.89.0,<0.90.0"
   },
   "runtime": {
     "kind": "monty",
@@ -27,7 +27,8 @@
     "settings-data": true,
     "virtual-types": true,
     "mutation-validation": true,
-    "project-index-lookup": true
+    "project-index-lookup": true,
+    "class-batch": true
   },
   "claims": {
     "classes": [

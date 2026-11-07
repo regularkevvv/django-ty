@@ -17,6 +17,7 @@ if typing.TYPE_CHECKING:
         call_state_patch,
         callable_member,
         callable_signature,
+        class_batch,
         class_patch,
         class_target,
         contribution,
@@ -35,6 +36,7 @@ if typing.TYPE_CHECKING:
         on_call_signature,
         on_call_state,
         on_class_transform,
+        on_class_batch,
         on_manifest,
         on_mutation,
         on_project_index,
@@ -62,6 +64,8 @@ if typing.TYPE_CHECKING:
         CallStateResponse,
         CallSummary,
         ClassModelIndex,
+        ClassBatchRequest,
+        ClassBatchResponse,
         ClassRequest,
         ClassResponse,
         ClassSummary,
@@ -1184,6 +1188,12 @@ def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
     return class_patch(fields=fields, class_members=members, instance_members=instance)
 
 
+@on_class_batch
+def analyze_django_classes(request: "ClassBatchRequest") -> "ClassBatchResponse":
+    """Share interpreter setup; each class keeps its own complete input index."""
+    return class_batch([analyze_django_class(item) for item in request["requests"]])
+
+
 def model_entry(request: "IndexedRequest", name: str) -> "ModelIndex | None":
     return project_index_value(request, ["models", name])
 
@@ -2114,10 +2124,10 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
   "version": "0.7.0",
   "protocol-version": {
     "major": 0,
-    "minor": 8
+    "minor": 9
   },
   "ty-compatibility": {
-    "requirement": ">=0.88.0,<0.89.0"
+    "requirement": ">=0.89.0,<0.90.0"
   },
   "runtime": {
     "kind": "monty",
@@ -2137,7 +2147,8 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     "settings-data": true,
     "virtual-types": true,
     "mutation-validation": true,
-    "project-index-lookup": true
+    "project-index-lookup": true,
+    "class-batch": true
   },
   "claims": {
     "classes": [

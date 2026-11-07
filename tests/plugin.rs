@@ -502,8 +502,8 @@ fn packaged_manifest_uses_the_wheel_artifact() {
 
     assert_eq!(manifest.id, "django-ty");
     assert_eq!(manifest.version, env!("CARGO_PKG_VERSION"));
-    assert_eq!(manifest.protocol_version.minor, 8);
-    assert_eq!(manifest.ty_compatibility.requirement, ">=0.88.0,<0.89.0");
+    assert_eq!(manifest.protocol_version.minor, 9);
+    assert_eq!(manifest.ty_compatibility.requirement, ">=0.89.0,<0.90.0");
     assert!(matches!(
         manifest.runtime,
         ty_plugin_sdk::protocol::RuntimeSpec::Monty(ref monty) if monty.artifact == "monty.py"
