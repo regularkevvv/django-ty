@@ -57,10 +57,19 @@ vim.lsp.config("ty", {
 vim.lsp.enable("ty")
 ```
 
+## Performance
+
+Django-ty 0.7 uses class-specific project indexes and bounded read-only lookups
+in companion 0.88. Model relations within a split `models` package resolve across
+sibling modules. See [the performance comparison](https://github.com/regularkevvv/ty-extended/blob/main/docs/performance.md)
+for fresh-process MyPy and bare-ty benchmarks with ORM and ordinary Python error
+controls, and [the Monty guide](docs/MONTY.md#large-project-performance) for the
+installed large-project regression.
+
 ## Versions and migration
 
-Django-ty 0.6.0 requires `ty-extended>=0.87.0,<0.88.0`. Companion versions are
-independent of official ty. Companion 0.87.0 was qualified against every ty release
+Django-ty 0.7.0 requires `ty-extended>=0.88.0,<0.89.0`. Companion versions are
+independent of official ty. Companion 0.88.0 was qualified against every ty release
 from 0.0.84 through 0.0.99; its dependency range is `ty>=0.0.84,<0.1`. Future versions
 within that range are accepted but need compatibility checks. An ordinary ty update
 within a compatible group does not require another Django-ty release.

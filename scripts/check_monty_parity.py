@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
     sdk = importlib.util.find_spec("ty_extended.plugin_sdk")
     if sdk is None or sdk.origin is None:
-        raise RuntimeError("Install ty-extended 0.87.0 in the test environment")
+        raise RuntimeError("Install ty-extended 0.88.0 in the test environment")
     root = Path(__file__).resolve().parent.parent
     source = (
         Path(sdk.origin).read_text()

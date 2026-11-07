@@ -282,8 +282,13 @@ class ModelIndex(TypedDict):
     signal_receivers: bool
     query_fields: NotRequired[dict[str, str]]
 
+class ClassModelIndex(TypedDict, total=False):
+    auto_primary_key_default: str | None
+    manager_queryset: str | None
+
 class DjangoIndex(TypedDict, total=False):
     models: dict[str, ModelIndex]
+    class_models: dict[str, ClassModelIndex]
     settings: dict[str, str]
     auth_user_model: str | None
 
@@ -395,6 +400,7 @@ ProjectIndexResponse = TypedDict(
     {
         "kind": Literal["project-index"],
         "plugin-index": DjangoIndex,
+        "class-indexes": NotRequired[dict[str, DjangoIndex]],
         "contributions": NotRequired[list[Contribution]],
         "virtual-types": NotRequired[list[VirtualType]],
         "dependencies": NotRequired[list[Dependency]],

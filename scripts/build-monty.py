@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import ast
 import json
 import re
 from pathlib import Path
@@ -30,17 +29,17 @@ def main():
     prefix = source_path.read_text().split("\n# Packaged manifest\n")[0]
     source = (
         prefix
-        + '\n# Packaged manifest\nset_manifest(\n    json.loads(r"""\n'
+        + "\n# Packaged manifest\n@on_manifest\n"
+        + "def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:\n"
+        + '    return json.loads(r"""\n'
         + encoded
-        + '""")\n)\n'
+        + '""")\n'
     )
     if args.check:
-        module = ast.parse(source_path.read_text())
-        embedded = json.loads(ast.literal_eval(module.body[-1].value.args[0].args[0]))
         if (
             manifest_path.read_text() != encoded
             or alias_path.read_text() != encoded
-            or embedded != manifest
+            or source_path.read_text() != source
         ):
             raise RuntimeError(
                 "Run python scripts/build-monty.py to regenerate the embedded manifest"
@@ -48,9 +47,7 @@ def main():
     else:
         manifest_path.write_text(encoded)
         alias_path.write_text(encoded)
-        module = ast.parse(source_path.read_text())
-        embedded = json.loads(ast.literal_eval(module.body[-1].value.args[0].args[0]))
-        if embedded != manifest:
+        if source_path.read_text() != source:
             source_path.write_text(source)
 
 

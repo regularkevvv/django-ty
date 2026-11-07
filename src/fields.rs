@@ -307,7 +307,23 @@ fn resolve_model_name(module: &str, raw: &str, model_names: &BTreeSet<String>) -
         }
         return raw.to_string();
     }
-    format!("{module}.{raw}")
+    let local = format!("{module}.{raw}");
+    if model_names.contains(&local) {
+        return local;
+    }
+    let parts: Vec<_> = module.split('.').collect();
+    if let Some(index) = parts.iter().rposition(|part| *part == "models") {
+        let prefix = format!("{}.", parts[..=index].join("."));
+        let suffix = format!(".{raw}");
+        let mut candidates = model_names
+            .range(prefix.clone()..)
+            .take_while(|name| name.starts_with(&prefix))
+            .filter(|name| name.ends_with(&suffix));
+        if let (Some(candidate), None) = (candidates.next(), candidates.next()) {
+            return candidate.clone();
+        }
+    }
+    local
 }
 
 fn scalar_field_type(call: &CallValueSummary, is_nullable: bool) -> Option<TypeExpr> {

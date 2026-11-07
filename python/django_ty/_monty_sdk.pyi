@@ -5,7 +5,7 @@ broad JSON aliases without adding runtime imports or changing the checker SDK.
 """
 
 from collections.abc import Callable
-from typing import Literal
+from typing import Any, Literal
 
 from ._monty_types import (
     CallableSignature,
@@ -46,6 +46,9 @@ from ._monty_types import (
 def on_project_index(
     fn: Callable[[ProjectIndexRequest], ProjectIndexResponse],
 ) -> Callable[[ProjectIndexRequest], ProjectIndexResponse]: ...
+def on_manifest(
+    fn: Callable[[dict[str, JsonValue]], dict[str, JsonValue]],
+) -> Callable[[dict[str, JsonValue]], dict[str, JsonValue]]: ...
 def on_class_transform(
     fn: Callable[[ClassRequest], ClassResponse | None],
 ) -> Callable[[ClassRequest], ClassResponse | None]: ...
@@ -165,6 +168,7 @@ def project_index(
     virtual_types: list[VirtualType] | None = ...,
     dependencies: list[Dependency] | None = ...,
     diagnostics: list[Diagnostic] | None = ...,
+    class_indexes: dict[str, DjangoIndex] | None = ...,
 ) -> ProjectIndexResponse: ...
 def class_patch(
     fields: list[FieldPatch] | None = ...,
@@ -189,4 +193,9 @@ def call_state_patch(
     preserves_other_objects: bool = ...,
 ) -> CallStateResponse: ...
 def mutation_diagnostics(items: list[Diagnostic]) -> MutationResponse: ...
-def set_manifest(manifest_dict: dict[str, JsonValue]) -> None: ...
+
+# Opaque JSON index values cross the host boundary; plugin helpers refine them.
+def project_index_value(
+    request: object, path: list[str], default: Any = ...
+) -> Any: ...
+def project_index_keys(request: object, path: list[str]) -> list[str]: ...
