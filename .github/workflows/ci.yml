@@ -8,45 +8,174 @@ on:
 permissions:
   contents: read
 
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_BUILD_JOBS: 2
+  UV_NO_CACHE: 1
+  UV_HTTP_RETRIES: 10
+
 jobs:
-  verify:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          path: django-ty
           persist-credentials: false
-      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
-      - name: Install Rust components
-        run: rustup component add rustfmt clippy llvm-tools-preview && rustup target add wasm32-unknown-unknown
-        working-directory: django-ty
-      - name: Verify vendored Django compatibility map
-        run: uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --check
-        working-directory: django-ty
-      - name: Test compatibility tooling
-        run: uv run --no-project --python 3.11 python -m unittest discover -s tests
-        working-directory: django-ty
-      - name: Verify differential conformance
-        run: bash scripts/differential-conformance.sh --check
-        working-directory: django-ty
-      - name: Verify Django and Python compatibility matrix
-        run: uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check
-        working-directory: django-ty
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: '0.12.23'
+          enable-cache: false
+      - name: Check Monty packaging and Python tooling
+        run: |
+          python scripts/build-monty.py --check
+          python -m unittest discover -s tests
+          python scripts/evaluate_django_stubs_coverage.py --check
+      - name: Check Python formatting and imports
+        run: |
+          uv run --no-project --with ruff==0.16.10 ruff check --no-cache --isolated --select E4,E7,E9,F,I python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi python/django_ty/runtime.py python/django_ty/__main__.py scripts/build-monty.py scripts/check_monty_types.py scripts/check_monty_parity.py scripts/runtime_config.py scripts/lsp_client.py scripts/check_companion_install.py scripts/check_companion_scalability.py scripts/check_latest_python.py tests/test_runtime_config.py tests/test_companion_scalability.py
+          uv run --no-project --with ruff==0.16.10 ruff format --no-cache --isolated --check python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi python/django_ty/runtime.py python/django_ty/__main__.py scripts/build-monty.py scripts/check_monty_types.py scripts/check_monty_parity.py scripts/runtime_config.py scripts/lsp_client.py scripts/check_companion_install.py scripts/check_companion_scalability.py scripts/check_latest_python.py tests/test_runtime_config.py tests/test_companion_scalability.py
+      - name: Build the universal wheel without Rust
+        run: bash scripts/build-wheel.sh
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: django-ty-dist
+          path: dist/*
+          retention-days: 5
+
+  oracle:
+    runs-on: ubuntu-latest
+    env:
+      CARGO_TARGET_DIR: ${{ github.workspace }}/target
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: '0.12.23'
+          enable-cache: false
+      - name: Install native reference tools
+        run: rustup component add rustfmt clippy llvm-tools-preview
       - uses: taiki-e/install-action@16b05812d776ae1dfaabc8277e421fb6d2506419 # v2.82.7
         with:
           tool: cargo-llvm-cov
-      - name: Check formatting
+      - name: Check reference formatting
         run: cargo fmt --check
-        working-directory: django-ty
-      - name: Run Clippy
+      - name: Lint the native reference
         run: cargo clippy --locked --all-targets -- -D warnings
-        working-directory: django-ty
-      - name: Run unit tests
+      - name: Clean lint artifacts
+        if: always()
+        run: cargo clean
+      - name: Test the native reference
         run: cargo test --locked
-        working-directory: django-ty
-      - name: Enforce line coverage
+      - name: Clean test artifacts
+        if: always()
+        run: cargo clean
+      - name: Enforce native reference line coverage
         run: cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 98
-        working-directory: django-ty
-      - name: Verify wheel installation
+      - name: Clean coverage artifacts
+        if: always()
+        run: cargo clean
+      - name: Compare Python and Monty 1.5 responses with the native oracle
+        run: bash scripts/check-monty-parity.sh
+      - name: Clean remaining reference artifacts
+        if: always()
+        run: cargo clean
+
+  contracts:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: '0.12.23'
+          enable-cache: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: django-ty-dist
+          path: dist
+      - name: Select the qualified wheel
+        run: |
+          wheel="$(find "$GITHUB_WORKSPACE/dist" -maxdepth 1 -name '*.whl' -print -quit)"
+          test -f "$wheel"
+          printf '%s\n' "DJANGO_TY_WHEEL=$wheel" "DJANGO_TY_CONFORMANCE_DIR=$RUNNER_TEMP/django-ty-conformance" "DJANGO_TY_E2E_DIR=$RUNNER_TEMP/django-ty-e2e" >> "$GITHUB_ENV"
+      - name: Check SDK declarations and reject invalid types
+        run: uv run --no-project --python 3.13 --with ty-extended==0.87.0 python scripts/check_monty_types.py
+      - name: Verify official Django contracts
+        run: bash scripts/differential-conformance.sh --check
+      - name: Verify all 21 Django and Python pairs
+        run: uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check --clean-environments --wheel "$DJANGO_TY_WHEEL" --work-dir "$RUNNER_TEMP/django-ty-matrix"
+      # uv run --with layers dependencies outside sys.executable's environment.
+      # Explicit installations keep subprocesses and ty in the same environment.
+      - name: Install the wheel into Python 3.15 and 3.13 environments
+        run: |
+          for version in 3.15 3.13; do
+            target="$RUNNER_TEMP/django-ty-python-$version"
+            uv venv --python "$version" "$target"
+            uv pip install --python "$target/bin/python" "$DJANGO_TY_WHEEL" Django==6.1.3
+          done
+      - name: Verify latest Python against Django contracts and runtime
+        run: '"$RUNNER_TEMP/django-ty-python-3.15/bin/python" scripts/check_latest_python.py --mypy-bin "$DJANGO_TY_CONFORMANCE_DIR/reference/bin/mypy" --output "$RUNNER_TEMP/django-ty-python315"'
+      - name: Check the installed wheel and QueryDict runtime contracts
         run: bash scripts/e2e.sh
-        working-directory: django-ty
+      - name: Bound the 7082-file and 2501-model regression
+        run: '"$RUNNER_TEMP/django-ty-python-3.13/bin/python" scripts/check_companion_scalability.py --output "$RUNNER_TEMP/django-ty-scalability"'
+      - name: Preserve qualification receipts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: django-ty-contracts
+          retention-days: 5
+          path: |
+            ${{ runner.temp }}/django-ty-python315/*.json
+            ${{ runner.temp }}/django-ty-scalability/scalability.json
+            ${{ runner.temp }}/django-ty-scalability/*/stderr.log
+
+  installation:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: '0.12.23'
+          enable-cache: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: django-ty-dist
+          path: dist
+      - name: Check the exact wheel through installed CLI and LSP
+        shell: bash
+        run: |
+          wheel="$(find "$GITHUB_WORKSPACE/dist" -maxdepth 1 -name '*.whl' -print -quit)"
+          target="$RUNNER_TEMP/django-ty-runtime"
+          uv venv --python 3.13 "$target"
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            python="$target/Scripts/python.exe"
+          else
+            python="$target/bin/python"
+          fi
+          uv pip install --python "$python" "$wheel"
+          "$python" scripts/check_companion_install.py --output "$RUNNER_TEMP/django-ty-installed"
+      - name: Preserve installed editor receipts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: django-ty-installed-${{ matrix.os }}
+          retention-days: 5
+          path: |
+            ${{ runner.temp }}/django-ty-installed/acceptance.json
+            ${{ runner.temp }}/django-ty-installed/*.stdout
+            ${{ runner.temp }}/django-ty-installed/*.stderr

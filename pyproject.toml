@@ -1,14 +1,14 @@
 [project]
 name = "django-ty"
-version = "0.5.0"
+version = "0.6.0"
 requires-python = ">=3.10"
 dependencies = [
     "Django>=5.0,<6.2",
-    "ty-extended>=0.84.4,<0.85.0",
+    "ty-extended>=0.87.0,<0.88.0",
     "types-PyYAML>=6.0.12",
     "typing-extensions>=4.11.0",
 ]
-description = "Django semantic plugin for ty-extended."
+description = "Django semantic plugin for the ty-extended Monty companion."
 readme = "README.md"
 authors = [{ name = "Kevin Castro", email = "hola@kev.pe" }]
 license = "MIT"
@@ -20,7 +20,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Rust",
     "Topic :: Software Development :: Quality Assurance",
 ]
 
@@ -32,16 +31,15 @@ Releases = "https://github.com/regularkevvv/django-ty/releases"
 requires = ["hatchling>=1.31,<2"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+exclude = ["*.wasm", "**/__pycache__/**", "*.pyc"]
+
 [tool.hatch.build.targets.sdist]
-artifacts = [
-    "python/django_ty/django_ty.wasm",
-    "python/django_ty/ty-plugin.json",
-]
+include = ["/python", "/pyproject.toml", "/README.md", "/LICENSE", "/THIRD_PARTY_NOTICES.md"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["python/django_ty"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"python/django_ty/django_ty.wasm" = "django_ty/django_ty.wasm"
 "python/django_ty/ty-plugin.json" = "django_ty/ty-plugin.json"
 "THIRD_PARTY_NOTICES.md" = "django_ty/THIRD_PARTY_NOTICES.md"

@@ -1,4 +1,6 @@
-use django_ty::DjangoTyPlugin;
+#[path = "support/monty_oracle.rs"]
+mod monty_oracle;
+use monty_oracle::DjangoTyPlugin;
 use ty_plugin_sdk::Plugin;
 use ty_plugin_sdk::protocol::{
     AnalyzeClassRequest, ArgumentKind, ArgumentSummary, AssignedValueSummary, AssignmentSummary,
@@ -500,10 +502,10 @@ fn packaged_manifest_uses_the_wheel_artifact() {
 
     assert_eq!(manifest.id, "django-ty");
     assert_eq!(manifest.version, env!("CARGO_PKG_VERSION"));
-    assert_eq!(manifest.ty_compatibility.requirement, ">=0.84.4,<0.85.0");
+    assert_eq!(manifest.ty_compatibility.requirement, ">=0.87.0,<0.88.0");
     assert!(matches!(
         manifest.runtime,
-        ty_plugin_sdk::protocol::RuntimeSpec::Wasm(ref wasm) if wasm.artifact == "django_ty.wasm"
+        ty_plugin_sdk::protocol::RuntimeSpec::Monty(ref monty) if monty.artifact == "monty.py"
     ));
     assert!(manifest.capabilities.class_transform);
     assert!(manifest.capabilities.call_return);

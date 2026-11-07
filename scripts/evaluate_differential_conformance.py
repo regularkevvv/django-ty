@@ -16,6 +16,11 @@ from pathlib import Path
 from typing import Any
 
 try:
+    from .runtime_config import checker_options
+except ImportError:
+    from runtime_config import checker_options
+
+try:
     import tomllib
 except ModuleNotFoundError:
     import tomli as tomllib
@@ -208,10 +213,10 @@ def normalize_ty_checker_version(
     reported: str, expected_version: str, expected_commit: str
 ) -> str:
     parts = reported.split()
-    version = parts[1] if len(parts) >= 2 and parts[0] == "ty" else ""
+    version = parts[1] if len(parts) >= 2 and parts[0] == "ty-extended" else ""
     if version != expected_version and not version.startswith(f"{expected_version}+"):
         raise ConformanceError(
-            f"candidate ty executable reports {reported!r}; expected ty {expected_version}"
+            f"candidate executable reports {reported!r}; expected ty-extended {expected_version}"
         )
 
     # Release wheels may omit VCS metadata; validate it whenever it is present.
@@ -221,7 +226,7 @@ def normalize_ty_checker_version(
             "candidate ty executable reports commit "
             f"{commit_match.group(1)}; expected {expected_commit}"
         )
-    return f"ty {expected_version}"
+    return f"ty-extended {expected_version}"
 
 
 def python_executable(environment: Path) -> Path:
@@ -435,6 +440,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     ty_command = [
         str(args.ty_bin),
         "check",
+        *checker_options(args.ty_python, settings_module="conformance_project.settings"),
         *CHECK_PATHS,
         "--project",
         ".",
@@ -612,6 +618,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             else conformance["python"],
         },
         "candidate": {
+            "python": ".".join(python_version(args.ty_python).split(".")[:2]),
             "checker": ty_version,
             "django_ty": candidate_versions["django-ty"],
             "django": candidate_versions["Django"],

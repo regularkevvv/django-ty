@@ -10,6 +10,11 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+try:
+    from .runtime_config import checker_options
+except ImportError:
+    from runtime_config import checker_options
+
 CASES = {
     "fresh-get": "HttpRequest().GET",
     "fresh-post": "HttpRequest().POST",
@@ -68,6 +73,7 @@ print(json.dumps(outcomes))
     }
     if actual != expected:
         raise RuntimeError(f"Django runtime mutability changed: {actual}")
+    options = checker_options(environment)
     with tempfile.TemporaryDirectory(prefix="django-ty-querydict-") as directory:
         root = Path(directory)
         (root / "pyproject.toml").write_text(
@@ -80,8 +86,9 @@ print(json.dumps(outcomes))
             )
             result = subprocess.run(
                 [
-                    str(environment / "bin" / "ty"),
+                    str(environment / "bin" / "ty-extended"),
                     "check",
+                    *options,
                     str(path),
                     "--project",
                     str(root),
