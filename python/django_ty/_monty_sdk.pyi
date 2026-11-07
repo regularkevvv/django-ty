@@ -1,6 +1,6 @@
 """Precise declarations for the ambient SDK builders used by this plugin.
 
-Runtime implementations are ty.plugin_sdk (0.0.8). This stub refines its
+Runtime implementations are ty_extended.plugin_sdk (companion 0.87.0). This stub refines its
 broad JSON aliases without adding runtime imports or changing the checker SDK.
 """
 

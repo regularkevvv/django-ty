@@ -13,9 +13,9 @@
   ],
   "declared_range": ">=5.0,<6.2",
   "candidate": {
-    "django_ty": "0.5.0",
-    "ty_extended": "0.84.4",
-    "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+    "django_ty": "0.6.0",
+    "ty_extended": "0.87.0",
+    "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
   },
   "corpus": {
     "sha256": "4a4e1cbeff35eb0c655071d262555ef69313b9f8c4fdd77580aa39d049d7dfc0",
@@ -39,11 +39,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/d60e31ed0ac4e4115f9ef20041521c201391d592/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.10",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.0.14",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 83.7,
@@ -1432,11 +1433,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/d60e31ed0ac4e4115f9ef20041521c201391d592/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.11",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.0.14",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 83.7,
@@ -2825,11 +2827,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/d60e31ed0ac4e4115f9ef20041521c201391d592/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.12",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.0.14",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 83.7,
@@ -4218,11 +4221,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/7e50d7bdb16372ecb4a5d913748eba101082120b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.10",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.1.15",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 85.4,
@@ -5579,11 +5583,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/7e50d7bdb16372ecb4a5d913748eba101082120b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.11",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.1.15",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 85.4,
@@ -6940,11 +6945,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/7e50d7bdb16372ecb4a5d913748eba101082120b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.12",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.1.15",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 85.4,
@@ -8301,11 +8307,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/7e50d7bdb16372ecb4a5d913748eba101082120b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.13",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.1.15",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 85.4,
@@ -9662,11 +9669,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.10",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.2.17",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -10948,11 +10956,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.11",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.2.17",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -12234,11 +12243,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.12",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.2.17",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -13520,11 +13530,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.13",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.2.17",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -14806,11 +14817,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.14",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "5.2.17",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -16092,11 +16104,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.12",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "6.0.8",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -17378,11 +17391,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.13",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "6.0.8",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -18664,11 +18678,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.14",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "6.0.8",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -19950,11 +19965,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.12",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "6.1.1",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -21236,11 +21252,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.13",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "6.1.1",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -22522,11 +22539,12 @@
         "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
       },
       "candidate": {
-        "checker": "ty 0.84.4",
-        "django_ty": "0.5.0",
+        "python": "3.14",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
         "django": "6.1.1",
-        "ty_extended": "0.84.4",
-        "ty_extended_commit": "1e7e01dc34da874f494db30a49323e570ef8974a"
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
       },
       "scores": {
         "feature_balanced_percent": 93.8,
@@ -23372,6 +23390,3867 @@
           }
         },
         "django": "6.1.1"
+      },
+      "features": [
+        {
+          "id": "models.subclass-transform",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.default-primary-key",
+          "area": "Models and fields",
+          "cases": 49,
+          "matched": 21,
+          "percent": 42.9,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "contract_matched": 49,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.field-descriptors",
+          "area": "Models and fields",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.constructor-keywords",
+          "area": "Models and fields",
+          "cases": 7,
+          "matched": 7,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "contract_matched": 7,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.create-keywords",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#create",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.abstract-proxy-inheritance",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/#model-inheritance",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.choices-enums",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#enumeration-types",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.custom-fields",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/howto/custom-model-fields/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.foreign-key-one-to-one",
+          "area": "Relations",
+          "cases": 3,
+          "matched": 2,
+          "percent": 66.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.many-to-many",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.reverse-relations",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.string-settings-targets",
+          "area": "Relations",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.related-query-name",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.default-manager",
+          "area": "Managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.declared-manager",
+          "area": "Managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.custom-queryset-methods",
+          "area": "Managers",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.from-queryset-as-manager",
+          "area": "Managers",
+          "cases": 4,
+          "matched": 4,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.chain-preserving-methods",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.scalar-return-methods",
+          "area": "Querysets and managers",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.async-return-methods",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.values",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.values-list",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.annotate",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.prefetch-annotations",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#prefetch-related",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.ordering-field-validation",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#order-by",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.bulk-operations",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#bulk-update",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.field-traversal",
+          "area": "Query lookups",
+          "cases": 2,
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.value-validation",
+          "area": "Query lookups",
+          "cases": 12,
+          "matched": 11,
+          "percent": 91.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#field-lookups",
+          "contract_matched": 12,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.creation-defaults",
+          "area": "Query lookups",
+          "cases": 17,
+          "matched": 8,
+          "percent": 47.1,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "contract_matched": 17,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.selected-field-validation",
+          "area": "Query lookups",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "settings.project-settings-types",
+          "area": "Settings and metadata",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/settings/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "metadata.get-field",
+          "area": "Settings and metadata",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "forms.model-forms",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/forms/modelforms/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "auth.user-model",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/auth/customizing/#referencing-the-user-model",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.save-update-fields",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#specifying-which-fields-to-save",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "http.querydict-mutability",
+          "area": "Django extras",
+          "cases": 6,
+          "matched": 4,
+          "percent": 66.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "contract_matched": 6,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "typing.lazy-string",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/i18n/translation/#lazy-translation",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "apps.model-registry",
+          "area": "Django extras",
+          "cases": 4,
+          "matched": 4,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
+          "contract_matched": 4,
+          "contract_percent": 100.0
+        }
+      ]
+    },
+    {
+      "django": "6.1.3",
+      "declared": true,
+      "note": "Latest Django patch in the supported 6.1 line.",
+      "reference": {
+        "checker": "mypy 2.3.1",
+        "django_stubs": "6.1.1",
+        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "django": "6.1.3",
+        "python": "3.12",
+        "django_support": "full",
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+      },
+      "candidate": {
+        "python": "3.12",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
+        "django": "6.1.3",
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
+      },
+      "scores": {
+        "feature_balanced_percent": 93.8,
+        "assertion_conformance_percent": 74.7,
+        "matched_assertions": 124,
+        "total_assertions": 166,
+        "contract_feature_balanced_percent": 100.0,
+        "contract_assertion_percent": 100.0,
+        "contract_matched_assertions": 166
+      },
+      "reference_drift": [
+        {
+          "feature": "http.querydict-mutability",
+          "case": "fresh-get-write",
+          "path": "cases/extras.py",
+          "line": 43,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "runtime_proof": "fresh-request-get",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/http/request.py"
+        },
+        {
+          "feature": "http.querydict-mutability",
+          "case": "fresh-post-write",
+          "path": "cases/extras.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "runtime_proof": "fresh-request-post",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/http/request.py"
+        },
+        {
+          "feature": "lookups.field-traversal",
+          "case": "unknown-related-field",
+          "path": "cases/lookups.py",
+          "line": 8,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "runtime_proof": "unknown-related-field"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-create-default",
+          "path": "cases/lookups.py",
+          "line": 21,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-create-default"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-update-default",
+          "path": "cases/lookups.py",
+          "line": 22,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update-or-create",
+          "runtime_proof": "callable-update-default"
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 32,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#in",
+          "runtime_proof": "string-integer-invalid",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/fields/__init__.py"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "named-callable-create",
+          "path": "cases/lookups.py",
+          "line": 46,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "named-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "typed-callable-create",
+          "path": "cases/lookups.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "typed-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "mixed-literal-callable",
+          "path": "cases/lookups.py",
+          "line": 51,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "mixed-literal-callable"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "heterogeneous-callables",
+          "path": "cases/lookups.py",
+          "line": 52,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "heterogeneous-callables"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-create-defaults",
+          "path": "cases/lookups.py",
+          "line": 53,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-create-defaults"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "async-callable-create",
+          "path": "cases/lookups.py",
+          "line": 58,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "async-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "async-callable-update",
+          "path": "cases/lookups.py",
+          "line": 59,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "async-callable-update"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "deleted-alias-id",
+          "path": "cases/model_state.py",
+          "line": 38,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-delete-alias",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "deleted-alias-pk",
+          "path": "cases/model_state.py",
+          "line": 39,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-delete-alias",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "conditional-save",
+          "path": "cases/model_state.py",
+          "line": 48,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-conditional-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "skipped-save",
+          "path": "cases/model_state.py",
+          "line": 59,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-skipped-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "unknown-update-fields",
+          "path": "cases/model_state.py",
+          "line": 61,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-skipped-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "unknown-call-invalidates",
+          "path": "cases/model_state.py",
+          "line": 71,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-unknown-call",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "overridden-save",
+          "path": "cases/model_state.py",
+          "line": 77,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-overridden-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-deleted",
+          "path": "cases/model_state.py",
+          "line": 86,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-explicit-auto-delete",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-deleted-pk",
+          "path": "cases/model_state.py",
+          "line": 87,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-explicit-auto-delete",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "nullable-constructor-id",
+          "path": "cases/model_state.py",
+          "line": 94,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-constructor-nullable",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "constructor-pk-precedence",
+          "path": "cases/model_state.py",
+          "line": 95,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-constructor-precedence",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-unsaved",
+          "path": "cases/model_state.py",
+          "line": 97,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-explicit-auto-unsaved",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "custom-initialization",
+          "path": "cases/model_state.py",
+          "line": 104,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-custom-init",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "custom-loading",
+          "path": "cases/model_state.py",
+          "line": 106,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-custom-loader",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "create-overridden-save",
+          "path": "cases/model_state.py",
+          "line": 108,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-create-overridden-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "id-write-invalidates-pk",
+          "path": "cases/model_state.py",
+          "line": 114,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-id-write",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "post-init-signal",
+          "path": "cases/model_state.py",
+          "line": 126,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-signal-init",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/signals.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "post-save-signal",
+          "path": "cases/model_state.py",
+          "line": 129,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-save",
+          "runtime_proof": "state-signal-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/signals.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "concrete-child-key",
+          "path": "cases/model_state.py",
+          "line": 134,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/#multi-table-inheritance",
+          "runtime_proof": "state-concrete-child"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unsaved",
+          "path": "cases/model_state.py",
+          "line": 141,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unknown",
+          "path": "cases/model_state.py",
+          "line": 149,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unpacked",
+          "path": "cases/model_state.py",
+          "line": 151,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "aliased-signal-sender",
+          "path": "cases/model_state.py",
+          "line": 156,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-signal-alias"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "class-signal-handler",
+          "path": "cases/model_state.py",
+          "line": 161,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-class-signal"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "failed-save-handler",
+          "path": "cases/model_state.py",
+          "line": 169,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#forcing-an-insert-or-update",
+          "runtime_proof": "state-failed-save"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "failed-save-join",
+          "path": "cases/model_state.py",
+          "line": 170,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#forcing-an-insert-or-update",
+          "runtime_proof": "state-failed-save"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-id",
+          "path": "cases/models_fields.py",
+          "line": 11,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-id"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-pk",
+          "path": "cases/models_fields.py",
+          "line": 12,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-pk"
+        },
+        {
+          "feature": "relations.foreign-key-one-to-one",
+          "case": "foreign-key-id",
+          "path": "cases/relations.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "unsaved-relation-id",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        }
+      ],
+      "unowned_diagnostics": {},
+      "unparsed_output": {},
+      "querydict_runtime": {
+        "asgi-get": "reject",
+        "asgi-post": "reject",
+        "default-querydict": "reject",
+        "explicit-mutable": "accept",
+        "framework-get": "reject",
+        "framework-post": "reject",
+        "fresh-get": "accept",
+        "fresh-post": "accept",
+        "mutable-copy": "accept"
+      },
+      "django_runtime": {
+        "cases": {
+          "async-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "async-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "async-callable-update": {
+            "observed": "49",
+            "passed": true
+          },
+          "bulk-create-wrong-model": {
+            "exception": "AttributeError",
+            "passed": true
+          },
+          "bulk-update-invalid-field": {
+            "exception": "FieldDoesNotExist",
+            "passed": true
+          },
+          "callable-create-default": {
+            "observed": "43",
+            "passed": true
+          },
+          "callable-create-defaults": {
+            "observed": "(True, 48)",
+            "passed": true
+          },
+          "callable-existing-defaults": {
+            "observed": "(False, 45)",
+            "passed": true
+          },
+          "callable-invalid-result": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "callable-update-default": {
+            "observed": "44",
+            "passed": true
+          },
+          "constructor-id": {
+            "observed": "1",
+            "passed": true
+          },
+          "constructor-null-pk": {
+            "observed": "True",
+            "passed": true
+          },
+          "constructor-pk": {
+            "observed": "1",
+            "passed": true
+          },
+          "constructor-relation-id": {
+            "observed": "1",
+            "passed": true
+          },
+          "copied-chain-method": {
+            "observed": "True",
+            "passed": true
+          },
+          "copied-scalar-method": {
+            "observed": "1",
+            "passed": true
+          },
+          "custom-request-attribute": {
+            "observed": "hello",
+            "passed": true
+          },
+          "custom-request-type": {
+            "observed": "True",
+            "passed": true
+          },
+          "date-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "day-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "fresh-request-get": {
+            "observed": "1",
+            "passed": true
+          },
+          "fresh-request-post": {
+            "observed": "1",
+            "passed": true
+          },
+          "get-or-create-default": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "heterogeneous-callables": {
+            "observed": "('MixedBook', 47)",
+            "passed": true
+          },
+          "integer-in-wrong-container": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "integer-wrong-type": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "invalid-create-defaults": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "invalid-existing-defaults": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "mixed-literal-callable": {
+            "observed": "('Mixed', 46)",
+            "passed": true
+          },
+          "month-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "named-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "named-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "null-exact-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "only-invalid": {
+            "exception": "FieldDoesNotExist",
+            "passed": true
+          },
+          "order-by-invalid": {
+            "exception": "FieldError",
+            "passed": true
+          },
+          "prefetch-list": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-case-insensitive": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-keywords": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-qualified": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-wrong-model": {
+            "observed": "False",
+            "passed": true
+          },
+          "save-invalid-field": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "save-valid-field": {
+            "observed": "D",
+            "passed": true
+          },
+          "state-class-signal": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-concrete-child": {
+            "observed": "(123, None)",
+            "passed": true
+          },
+          "state-conditional-save": {
+            "observed": "[False, True]",
+            "passed": true
+          },
+          "state-constructor-nullable": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-constructor-precedence": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-create-overridden-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-custom-init": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-custom-loader": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-database-default": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-database-default-explicit": {
+            "observed": "123",
+            "passed": true
+          },
+          "state-database-default-saved": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-delete-alias": {
+            "observed": "(None, None, None)",
+            "passed": true
+          },
+          "state-explicit-auto": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-explicit-auto-delete": {
+            "observed": "(None, None)",
+            "passed": true
+          },
+          "state-explicit-auto-unsaved": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-failed-save": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "state-id-write": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-inherited": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-loaded": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-overridden-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-proxy-key": {
+            "observed": "123",
+            "passed": true
+          },
+          "state-resave": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-save": {
+            "observed": "(True, True)",
+            "passed": true
+          },
+          "state-signal-alias": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-signal-init": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-signal-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-skipped-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-unknown-call": {
+            "observed": "True",
+            "passed": true
+          },
+          "string-in-lookup": {
+            "observed": "['D']",
+            "passed": true
+          },
+          "string-integer-in": {
+            "observed": "0",
+            "passed": true
+          },
+          "string-integer-invalid": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "string-integer-range": {
+            "observed": "0",
+            "passed": true
+          },
+          "string-range-lookup": {
+            "observed": "['D']",
+            "passed": true
+          },
+          "typed-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "typed-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "unknown-related-field": {
+            "exception": "FieldError",
+            "passed": true
+          },
+          "unsaved-auto-id": {
+            "observed": "True",
+            "passed": true
+          },
+          "unsaved-auto-pk": {
+            "observed": "True",
+            "passed": true
+          },
+          "unsaved-relation-id": {
+            "observed": "True",
+            "passed": true
+          },
+          "update-or-create-default": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "year-lookup": {
+            "observed": "False",
+            "passed": true
+          }
+        },
+        "django": "6.1.3"
+      },
+      "features": [
+        {
+          "id": "models.subclass-transform",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.default-primary-key",
+          "area": "Models and fields",
+          "cases": 49,
+          "matched": 21,
+          "percent": 42.9,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "contract_matched": 49,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.field-descriptors",
+          "area": "Models and fields",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.constructor-keywords",
+          "area": "Models and fields",
+          "cases": 7,
+          "matched": 7,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "contract_matched": 7,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.create-keywords",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#create",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.abstract-proxy-inheritance",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/#model-inheritance",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.choices-enums",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#enumeration-types",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.custom-fields",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/howto/custom-model-fields/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.foreign-key-one-to-one",
+          "area": "Relations",
+          "cases": 3,
+          "matched": 2,
+          "percent": 66.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.many-to-many",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.reverse-relations",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.string-settings-targets",
+          "area": "Relations",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.related-query-name",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.default-manager",
+          "area": "Managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.declared-manager",
+          "area": "Managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.custom-queryset-methods",
+          "area": "Managers",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.from-queryset-as-manager",
+          "area": "Managers",
+          "cases": 4,
+          "matched": 4,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.chain-preserving-methods",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.scalar-return-methods",
+          "area": "Querysets and managers",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.async-return-methods",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.values",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.values-list",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.annotate",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.prefetch-annotations",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#prefetch-related",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.ordering-field-validation",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#order-by",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.bulk-operations",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#bulk-update",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.field-traversal",
+          "area": "Query lookups",
+          "cases": 2,
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.value-validation",
+          "area": "Query lookups",
+          "cases": 12,
+          "matched": 11,
+          "percent": 91.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#field-lookups",
+          "contract_matched": 12,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.creation-defaults",
+          "area": "Query lookups",
+          "cases": 17,
+          "matched": 8,
+          "percent": 47.1,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "contract_matched": 17,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.selected-field-validation",
+          "area": "Query lookups",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "settings.project-settings-types",
+          "area": "Settings and metadata",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/settings/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "metadata.get-field",
+          "area": "Settings and metadata",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "forms.model-forms",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/forms/modelforms/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "auth.user-model",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/auth/customizing/#referencing-the-user-model",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.save-update-fields",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#specifying-which-fields-to-save",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "http.querydict-mutability",
+          "area": "Django extras",
+          "cases": 6,
+          "matched": 4,
+          "percent": 66.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "contract_matched": 6,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "typing.lazy-string",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/i18n/translation/#lazy-translation",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "apps.model-registry",
+          "area": "Django extras",
+          "cases": 4,
+          "matched": 4,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
+          "contract_matched": 4,
+          "contract_percent": 100.0
+        }
+      ]
+    },
+    {
+      "django": "6.1.3",
+      "declared": true,
+      "note": "Latest Django patch in the supported 6.1 line.",
+      "reference": {
+        "checker": "mypy 2.3.1",
+        "django_stubs": "6.1.1",
+        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "django": "6.1.3",
+        "python": "3.13",
+        "django_support": "full",
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+      },
+      "candidate": {
+        "python": "3.13",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
+        "django": "6.1.3",
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
+      },
+      "scores": {
+        "feature_balanced_percent": 93.8,
+        "assertion_conformance_percent": 74.7,
+        "matched_assertions": 124,
+        "total_assertions": 166,
+        "contract_feature_balanced_percent": 100.0,
+        "contract_assertion_percent": 100.0,
+        "contract_matched_assertions": 166
+      },
+      "reference_drift": [
+        {
+          "feature": "http.querydict-mutability",
+          "case": "fresh-get-write",
+          "path": "cases/extras.py",
+          "line": 43,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "runtime_proof": "fresh-request-get",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/http/request.py"
+        },
+        {
+          "feature": "http.querydict-mutability",
+          "case": "fresh-post-write",
+          "path": "cases/extras.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "runtime_proof": "fresh-request-post",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/http/request.py"
+        },
+        {
+          "feature": "lookups.field-traversal",
+          "case": "unknown-related-field",
+          "path": "cases/lookups.py",
+          "line": 8,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "runtime_proof": "unknown-related-field"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-create-default",
+          "path": "cases/lookups.py",
+          "line": 21,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-create-default"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-update-default",
+          "path": "cases/lookups.py",
+          "line": 22,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update-or-create",
+          "runtime_proof": "callable-update-default"
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 32,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#in",
+          "runtime_proof": "string-integer-invalid",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/fields/__init__.py"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "named-callable-create",
+          "path": "cases/lookups.py",
+          "line": 46,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "named-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "typed-callable-create",
+          "path": "cases/lookups.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "typed-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "mixed-literal-callable",
+          "path": "cases/lookups.py",
+          "line": 51,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "mixed-literal-callable"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "heterogeneous-callables",
+          "path": "cases/lookups.py",
+          "line": 52,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "heterogeneous-callables"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-create-defaults",
+          "path": "cases/lookups.py",
+          "line": 53,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-create-defaults"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "async-callable-create",
+          "path": "cases/lookups.py",
+          "line": 58,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "async-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "async-callable-update",
+          "path": "cases/lookups.py",
+          "line": 59,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "async-callable-update"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "deleted-alias-id",
+          "path": "cases/model_state.py",
+          "line": 38,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-delete-alias",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "deleted-alias-pk",
+          "path": "cases/model_state.py",
+          "line": 39,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-delete-alias",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "conditional-save",
+          "path": "cases/model_state.py",
+          "line": 48,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-conditional-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "skipped-save",
+          "path": "cases/model_state.py",
+          "line": 59,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-skipped-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "unknown-update-fields",
+          "path": "cases/model_state.py",
+          "line": 61,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-skipped-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "unknown-call-invalidates",
+          "path": "cases/model_state.py",
+          "line": 71,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-unknown-call",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "overridden-save",
+          "path": "cases/model_state.py",
+          "line": 77,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-overridden-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-deleted",
+          "path": "cases/model_state.py",
+          "line": 86,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-explicit-auto-delete",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-deleted-pk",
+          "path": "cases/model_state.py",
+          "line": 87,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-explicit-auto-delete",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "nullable-constructor-id",
+          "path": "cases/model_state.py",
+          "line": 94,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-constructor-nullable",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "constructor-pk-precedence",
+          "path": "cases/model_state.py",
+          "line": 95,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-constructor-precedence",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-unsaved",
+          "path": "cases/model_state.py",
+          "line": 97,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-explicit-auto-unsaved",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "custom-initialization",
+          "path": "cases/model_state.py",
+          "line": 104,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-custom-init",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "custom-loading",
+          "path": "cases/model_state.py",
+          "line": 106,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-custom-loader",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "create-overridden-save",
+          "path": "cases/model_state.py",
+          "line": 108,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-create-overridden-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "id-write-invalidates-pk",
+          "path": "cases/model_state.py",
+          "line": 114,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-id-write",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "post-init-signal",
+          "path": "cases/model_state.py",
+          "line": 126,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-signal-init",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/signals.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "post-save-signal",
+          "path": "cases/model_state.py",
+          "line": 129,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-save",
+          "runtime_proof": "state-signal-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/signals.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "concrete-child-key",
+          "path": "cases/model_state.py",
+          "line": 134,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/#multi-table-inheritance",
+          "runtime_proof": "state-concrete-child"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unsaved",
+          "path": "cases/model_state.py",
+          "line": 141,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unknown",
+          "path": "cases/model_state.py",
+          "line": 149,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unpacked",
+          "path": "cases/model_state.py",
+          "line": 151,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "aliased-signal-sender",
+          "path": "cases/model_state.py",
+          "line": 156,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-signal-alias"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "class-signal-handler",
+          "path": "cases/model_state.py",
+          "line": 161,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-class-signal"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "failed-save-handler",
+          "path": "cases/model_state.py",
+          "line": 169,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#forcing-an-insert-or-update",
+          "runtime_proof": "state-failed-save"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "failed-save-join",
+          "path": "cases/model_state.py",
+          "line": 170,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#forcing-an-insert-or-update",
+          "runtime_proof": "state-failed-save"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-id",
+          "path": "cases/models_fields.py",
+          "line": 11,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-id"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-pk",
+          "path": "cases/models_fields.py",
+          "line": 12,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-pk"
+        },
+        {
+          "feature": "relations.foreign-key-one-to-one",
+          "case": "foreign-key-id",
+          "path": "cases/relations.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "unsaved-relation-id",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        }
+      ],
+      "unowned_diagnostics": {},
+      "unparsed_output": {},
+      "querydict_runtime": {
+        "asgi-get": "reject",
+        "asgi-post": "reject",
+        "default-querydict": "reject",
+        "explicit-mutable": "accept",
+        "framework-get": "reject",
+        "framework-post": "reject",
+        "fresh-get": "accept",
+        "fresh-post": "accept",
+        "mutable-copy": "accept"
+      },
+      "django_runtime": {
+        "cases": {
+          "async-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "async-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "async-callable-update": {
+            "observed": "49",
+            "passed": true
+          },
+          "bulk-create-wrong-model": {
+            "exception": "AttributeError",
+            "passed": true
+          },
+          "bulk-update-invalid-field": {
+            "exception": "FieldDoesNotExist",
+            "passed": true
+          },
+          "callable-create-default": {
+            "observed": "43",
+            "passed": true
+          },
+          "callable-create-defaults": {
+            "observed": "(True, 48)",
+            "passed": true
+          },
+          "callable-existing-defaults": {
+            "observed": "(False, 45)",
+            "passed": true
+          },
+          "callable-invalid-result": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "callable-update-default": {
+            "observed": "44",
+            "passed": true
+          },
+          "constructor-id": {
+            "observed": "1",
+            "passed": true
+          },
+          "constructor-null-pk": {
+            "observed": "True",
+            "passed": true
+          },
+          "constructor-pk": {
+            "observed": "1",
+            "passed": true
+          },
+          "constructor-relation-id": {
+            "observed": "1",
+            "passed": true
+          },
+          "copied-chain-method": {
+            "observed": "True",
+            "passed": true
+          },
+          "copied-scalar-method": {
+            "observed": "1",
+            "passed": true
+          },
+          "custom-request-attribute": {
+            "observed": "hello",
+            "passed": true
+          },
+          "custom-request-type": {
+            "observed": "True",
+            "passed": true
+          },
+          "date-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "day-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "fresh-request-get": {
+            "observed": "1",
+            "passed": true
+          },
+          "fresh-request-post": {
+            "observed": "1",
+            "passed": true
+          },
+          "get-or-create-default": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "heterogeneous-callables": {
+            "observed": "('MixedBook', 47)",
+            "passed": true
+          },
+          "integer-in-wrong-container": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "integer-wrong-type": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "invalid-create-defaults": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "invalid-existing-defaults": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "mixed-literal-callable": {
+            "observed": "('Mixed', 46)",
+            "passed": true
+          },
+          "month-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "named-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "named-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "null-exact-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "only-invalid": {
+            "exception": "FieldDoesNotExist",
+            "passed": true
+          },
+          "order-by-invalid": {
+            "exception": "FieldError",
+            "passed": true
+          },
+          "prefetch-list": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-case-insensitive": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-keywords": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-qualified": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-wrong-model": {
+            "observed": "False",
+            "passed": true
+          },
+          "save-invalid-field": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "save-valid-field": {
+            "observed": "D",
+            "passed": true
+          },
+          "state-class-signal": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-concrete-child": {
+            "observed": "(123, None)",
+            "passed": true
+          },
+          "state-conditional-save": {
+            "observed": "[False, True]",
+            "passed": true
+          },
+          "state-constructor-nullable": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-constructor-precedence": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-create-overridden-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-custom-init": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-custom-loader": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-database-default": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-database-default-explicit": {
+            "observed": "123",
+            "passed": true
+          },
+          "state-database-default-saved": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-delete-alias": {
+            "observed": "(None, None, None)",
+            "passed": true
+          },
+          "state-explicit-auto": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-explicit-auto-delete": {
+            "observed": "(None, None)",
+            "passed": true
+          },
+          "state-explicit-auto-unsaved": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-failed-save": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "state-id-write": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-inherited": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-loaded": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-overridden-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-proxy-key": {
+            "observed": "123",
+            "passed": true
+          },
+          "state-resave": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-save": {
+            "observed": "(True, True)",
+            "passed": true
+          },
+          "state-signal-alias": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-signal-init": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-signal-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-skipped-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-unknown-call": {
+            "observed": "True",
+            "passed": true
+          },
+          "string-in-lookup": {
+            "observed": "['D']",
+            "passed": true
+          },
+          "string-integer-in": {
+            "observed": "0",
+            "passed": true
+          },
+          "string-integer-invalid": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "string-integer-range": {
+            "observed": "0",
+            "passed": true
+          },
+          "string-range-lookup": {
+            "observed": "['D']",
+            "passed": true
+          },
+          "typed-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "typed-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "unknown-related-field": {
+            "exception": "FieldError",
+            "passed": true
+          },
+          "unsaved-auto-id": {
+            "observed": "True",
+            "passed": true
+          },
+          "unsaved-auto-pk": {
+            "observed": "True",
+            "passed": true
+          },
+          "unsaved-relation-id": {
+            "observed": "True",
+            "passed": true
+          },
+          "update-or-create-default": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "year-lookup": {
+            "observed": "False",
+            "passed": true
+          }
+        },
+        "django": "6.1.3"
+      },
+      "features": [
+        {
+          "id": "models.subclass-transform",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.default-primary-key",
+          "area": "Models and fields",
+          "cases": 49,
+          "matched": 21,
+          "percent": 42.9,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "contract_matched": 49,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.field-descriptors",
+          "area": "Models and fields",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.constructor-keywords",
+          "area": "Models and fields",
+          "cases": 7,
+          "matched": 7,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "contract_matched": 7,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.create-keywords",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#create",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.abstract-proxy-inheritance",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/#model-inheritance",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.choices-enums",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#enumeration-types",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.custom-fields",
+          "area": "Models and fields",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/howto/custom-model-fields/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.foreign-key-one-to-one",
+          "area": "Relations",
+          "cases": 3,
+          "matched": 2,
+          "percent": 66.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.many-to-many",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.reverse-relations",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.string-settings-targets",
+          "area": "Relations",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "relations.related-query-name",
+          "area": "Relations",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/queries/#lookups-that-span-relationships",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.default-manager",
+          "area": "Managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.declared-manager",
+          "area": "Managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.custom-queryset-methods",
+          "area": "Managers",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "managers.from-queryset-as-manager",
+          "area": "Managers",
+          "cases": 4,
+          "matched": 4,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/managers/",
+          "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.chain-preserving-methods",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.scalar-return-methods",
+          "area": "Querysets and managers",
+          "cases": 3,
+          "matched": 3,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 3,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.async-return-methods",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.values",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.values-list",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.annotate",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.prefetch-annotations",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#prefetch-related",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.ordering-field-validation",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#order-by",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.bulk-operations",
+          "area": "Querysets and managers",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#bulk-update",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.field-traversal",
+          "area": "Query lookups",
+          "cases": 2,
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.value-validation",
+          "area": "Query lookups",
+          "cases": 12,
+          "matched": 11,
+          "percent": 91.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#field-lookups",
+          "contract_matched": 12,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.creation-defaults",
+          "area": "Query lookups",
+          "cases": 17,
+          "matched": 8,
+          "percent": 47.1,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "contract_matched": 17,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "lookups.selected-field-validation",
+          "area": "Query lookups",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "settings.project-settings-types",
+          "area": "Settings and metadata",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/settings/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "metadata.get-field",
+          "area": "Settings and metadata",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "forms.model-forms",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/forms/modelforms/",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "auth.user-model",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/auth/customizing/#referencing-the-user-model",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "models.save-update-fields",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#specifying-which-fields-to-save",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "http.querydict-mutability",
+          "area": "Django extras",
+          "cases": 6,
+          "matched": 4,
+          "percent": 66.7,
+          "status": "partial",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "contract_matched": 6,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "typing.lazy-string",
+          "area": "Django extras",
+          "cases": 2,
+          "matched": 2,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/i18n/translation/#lazy-translation",
+          "contract_matched": 2,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "apps.model-registry",
+          "area": "Django extras",
+          "cases": 4,
+          "matched": 4,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
+          "contract_matched": 4,
+          "contract_percent": 100.0
+        }
+      ]
+    },
+    {
+      "django": "6.1.3",
+      "declared": true,
+      "note": "Latest Django patch in the supported 6.1 line.",
+      "reference": {
+        "checker": "mypy 2.3.1",
+        "django_stubs": "6.1.1",
+        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "django": "6.1.3",
+        "python": "3.14",
+        "django_support": "full",
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+      },
+      "candidate": {
+        "python": "3.14",
+        "checker": "ty-extended 0.87.0",
+        "django_ty": "0.6.0",
+        "django": "6.1.3",
+        "ty_extended": "0.87.0",
+        "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
+      },
+      "scores": {
+        "feature_balanced_percent": 93.8,
+        "assertion_conformance_percent": 74.7,
+        "matched_assertions": 124,
+        "total_assertions": 166,
+        "contract_feature_balanced_percent": 100.0,
+        "contract_assertion_percent": 100.0,
+        "contract_matched_assertions": 166
+      },
+      "reference_drift": [
+        {
+          "feature": "http.querydict-mutability",
+          "case": "fresh-get-write",
+          "path": "cases/extras.py",
+          "line": 43,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "runtime_proof": "fresh-request-get",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/http/request.py"
+        },
+        {
+          "feature": "http.querydict-mutability",
+          "case": "fresh-post-write",
+          "path": "cases/extras.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects",
+          "runtime_proof": "fresh-request-post",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/http/request.py"
+        },
+        {
+          "feature": "lookups.field-traversal",
+          "case": "unknown-related-field",
+          "path": "cases/lookups.py",
+          "line": 8,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+          "runtime_proof": "unknown-related-field"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-create-default",
+          "path": "cases/lookups.py",
+          "line": 21,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-create-default"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-update-default",
+          "path": "cases/lookups.py",
+          "line": 22,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update-or-create",
+          "runtime_proof": "callable-update-default"
+        },
+        {
+          "feature": "lookups.value-validation",
+          "case": "string-integer-invalid",
+          "path": "cases/lookups.py",
+          "line": 32,
+          "expect": "fail",
+          "reference": "accept",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#in",
+          "runtime_proof": "string-integer-invalid",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/fields/__init__.py"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "named-callable-create",
+          "path": "cases/lookups.py",
+          "line": 46,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "named-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "typed-callable-create",
+          "path": "cases/lookups.py",
+          "line": 47,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "typed-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "mixed-literal-callable",
+          "path": "cases/lookups.py",
+          "line": 51,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "mixed-literal-callable"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "heterogeneous-callables",
+          "path": "cases/lookups.py",
+          "line": 52,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "heterogeneous-callables"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "callable-create-defaults",
+          "path": "cases/lookups.py",
+          "line": 53,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "callable-create-defaults"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "async-callable-create",
+          "path": "cases/lookups.py",
+          "line": 58,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "async-callable-create"
+        },
+        {
+          "feature": "lookups.creation-defaults",
+          "case": "async-callable-update",
+          "path": "cases/lookups.py",
+          "line": 59,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "implementation-defect-or-incomplete-validation",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create",
+          "runtime_proof": "async-callable-update"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "deleted-alias-id",
+          "path": "cases/model_state.py",
+          "line": 38,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-delete-alias",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "deleted-alias-pk",
+          "path": "cases/model_state.py",
+          "line": 39,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-delete-alias",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "conditional-save",
+          "path": "cases/model_state.py",
+          "line": 48,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-conditional-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "skipped-save",
+          "path": "cases/model_state.py",
+          "line": 59,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-skipped-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "unknown-update-fields",
+          "path": "cases/model_state.py",
+          "line": 61,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-skipped-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "unknown-call-invalidates",
+          "path": "cases/model_state.py",
+          "line": 71,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-unknown-call",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "overridden-save",
+          "path": "cases/model_state.py",
+          "line": 77,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-overridden-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-deleted",
+          "path": "cases/model_state.py",
+          "line": 86,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-explicit-auto-delete",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-deleted-pk",
+          "path": "cases/model_state.py",
+          "line": 87,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-explicit-auto-delete",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "nullable-constructor-id",
+          "path": "cases/model_state.py",
+          "line": 94,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-constructor-nullable",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "constructor-pk-precedence",
+          "path": "cases/model_state.py",
+          "line": 95,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-constructor-precedence",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "explicit-auto-unsaved",
+          "path": "cases/model_state.py",
+          "line": 97,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "state-explicit-auto-unsaved",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "custom-initialization",
+          "path": "cases/model_state.py",
+          "line": 104,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-custom-init",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "custom-loading",
+          "path": "cases/model_state.py",
+          "line": 106,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-custom-loader",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "create-overridden-save",
+          "path": "cases/model_state.py",
+          "line": 108,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-create-overridden-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "id-write-invalidates-pk",
+          "path": "cases/model_state.py",
+          "line": 114,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/",
+          "runtime_proof": "state-id-write",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "post-init-signal",
+          "path": "cases/model_state.py",
+          "line": 126,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-signal-init",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/signals.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "post-save-signal",
+          "path": "cases/model_state.py",
+          "line": 129,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-save",
+          "runtime_proof": "state-signal-save",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/signals.py"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "concrete-child-key",
+          "path": "cases/model_state.py",
+          "line": 134,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/topics/db/models/#multi-table-inheritance",
+          "runtime_proof": "state-concrete-child"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unsaved",
+          "path": "cases/model_state.py",
+          "line": 141,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unknown",
+          "path": "cases/model_state.py",
+          "line": 149,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "database-default-unpacked",
+          "path": "cases/model_state.py",
+          "line": 151,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/fields/#db-default",
+          "runtime_proof": "state-database-default"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "aliased-signal-sender",
+          "path": "cases/model_state.py",
+          "line": 156,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-signal-alias"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "class-signal-handler",
+          "path": "cases/model_state.py",
+          "line": 161,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/signals/#post-init",
+          "runtime_proof": "state-class-signal"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "failed-save-handler",
+          "path": "cases/model_state.py",
+          "line": 169,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#forcing-an-insert-or-update",
+          "runtime_proof": "state-failed-save"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "failed-save-join",
+          "path": "cases/model_state.py",
+          "line": 170,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#forcing-an-insert-or-update",
+          "runtime_proof": "state-failed-save"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-id",
+          "path": "cases/models_fields.py",
+          "line": 11,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-id"
+        },
+        {
+          "feature": "models.default-primary-key",
+          "case": "default-pk",
+          "path": "cases/models_fields.py",
+          "line": 12,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#auto-incrementing-primary-keys",
+          "runtime_proof": "unsaved-auto-pk"
+        },
+        {
+          "feature": "relations.foreign-key-one-to-one",
+          "case": "foreign-key-id",
+          "path": "cases/relations.py",
+          "line": 7,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "deliberate-policy-or-limit",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
+          "runtime_proof": "unsaved-relation-id",
+          "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        }
+      ],
+      "unowned_diagnostics": {},
+      "unparsed_output": {},
+      "querydict_runtime": {
+        "asgi-get": "reject",
+        "asgi-post": "reject",
+        "default-querydict": "reject",
+        "explicit-mutable": "accept",
+        "framework-get": "reject",
+        "framework-post": "reject",
+        "fresh-get": "accept",
+        "fresh-post": "accept",
+        "mutable-copy": "accept"
+      },
+      "django_runtime": {
+        "cases": {
+          "async-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "async-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "async-callable-update": {
+            "observed": "49",
+            "passed": true
+          },
+          "bulk-create-wrong-model": {
+            "exception": "AttributeError",
+            "passed": true
+          },
+          "bulk-update-invalid-field": {
+            "exception": "FieldDoesNotExist",
+            "passed": true
+          },
+          "callable-create-default": {
+            "observed": "43",
+            "passed": true
+          },
+          "callable-create-defaults": {
+            "observed": "(True, 48)",
+            "passed": true
+          },
+          "callable-existing-defaults": {
+            "observed": "(False, 45)",
+            "passed": true
+          },
+          "callable-invalid-result": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "callable-update-default": {
+            "observed": "44",
+            "passed": true
+          },
+          "constructor-id": {
+            "observed": "1",
+            "passed": true
+          },
+          "constructor-null-pk": {
+            "observed": "True",
+            "passed": true
+          },
+          "constructor-pk": {
+            "observed": "1",
+            "passed": true
+          },
+          "constructor-relation-id": {
+            "observed": "1",
+            "passed": true
+          },
+          "copied-chain-method": {
+            "observed": "True",
+            "passed": true
+          },
+          "copied-scalar-method": {
+            "observed": "1",
+            "passed": true
+          },
+          "custom-request-attribute": {
+            "observed": "hello",
+            "passed": true
+          },
+          "custom-request-type": {
+            "observed": "True",
+            "passed": true
+          },
+          "date-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "day-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "fresh-request-get": {
+            "observed": "1",
+            "passed": true
+          },
+          "fresh-request-post": {
+            "observed": "1",
+            "passed": true
+          },
+          "get-or-create-default": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "heterogeneous-callables": {
+            "observed": "('MixedBook', 47)",
+            "passed": true
+          },
+          "integer-in-wrong-container": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "integer-wrong-type": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "invalid-create-defaults": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "invalid-existing-defaults": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "mixed-literal-callable": {
+            "observed": "('Mixed', 46)",
+            "passed": true
+          },
+          "month-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "named-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "named-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "null-exact-lookup": {
+            "observed": "False",
+            "passed": true
+          },
+          "only-invalid": {
+            "exception": "FieldDoesNotExist",
+            "passed": true
+          },
+          "order-by-invalid": {
+            "exception": "FieldError",
+            "passed": true
+          },
+          "prefetch-list": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-case-insensitive": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-keywords": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-qualified": {
+            "observed": "True",
+            "passed": true
+          },
+          "registry-wrong-model": {
+            "observed": "False",
+            "passed": true
+          },
+          "save-invalid-field": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "save-valid-field": {
+            "observed": "D",
+            "passed": true
+          },
+          "state-class-signal": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-concrete-child": {
+            "observed": "(123, None)",
+            "passed": true
+          },
+          "state-conditional-save": {
+            "observed": "[False, True]",
+            "passed": true
+          },
+          "state-constructor-nullable": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-constructor-precedence": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-create-overridden-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-custom-init": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-custom-loader": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-database-default": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-database-default-explicit": {
+            "observed": "123",
+            "passed": true
+          },
+          "state-database-default-saved": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-delete-alias": {
+            "observed": "(None, None, None)",
+            "passed": true
+          },
+          "state-explicit-auto": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-explicit-auto-delete": {
+            "observed": "(None, None)",
+            "passed": true
+          },
+          "state-explicit-auto-unsaved": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-failed-save": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "state-id-write": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-inherited": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-loaded": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-overridden-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-proxy-key": {
+            "observed": "123",
+            "passed": true
+          },
+          "state-resave": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-save": {
+            "observed": "(True, True)",
+            "passed": true
+          },
+          "state-signal-alias": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-signal-init": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-signal-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-skipped-save": {
+            "observed": "True",
+            "passed": true
+          },
+          "state-unknown-call": {
+            "observed": "True",
+            "passed": true
+          },
+          "string-in-lookup": {
+            "observed": "['D']",
+            "passed": true
+          },
+          "string-integer-in": {
+            "observed": "0",
+            "passed": true
+          },
+          "string-integer-invalid": {
+            "exception": "ValueError",
+            "passed": true
+          },
+          "string-integer-range": {
+            "observed": "0",
+            "passed": true
+          },
+          "string-range-lookup": {
+            "observed": "['D']",
+            "passed": true
+          },
+          "typed-callable-create": {
+            "observed": "45",
+            "passed": true
+          },
+          "typed-callable-invalid": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "unknown-related-field": {
+            "exception": "FieldError",
+            "passed": true
+          },
+          "unsaved-auto-id": {
+            "observed": "True",
+            "passed": true
+          },
+          "unsaved-auto-pk": {
+            "observed": "True",
+            "passed": true
+          },
+          "unsaved-relation-id": {
+            "observed": "True",
+            "passed": true
+          },
+          "update-or-create-default": {
+            "exception": "TypeError",
+            "passed": true
+          },
+          "year-lookup": {
+            "observed": "False",
+            "passed": true
+          }
+        },
+        "django": "6.1.3"
       },
       "features": [
         {

@@ -15,7 +15,7 @@ alias.delete()                      # book.id/book.pk: None
 book = Book.objects.get(pk=1)        # id/pk: int
 ```
 
-**Disagreement:** mypy keeps auto-ID getters nonnullable (`int`) even before saving and after deletion. django-ty 0.5.0 tracks auto-primary-key values using ty-extended **0.84.4+**. All five originally audited django-stubs releases use the nonnullable policy: 5.0.4, 5.1.3, 5.2.9, 6.0.6, and 6.1.1.
+**Disagreement:** mypy keeps auto-ID getters nonnullable (`int`) even before saving and after deletion. django-ty 0.6.0 tracks auto-primary-key values through companion **0.87.0**. All five originally audited django-stubs releases use the nonnullable policy: 5.0.4, 5.1.3, 5.2.9, 6.0.6, and 6.1.1.
 
 **Which is right?** django-ty follows Django's lifecycle. Mypy's nonnullable getter is a deliberate typing policy. Branches merge states; aliases share updates; unknown calls discard refinements. `save(update_fields=[])` does not establish an ID.
 

@@ -19,9 +19,9 @@ def main():
     parser.add_argument("--runtime", choices=["cpython", "monty"], required=True)
     parser.add_argument("--manifest", type=Path, required=True)
     args = parser.parse_args()
-    sdk = importlib.util.find_spec("ty.plugin_sdk")
+    sdk = importlib.util.find_spec("ty_extended.plugin_sdk")
     if sdk is None or sdk.origin is None:
-        raise RuntimeError("Install ty-extended 0.84.4 in the test environment")
+        raise RuntimeError("Install ty-extended 0.87.0 in the test environment")
     root = Path(__file__).resolve().parent.parent
     source = (
         Path(sdk.origin).read_text()

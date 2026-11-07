@@ -10,7 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from ty import plugin_sdk
+from ty_extended import plugin_sdk
 
 ROOT = Path(__file__).resolve().parent.parent
 PACKAGE = ROOT / "python/django_ty"

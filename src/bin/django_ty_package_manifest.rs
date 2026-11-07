@@ -14,11 +14,11 @@ mod tests {
     use super::manifest_json;
 
     #[test]
-    fn serializes_the_packaged_wasm_manifest() {
+    fn serializes_the_packaged_monty_manifest() {
         let manifest: Value = ty_plugin_sdk::serde_json::from_str(&manifest_json()).unwrap();
 
         assert_eq!(manifest["id"], "django-ty");
-        assert_eq!(manifest["runtime"]["kind"], "wasm");
-        assert_eq!(manifest["runtime"]["artifact"], "django_ty.wasm");
+        assert_eq!(manifest["runtime"]["kind"], "monty");
+        assert_eq!(manifest["runtime"]["artifact"], "monty.py");
     }
 }

@@ -20,10 +20,9 @@ spec.loader.exec_module(module)
 
 
 class RuntimeConfigTest(unittest.TestCase):
-    def test_both_backends_select_exactly_one_plugin_and_the_same_stubs(self):
+    def test_monty_selects_exactly_one_plugin_and_packaged_stubs(self):
         for backend, artifact, manifest in [
-            ("wasm", "django_ty.wasm", "ty-plugin.json"),
-            ("monty", "monty.py", "ty-plugin-monty.json"),
+            ("monty", "monty.py", "ty-plugin.json"),
         ]:
             with (
                 self.subTest(backend=backend),
@@ -67,7 +66,20 @@ class RuntimeConfigTest(unittest.TestCase):
 
     def test_invalid_runtime_is_rejected_before_launching_a_process(self):
         with patch.dict("os.environ", {"DJANGO_TY_RUNTIME": "typo"}):
-            with self.assertRaisesRegex(ValueError, "wasm or monty"):
+            with self.assertRaisesRegex(ValueError, "must be monty"):
                 checker_options(Path("/candidate"))
-        with self.assertRaisesRegex(ValueError, "wasm or monty"):
+        with self.assertRaisesRegex(ValueError, "must be monty"):
             module.config_overrides("typo")
+
+    def test_monty_is_the_default_and_wasm_is_rejected(self):
+        parsed = tomllib.loads("\n".join(module.config_overrides()))
+        self.assertEqual(parsed["plugins"]["plugin"][0]["runtime"], "monty")
+        for function, arguments in [
+            (module.config_overrides, ("wasm",)),
+            (checker_options, (Path("/candidate"), "wasm")),
+        ]:
+            with (
+                self.subTest(function=function),
+                self.assertRaisesRegex(ValueError, "must be monty"),
+            ):
+                function(*arguments)

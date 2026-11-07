@@ -1,0 +1,497 @@
+{
+  "stage": "local prepublication qualification; hosted CI and published artifacts are separate acceptance gates",
+  "versions": {
+    "django-ty": "0.6.0",
+    "ty-extended": "0.87.0",
+    "ty": "0.0.99",
+    "Django": "6.1.3"
+  },
+  "matrix": {
+    "pairs": 21,
+    "assertions_per_pair": 166,
+    "runtime_contracts_per_pair": 83,
+    "querydict_cases_per_pair": 9,
+    "sha256": "bcab57c256a33eb2b44de3ae2cf423f7e4bddef78ea5779e3b49251f19fed666"
+  },
+  "latest_python": {
+    "passed": true,
+    "candidate": {
+      "python": "3.15",
+      "checker": "ty-extended 0.87.0",
+      "django_ty": "0.6.0",
+      "django": "6.1.3",
+      "ty_extended": "0.87.0",
+      "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
+    },
+    "reference": {
+      "checker": "mypy 2.3.1",
+      "django_stubs": "6.1.1",
+      "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+      "django": "6.1.1",
+      "python": "3.13"
+    },
+    "contract_assertions": 166,
+    "runtime_contracts": 83,
+    "querydict": {
+      "fresh-get": "accept",
+      "fresh-post": "accept",
+      "asgi-get": "reject",
+      "asgi-post": "reject",
+      "framework-get": "reject",
+      "framework-post": "reject",
+      "default-querydict": "reject",
+      "explicit-mutable": "accept",
+      "mutable-copy": "accept"
+    },
+    "scope": "Django documentation and its installed runtime are the authority on Python 3.15. The pinned mypy/django-stubs baseline runs on its separately supported Python interpreter; this is not a version-matched Python 3.15 comparator pair."
+  },
+  "native_oracle": {
+    "tests_passed": 50,
+    "line_coverage_percent": 98.23,
+    "target_cleaned_after_each_phase": true
+  },
+  "response_parity": {
+    "cpython": 151,
+    "monty_1_5_0": 151
+  },
+  "sdk_type_checks": {
+    "annotated_functions": 79,
+    "sdk_signatures": 39,
+    "invalid_payloads_rejected": 7
+  },
+  "python_tooling_tests": 35,
+  "installed_checks": {
+    "passed": true,
+    "versions": {
+      "django-ty": "0.6.0",
+      "ty-extended": "0.87.0",
+      "ty": "0.0.99",
+      "Django": "6.1.3"
+    },
+    "companion_sha256": "60e54546513e253a712f797fa2cb12660b3bad3637c25547c856718b7dab2c62",
+    "checks": [
+      "discovery",
+      "module",
+      "empty-path",
+      "negative CLI controls",
+      "LSP diagnostics",
+      "field hover",
+      "unsaved negative source span",
+      "unsaved restoration"
+    ],
+    "editor": {
+      "configuration": {
+        "diagnosticMode": "workspace"
+      },
+      "configuration_requests": [
+        {
+          "id": "ty-companion-configuration-0",
+          "jsonrpc": "2.0",
+          "method": "workspace/configuration",
+          "params": {
+            "items": [
+              {
+                "scopeUri": "file:///private/tmp/ty-companion-release-audit/django-final-installed-smoke/project",
+                "section": "ty"
+              }
+            ]
+          }
+        }
+      ],
+      "initial": [],
+      "hover": {
+        "contents": {
+          "kind": "markdown",
+          "value": "```python\nstr\n```"
+        },
+        "range": {
+          "end": {
+            "character": 23,
+            "line": 25
+          },
+          "start": {
+            "character": 18,
+            "line": 25
+          }
+        }
+      },
+      "unsaved_negative": [
+        {
+          "code": "invalid-assignment",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#invalid-assignment"
+          },
+          "message": "Object of type `str` is not assignable to `int`",
+          "range": {
+            "end": {
+              "character": 28,
+              "line": 89
+            },
+            "start": {
+              "character": 18,
+              "line": 89
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        }
+      ],
+      "restored": []
+    },
+    "source_preserved": true
+  },
+  "editor_scope_comparison": [
+    {
+      "backend": "reference",
+      "mode": "openFilesOnly",
+      "diagnostics": [
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "data": null,
+          "message": "Object of type `User` has no attribute `profile`",
+          "range": {
+            "end": {
+              "character": 38,
+              "line": 42
+            },
+            "start": {
+              "character": 26,
+              "line": 42
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "data": null,
+          "message": "Object of type `User` has no attribute `edited_books`",
+          "range": {
+            "end": {
+              "character": 37,
+              "line": 43
+            },
+            "start": {
+              "character": 20,
+              "line": 43
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "data": null,
+          "message": "Object of type `Author` has no attribute `books`",
+          "range": {
+            "end": {
+              "character": 38,
+              "line": 44
+            },
+            "start": {
+              "character": 26,
+              "line": 44
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "data": null,
+          "message": "Object of type `Category` has no attribute `children`",
+          "range": {
+            "end": {
+              "character": 35,
+              "line": 46
+            },
+            "start": {
+              "character": 18,
+              "line": 46
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "data": null,
+          "message": "Object of type `Tag` has no attribute `books`",
+          "range": {
+            "end": {
+              "character": 29,
+              "line": 47
+            },
+            "start": {
+              "character": 20,
+              "line": 47
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "data": null,
+          "message": "Object of type `Order` has no attribute `invoice`",
+          "range": {
+            "end": {
+              "character": 46,
+              "line": 83
+            },
+            "start": {
+              "character": 33,
+              "line": 83
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "data": null,
+          "message": "Object of type `User` has no attribute `orders`",
+          "range": {
+            "end": {
+              "character": 39,
+              "line": 84
+            },
+            "start": {
+              "character": 28,
+              "line": 84
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "mode": "workspace",
+      "diagnostics": []
+    },
+    {
+      "backend": "companion",
+      "mode": "openFilesOnly",
+      "diagnostics": [
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "message": "Object of type `Author` has no attribute `books`",
+          "range": {
+            "end": {
+              "character": 38,
+              "line": 44
+            },
+            "start": {
+              "character": 26,
+              "line": 44
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "message": "Object of type `Book` has no attribute `score`",
+          "range": {
+            "end": {
+              "character": 55,
+              "line": 70
+            },
+            "start": {
+              "character": 13,
+              "line": 70
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "message": "Object of type `Category` has no attribute `children`",
+          "range": {
+            "end": {
+              "character": 35,
+              "line": 46
+            },
+            "start": {
+              "character": 18,
+              "line": 46
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "message": "Object of type `Order` has no attribute `invoice`",
+          "range": {
+            "end": {
+              "character": 46,
+              "line": 83
+            },
+            "start": {
+              "character": 33,
+              "line": 83
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "message": "Object of type `Tag` has no attribute `books`",
+          "range": {
+            "end": {
+              "character": 29,
+              "line": 47
+            },
+            "start": {
+              "character": 20,
+              "line": 47
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "message": "Object of type `User` has no attribute `edited_books`",
+          "range": {
+            "end": {
+              "character": 37,
+              "line": 43
+            },
+            "start": {
+              "character": 20,
+              "line": 43
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "message": "Object of type `User` has no attribute `orders`",
+          "range": {
+            "end": {
+              "character": 39,
+              "line": 84
+            },
+            "start": {
+              "character": 28,
+              "line": 84
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        },
+        {
+          "code": "unresolved-attribute",
+          "codeDescription": {
+            "href": "https://ty.dev/rules#unresolved-attribute"
+          },
+          "message": "Object of type `User` has no attribute `profile`",
+          "range": {
+            "end": {
+              "character": 38,
+              "line": 42
+            },
+            "start": {
+              "character": 26,
+              "line": 42
+            }
+          },
+          "severity": 1,
+          "source": "ty"
+        }
+      ]
+    },
+    {
+      "backend": "companion",
+      "mode": "workspace",
+      "diagnostics": []
+    }
+  ],
+  "scalability": {
+    "files": 7082,
+    "models": 2501,
+    "timeout_seconds": 180,
+    "max_memory_mib": 3072,
+    "workload_python_sha256": "4d9f005f39dbd742fbd25619c1f5aa71129ba4e5f343d709326d02f60ca825ae",
+    "runs": [
+      {
+        "negative": false,
+        "exit": 0,
+        "seconds": 74.09514250000939,
+        "peak_process_tree_rss_kib": 2487264,
+        "stopped": null,
+        "source_preserved": true,
+        "diagnostic_codes": [],
+        "passed": true
+      },
+      {
+        "negative": true,
+        "exit": 1,
+        "seconds": 71.56854058406316,
+        "peak_process_tree_rss_kib": 2992976,
+        "stopped": null,
+        "source_preserved": true,
+        "diagnostic_codes": [
+          "invalid-assignment"
+        ],
+        "passed": true
+      }
+    ]
+  },
+  "logs_sha256": {
+    "django-native-phase.log": "10cc1dd4cc11684a3318f1c16c7960d7f1b72ac25df33ed37dfcbc5a76552c6f",
+    "django-final-parity.log": "cc15223121628d767027c94f0bbd85ed85724532f9879e5a412639140768e688",
+    "django-final-types-fixed.log": "7262e11d745b3198bcdb0610d264e1fbcdab9892bcf567f13e16d1b7271ac6ff",
+    "django-final-scalability.log": "0da221893b42602f787dcd90dbf66e247e60f4282ac00c24c98adbb57289fa6e",
+    "django-final-matrix-qualified.log": "d3c7721e7e9a3116f53941af7f494f689aebb21371e221e5b5da8fd8de23facd"
+  }
+}

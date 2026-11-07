@@ -86,7 +86,7 @@ print(json.dumps(outcomes))
             )
             result = subprocess.run(
                 [
-                    str(environment / "bin" / "ty"),
+                    str(environment / "bin" / "ty-extended"),
                     "check",
                     *options,
                     str(path),

@@ -119,8 +119,8 @@ def run_probe(
 ) -> dict[str, Any]:
     minor = ".".join(probe["django"].split(".")[:2])
     python = probe["python"]
-    reference = args.work_dir / "envs" / f"reference-{minor}-py{python}"
-    candidate = args.work_dir / "envs" / f"candidate-{minor}-py{python}"
+    reference = args.work_dir / "envs" / f"reference-{probe['django']}-py{python}"
+    candidate = args.work_dir / "envs" / f"candidate-{probe['django']}-py{python}"
     for environment in (reference, candidate):
         if not args.reuse:
             shutil.rmtree(environment, ignore_errors=True)
@@ -164,7 +164,7 @@ def run_probe(
     if not probe["declared"]:
         install.append("--no-deps")
     run([*install, str(wheel)])
-    output = args.work_dir / "results" / f"{minor}-py{python}.json"
+    output = args.work_dir / "results" / f"{probe['django']}-py{python}.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     run(
         [
@@ -173,7 +173,7 @@ def run_probe(
             "--mypy-bin",
             str(reference / "bin/mypy"),
             "--ty-bin",
-            str(candidate / "bin/ty"),
+            str(candidate / "bin/ty-extended"),
             "--ty-python",
             str(candidate),
             "--probe",
@@ -194,6 +194,7 @@ def run_probe(
     result["reference"]["support_source"] = support["source"]
     if (
         result["reference"]["python"] != python
+        or result["candidate"]["python"] != python
         or result["reference"]["django"] != probe["django"]
         or result["reference"]["django_stubs"] != probe["django_stubs"]
         or result["reference"]["checker"] != f"mypy {probe['mypy']}"
@@ -227,6 +228,9 @@ def run_probe(
         file=sys.stderr,
         flush=True,
     )
+    if args.clean_environments:
+        for environment in (reference, candidate):
+            shutil.rmtree(environment)
     return result
 
 
@@ -412,6 +416,7 @@ def main() -> int:
     )
     parser.add_argument("--wheel", type=Path)
     parser.add_argument("--reuse", action="store_true")
+    parser.add_argument("--clean-environments", action="store_true", help="Remove successful per-pair environments immediately")
     parser.add_argument("--only", action="append", default=[])
     parser.add_argument("--jobs", type=int, default=2)
     mode = parser.add_mutually_exclusive_group(required=True)

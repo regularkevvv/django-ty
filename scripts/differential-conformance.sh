@@ -48,6 +48,6 @@ fi
 
 "$WORK_DIR/candidate/bin/python" "$ROOT/scripts/evaluate_differential_conformance.py" \
   --mypy-bin "$WORK_DIR/reference/bin/mypy" \
-  --ty-bin "$WORK_DIR/candidate/bin/ty" \
+  --ty-bin "$WORK_DIR/candidate/bin/ty-extended" \
   --ty-python "$WORK_DIR/candidate" \
   "$MODE"

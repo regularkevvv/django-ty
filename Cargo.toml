@@ -1,9 +1,9 @@
 [package]
 name = "django-ty"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2024"
 rust-version = "1.96"
-description = "Django semantic plugin for ty"
+description = "Native regression oracle for Django Monty semantics"
 license = "MIT"
 repository = "https://github.com/regularkevvv/django-ty"
 authors = ["Kevin Castro <hola@kev.pe>"]
@@ -13,7 +13,7 @@ categories = ["development-tools"]
 publish = false
 
 [lib]
-crate-type = ["rlib", "cdylib"]
+crate-type = ["rlib"]
 
 [dependencies]
 ty_plugin_sdk = "0.0.8"

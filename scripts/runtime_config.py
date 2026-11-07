@@ -11,9 +11,9 @@ from pathlib import Path
 def checker_options(
     environment: Path, runtime: str | None = None, settings_module: str | None = None
 ) -> list[str]:
-    selected = runtime or os.environ.get("DJANGO_TY_RUNTIME", "wasm")
-    if selected not in {"wasm", "monty"}:
-        raise ValueError("DJANGO_TY_RUNTIME must be wasm or monty")
+    selected = runtime or os.environ.get("DJANGO_TY_RUNTIME", "monty")
+    if selected != "monty":
+        raise ValueError("DJANGO_TY_RUNTIME must be monty")
     return json.loads(
         subprocess.check_output(
             [

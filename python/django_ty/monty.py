@@ -1,6 +1,6 @@
 """Django semantic hooks for Monty's restricted Python interpreter.
 
-The host supplies ty.plugin_sdk and all project data. No Django code is imported
+The host supplies ty_extended.plugin_sdk and all project data. No Django code is imported
 or executed. This file is also executable with the SDK prelude under CPython.
 """
 
@@ -988,7 +988,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
             source = field.get("source") or {}
             if key in reverse_sources:
                 first = reverse_sources[key]
-                metadata = (
+                metadata: "dict[str, JsonValue]" = (
                     {"first-file-path": first["file-path"]}
                     if first.get("file-path")
                     else {}
@@ -2006,13 +2006,13 @@ set_manifest(
 {
   "id": "django-ty",
   "name": "Django ty plugin",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "protocol-version": {
     "major": 0,
     "minor": 7
   },
   "ty-compatibility": {
-    "requirement": ">=0.84.4,<0.85.0"
+    "requirement": ">=0.87.0,<0.88.0"
   },
   "runtime": {
     "kind": "monty",

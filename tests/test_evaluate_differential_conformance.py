@@ -17,27 +17,31 @@ class NormalizeTyCheckerVersionTest(unittest.TestCase):
         return normalize_ty_checker_version(reported, "1.2.3", self.commit)
 
     def test_accepts_release_without_embedded_commit(self) -> None:
-        self.assertEqual(self.normalize("ty 1.2.3"), "ty 1.2.3")
+        self.assertEqual(self.normalize("ty-extended 1.2.3"), "ty-extended 1.2.3")
 
     def test_accepts_release_with_matching_embedded_commit(self) -> None:
         self.assertEqual(
-            self.normalize("ty 1.2.3 (abcdef123 2030-01-02)"),
-            "ty 1.2.3",
+            self.normalize("ty-extended 1.2.3 (abcdef123 2030-01-02)"),
+            "ty-extended 1.2.3",
         )
 
     def test_accepts_source_build_metadata(self) -> None:
         self.assertEqual(
-            self.normalize("ty 1.2.3+4 (abcdef123 2030-01-02)"),
-            "ty 1.2.3",
+            self.normalize("ty-extended 1.2.3+4 (abcdef123 2030-01-02)"),
+            "ty-extended 1.2.3",
         )
 
+    def test_rejects_official_or_legacy_checker_name(self) -> None:
+        with self.assertRaisesRegex(ConformanceError, "expected ty-extended"):
+            self.normalize("ty 1.2.3")
+
     def test_rejects_wrong_version(self) -> None:
-        with self.assertRaisesRegex(ConformanceError, "expected ty 1.2.3"):
-            self.normalize("ty 1.2.2")
+        with self.assertRaisesRegex(ConformanceError, "expected ty-extended 1.2.3"):
+            self.normalize("ty-extended 1.2.2")
 
     def test_rejects_wrong_embedded_commit(self) -> None:
         with self.assertRaisesRegex(ConformanceError, "expected abcdef123"):
-            self.normalize("ty 1.2.3 (deadbeef0 2030-01-02)")
+            self.normalize("ty-extended 1.2.3 (deadbeef0 2030-01-02)")
 
 
 class ReachabilityTest(unittest.TestCase):

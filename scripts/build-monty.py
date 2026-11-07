@@ -12,16 +12,15 @@ from pathlib import Path
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
-    parser.add_argument("--from-wasm", action="store_true")
     args = parser.parse_args()
     root = Path(__file__).resolve().parent.parent
     package = root / "python/django_ty"
-    manifest_path = package / "ty-plugin-monty.json"
+    manifest_path = package / "ty-plugin.json"
+    alias_path = package / "ty-plugin-monty.json"
     source_path = package / "monty.py"
-    manifest = json.loads(
-        (package / "ty-plugin.json" if args.from_wasm else manifest_path).read_text()
-    )
-    manifest["runtime"] = {"kind": "monty", "artifact": "monty.py"}
+    manifest = json.loads(manifest_path.read_text())
+    if manifest["runtime"] != {"kind": "monty", "artifact": "monty.py"}:
+        raise RuntimeError("The packaged plugin must use the Monty companion")
     version = re.search(
         r'^version = "([^"]+)"', (root / "pyproject.toml").read_text(), re.MULTILINE
     ).group(1)
@@ -38,12 +37,17 @@ def main():
     if args.check:
         module = ast.parse(source_path.read_text())
         embedded = json.loads(ast.literal_eval(module.body[-1].value.args[0].args[0]))
-        if manifest_path.read_text() != encoded or embedded != manifest:
+        if (
+            manifest_path.read_text() != encoded
+            or alias_path.read_text() != encoded
+            or embedded != manifest
+        ):
             raise RuntimeError(
                 "Run python scripts/build-monty.py to regenerate the embedded manifest"
             )
     else:
         manifest_path.write_text(encoded)
+        alias_path.write_text(encoded)
         module = ast.parse(source_path.read_text())
         embedded = json.loads(ast.literal_eval(module.body[-1].value.args[0].args[0]))
         if embedded != manifest:
