@@ -12,7 +12,7 @@ Reviewed adaptations inline TemplatesSetting and add a mutable request helper us
 - Vendored static-tree SHA-256: `fc4a572a925776c7b2e45364dd22c44a91089c0ed82ad291ca8c45a228f3523f`.
 - Documented feature contract coverage: **100.0%** across 38 reviewed capabilities (38 supported, 0 partial, 0 unsupported).
 - Assertion conformance: **100.0%** (166 of 166 documented expectations matched).
-- Candidate host: `django-ty` 0.6.0 on `ty-extended` 0.87.0 at `d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d`.
+- Candidate host: `django-ty` 0.7.0 on `ty-extended` 0.89.0 at `0175686de10dfba302656de83744cb84a4ff9147`.
 - Target: **95%** documented contract coverage. The static score is deliberately separate and does not hide semantic gaps.
 
 Auxiliary `django-stubs-ext` utilities such as `WithAnnotations` are outside this Django-behavior inventory. The candidate wheel must not install or package `django-stubs`, `django-stubs-ext`, or mypy; generic `Annotated` transport remains a library-neutral ty-extended plugin capability.

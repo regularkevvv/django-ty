@@ -31,7 +31,7 @@ jobs:
       - name: Check Monty packaging and Python tooling
         run: |
           python scripts/build-monty.py --check
-          uv run --no-project --with ty-extended==0.88.0 python -m unittest discover -s tests
+          uv run --no-project --with ty-extended==0.89.0 python -m unittest discover -s tests
           python scripts/evaluate_django_stubs_coverage.py --check
       - name: Check Python formatting and imports
         run: |
@@ -106,7 +106,7 @@ jobs:
           test -f "$wheel"
           printf '%s\n' "DJANGO_TY_WHEEL=$wheel" "DJANGO_TY_CONFORMANCE_DIR=$RUNNER_TEMP/django-ty-conformance" "DJANGO_TY_E2E_DIR=$RUNNER_TEMP/django-ty-e2e" >> "$GITHUB_ENV"
       - name: Check SDK declarations and reject invalid types
-        run: uv run --no-project --python 3.13 --with ty-extended==0.88.0 python scripts/check_monty_types.py
+        run: uv run --no-project --python 3.13 --with ty-extended==0.89.0 python scripts/check_monty_types.py
       - name: Verify official Django contracts
         run: bash scripts/differential-conformance.sh --check
       - name: Verify all 21 Django and Python pairs

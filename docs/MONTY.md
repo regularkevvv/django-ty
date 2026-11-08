@@ -8,7 +8,7 @@ build with Hatchling without a Rust or WASM toolchain.
 
 The installed `ty-extended` binary executes the hooks in embedded Monty 1.5.0 and
 delegates checking to unchanged official ty. The plugin receives project facts
-through protocol 0.8; it does not import or execute a project's Django application.
+through protocol 0.9; it does not import or execute a project's Django application.
 Python SDK helpers come from `ty_extended.plugin_sdk`. `TYPE_CHECKING` declarations
 in `_monty_sdk.pyi` and `_monty_types.pyi` describe the ambient SDK and wire data;
 there is no separate interpreter or `pydantic-monty` consumer dependency.
@@ -17,8 +17,11 @@ there is no separate interpreter or `pydantic-monty` consumer dependency.
 
 The [version matrix](DJANGO-VERSIONS.md) records 21 complete Django/Python pairs
 including Django 6.1.3. Each checks all 166 assertions over 38 capabilities,
-83 framework runtime contracts and nine QueryDict cases. The native reference and
-CPython/Monty response replay remain independent checks. Native reference line
+83 framework runtime contracts and nine QueryDict cases. The native reference retains SDK 0.0.8 as an independent semantic baseline.
+CPython/Monty replay compares those original protocol fields and separately checks
+the exact packaged manifest. The companion's current protocol tests additionally
+compare 2,582 scoped class results and 3,012 ordered batches with the full-index
+CPython results. Native reference line
 coverage is enforced at 98%; the runtime/protocol corpus includes cross-module
 model relations and has 152 responses per interpreter.
 
@@ -60,7 +63,10 @@ On Windows, use the environment's `Scripts/python.exe` in place of `bin/python`.
 ## Large-project performance
 
 Django-ty 0.7 supplies a reduced index for each class and looks up additional
-model data through the companion's read-only index interface. Unqualified
+model data through the companion's read-only index interface. It opts into bounded
+class batches, preserving the response order and individual class results. The
+companion limits each batch to 128 classes and 1 MiB of request data; oversized
+classes and failed batches use the ordinary individual hook. Unqualified
 relations between sibling modules in an app's `models` package resolve to the
 same model as Django; an unrelated app's model is not a fallback.
 

@@ -2,7 +2,7 @@
 
 Examples use the [test models](../conformance/conformance_models/models.py). “mypy” means mypy **with django-stubs and its Django plugin**. Version numbers below refer to **django-stubs**, unless stated otherwise.
 
-The [original audit](../compatibility/mypy-disagreement-audit.json) records all 24 assertion disagreements, exact versions, diagnostics, source hashes, and reproductions. Cases with the same cause are grouped here. The [current matrix](DJANGO-VERSIONS.md) records the 0.5.0 candidate's results.
+The [original audit](../compatibility/mypy-disagreement-audit.json) records all 24 assertion disagreements, exact versions, diagnostics, source hashes, and reproductions. Cases with the same cause are grouped here. The [current matrix](DJANGO-VERSIONS.md) records the current companion's results.
 
 ## Model IDs: tracked state versus nonnullable getters
 
@@ -15,7 +15,7 @@ alias.delete()                      # book.id/book.pk: None
 book = Book.objects.get(pk=1)        # id/pk: int
 ```
 
-**Disagreement:** mypy keeps auto-ID getters nonnullable (`int`) even before saving and after deletion. django-ty 0.6.0 tracks auto-primary-key values through companion **0.87.0**. All five originally audited django-stubs releases use the nonnullable policy: 5.0.4, 5.1.3, 5.2.9, 6.0.6, and 6.1.1.
+**Disagreement:** mypy keeps auto-ID getters nonnullable (`int`) even before saving and after deletion. django-ty tracks auto-primary-key values through the Monty companion. All five originally audited django-stubs releases use the nonnullable policy: 5.0.4, 5.1.3, 5.2.9, 6.0.6, and 6.1.1.
 
 **Which is right?** django-ty follows Django's lifecycle. Mypy's nonnullable getter is a deliberate typing policy. Branches merge states; aliases share updates; unknown calls discard refinements. `save(update_fields=[])` does not establish an ID.
 
@@ -49,7 +49,7 @@ HttpRequest().POST["page"] = "1"  # Django accepts
 
 **Evidence:** [QueryDict docs](https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects), [HttpRequest creates mutable dictionaries](https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/http/request.py#L62), [subclass regression #3565](https://github.com/typeddjango/django-stubs/issues/3565), and [the upstream helper fix #3642](https://github.com/typeddjango/django-stubs/pull/3642).
 
-**Our fix:** 0.4.0 had the same subclass regression. The 0.5.0 candidate uses an exact-class constructor hook, preserving custom subclass types and attributes. WSGI/ASGI immutability is tested separately.
+**Our fix:** 0.4.0 had the same subclass regression. Django-ty uses an exact-class constructor hook, preserving custom subclass types and attributes. WSGI/ASGI immutability is tested separately.
 
 ## Callable defaults: upstream validation bug
 
@@ -65,7 +65,7 @@ Author.objects.update_or_create(name="Ada", defaults={"age": lambda: 44})
 
 **Evidence:** Django's [get_or_create docs](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create) and [update_or_create docs](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#update-or-create) permit callables. [Django resolves them](https://github.com/django/django/blob/249b13d6e93ee3164dee8ed1775395622a50c337/django/db/models/utils.py#L28); the [plugin compares the callable itself with the field type](https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/mypy_django_plugin/transformers/orm_lookups.py#L59). [PR #3326](https://github.com/typeddjango/django-stubs/pull/3326) added defaults validation. Supported-version reproductions confirm the valid-callable rejection; no exact matching upstream issue was found in the audit.
 
-**Our fix:** the 0.5.0 candidate checks lambda, named, and typed callable results, including create/update branches, `create_defaults`, and async APIs. Mixed dictionaries still use a combined value type, so validation is conservative rather than precise for every entry. The published mypy plugin remains unmodified.
+**Our fix:** django-ty checks lambda, named, and typed callable results, including create/update branches, `create_defaults`, and async APIs. Mixed dictionaries still use a combined value type, so validation is conservative rather than precise for every entry. The published mypy plugin remains unmodified.
 
 ## Invalid related lookup: missed path validation
 

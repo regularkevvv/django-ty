@@ -59,17 +59,29 @@ vim.lsp.enable("ty")
 
 ## Performance
 
-Django-ty 0.7 uses class-specific project indexes and bounded read-only lookups
-in companion 0.88. Model relations within a split `models` package resolve across
+Django-ty 0.7 uses class-specific project indexes, bounded class batches and
+read-only lookups in companion 0.89. Model relations within a split `models` package resolve across
 sibling modules. See [the performance comparison](https://github.com/regularkevvv/ty-extended/blob/main/docs/performance.md)
 for fresh-process MyPy and bare-ty benchmarks with ORM and ordinary Python error
 controls, and [the Monty guide](docs/MONTY.md#large-project-performance) for the
 installed large-project regression.
 
+On the recorded macOS workload with 7,082 Python files, 2,501 related models and
+100 ORM type assertions, the published 0.89 companion with the Django-ty 0.7
+candidate wheel takes a median **6.59 seconds**, down from
+**80.79 seconds** with Django-ty 0.6 and companion 0.87. MyPy with django-stubs takes
+**6.81 seconds** on the same files; bare official ty takes
+**0.27 seconds**. All five public-companion workloads meet the
+MyPy median ceiling. The largest Mac case is close to parity; smaller projects
+show larger advantages. These are five rotated fresh-process runs with exact ORM
+assertions, both negative controls and unchanged source bytes. The
+[qualification receipt](compatibility/companion-local-qualification.json) identifies
+the executables and every sample; Django's published wheel is verified separately.
+
 ## Versions and migration
 
-Django-ty 0.7.0 requires `ty-extended>=0.88.0,<0.89.0`. Companion versions are
-independent of official ty. Companion 0.88.0 was qualified against every ty release
+Django-ty 0.7.0 requires `ty-extended>=0.89.0,<0.90.0`. Companion versions are
+independent of official ty. Companion 0.89.0 was qualified against every ty release
 from 0.0.84 through 0.0.99; its dependency range is `ty>=0.0.84,<0.1`. Future versions
 within that range are accepted but need compatibility checks. An ordinary ty update
 within a compatible group does not require another Django-ty release.
@@ -132,7 +144,7 @@ bash scripts/e2e.sh
 
 The Rust crate is an independent development oracle. Its tests and 98% coverage gate
 remain in CI; it is not part of the consumer build. Native test artifacts are cleaned
-after each phase. The Python implementation also matches 151 native regression
+after each phase. The Python implementation also matches 152 native regression
 responses through CPython and Monty 1.5.0. Consumers use the companion's embedded
 runtime and do not depend on that separate development interpreter.
 

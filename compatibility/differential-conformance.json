@@ -350,11 +350,11 @@
   },
   "candidate": {
     "python": "3.13",
-    "checker": "ty-extended 0.87.0",
-    "django_ty": "0.6.0",
+    "checker": "ty-extended 0.89.0",
+    "django_ty": "0.7.0",
     "django": "6.1.1",
-    "ty_extended": "0.87.0",
-    "ty_extended_commit": "d7b8a5080cbc33f9ff33d8e12cbd23cb9e538e1d"
+    "ty_extended": "0.89.0",
+    "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
   },
   "corpus": {
     "sha256": "4a4e1cbeff35eb0c655071d262555ef69313b9f8c4fdd77580aa39d049d7dfc0",
