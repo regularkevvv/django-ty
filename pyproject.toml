@@ -1,10 +1,10 @@
 [project]
 name = "django-ty"
-version = "0.6.0"
+version = "0.7.0"
 requires-python = ">=3.10"
 dependencies = [
     "Django>=5.0,<6.2",
-    "ty-extended>=0.87.0,<0.88.0",
+    "ty-extended>=0.89.0,<0.90.0",
     "types-PyYAML>=6.0.12",
     "typing-extensions>=4.11.0",
 ]

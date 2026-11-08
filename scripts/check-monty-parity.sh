@@ -14,7 +14,7 @@ cleanup() {
 }
 trap cleanup EXIT
 uv venv --python 3.13 "$WORK_DIR/env"
-uv pip install --python "$WORK_DIR/env/bin/python" 'ty-extended==0.87.0' 'pydantic-monty==1.5.0'
+uv pip install --python "$WORK_DIR/env/bin/python" 'ty-extended==0.89.0' 'pydantic-monty==1.5.0'
 cargo run --locked --bin django_ty_package_manifest > "$WORK_DIR/manifest.json"
 DJANGO_TY_ORACLE_PATH="$WORK_DIR/oracle.jsonl" cargo test --locked --test plugin
 for runtime in cpython monty; do

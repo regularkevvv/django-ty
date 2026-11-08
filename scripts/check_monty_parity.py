@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
     sdk = importlib.util.find_spec("ty_extended.plugin_sdk")
     if sdk is None or sdk.origin is None:
-        raise RuntimeError("Install ty-extended 0.87.0 in the test environment")
+        raise RuntimeError("Install ty-extended 0.89.0 in the test environment")
     root = Path(__file__).resolve().parent.parent
     source = (
         Path(sdk.origin).read_text()
@@ -57,13 +57,26 @@ def main():
                     try:
                         response = session.feed_run(
                             source + "\n\n__ty_handle__(request_json)",
-                            inputs={"request_json": json.dumps(record["request"])},
+                            inputs={
+                                "request_json": json.dumps(record["request"]),
+                                # Match hosts that provide the full inline index.
+                                # No external lookup or suspension is permitted.
+                                "_ty_project_index_lookup": None,
+                            },
                         )
                     except Exception as exc:
                         raise RuntimeError(
                             f"Monty failed on regression request {index}: {record['request']['kind']}"
                         ) from exc
                     produced.append(json.loads(response))
+    # The frozen native SDK cannot describe newer optional capabilities. Check
+    # the complete current handshake before its normalized semantic comparison.
+    expected_manifest = {
+        "kind": "manifest",
+        **json.loads((root / "python/django_ty/ty-plugin.json").read_text()),
+    }
+    if produced[-1] != expected_manifest:
+        raise RuntimeError("Runtime manifest differs from the packaged manifest")
     with args.output.open("w") as output:
         for record, actual in zip(records, produced, strict=True):
             output.write(json.dumps({**record, "actual": actual}) + "\n")

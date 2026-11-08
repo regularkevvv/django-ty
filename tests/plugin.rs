@@ -502,7 +502,8 @@ fn packaged_manifest_uses_the_wheel_artifact() {
 
     assert_eq!(manifest.id, "django-ty");
     assert_eq!(manifest.version, env!("CARGO_PKG_VERSION"));
-    assert_eq!(manifest.ty_compatibility.requirement, ">=0.87.0,<0.88.0");
+    assert_eq!(manifest.protocol_version.minor, 9);
+    assert_eq!(manifest.ty_compatibility.requirement, ">=0.89.0,<0.90.0");
     assert!(matches!(
         manifest.runtime,
         ty_plugin_sdk::protocol::RuntimeSpec::Monty(ref monty) if monty.artifact == "monty.py"
@@ -1646,6 +1647,34 @@ fn relation_targets_support_to_keyword_self_and_unresolved_enum_fallbacks() {
             .diagnostics
             .iter()
             .any(|diagnostic| diagnostic.message.contains("external.models.Raw"))
+    );
+}
+
+#[test]
+fn unqualified_relations_resolve_sibling_modules_within_the_models_package() {
+    let target = "project.books.models.authors.Author";
+    let other = "other.models.authors.Author";
+    let book = "project.books.models.books.Book";
+    let classes = vec![
+        model_class(target, Vec::new()),
+        model_class(other, Vec::new()),
+        model_class(
+            book,
+            vec![relation_field(
+                "author",
+                "ForeignKey",
+                positional_str("Author"),
+                Vec::new(),
+            )],
+        ),
+    ];
+    let PluginResponse::ProjectIndex(index) = build_index(classes) else {
+        panic!("expected project index");
+    };
+    assert!(index.diagnostics.is_empty(), "{:?}", index.diagnostics);
+    assert_eq!(
+        index.plugin_index["models"][book]["fields"]["author"],
+        target
     );
 }
 

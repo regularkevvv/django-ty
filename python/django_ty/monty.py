@@ -17,6 +17,7 @@ if typing.TYPE_CHECKING:
         call_state_patch,
         callable_member,
         callable_signature,
+        class_batch,
         class_patch,
         class_target,
         contribution,
@@ -34,13 +35,16 @@ if typing.TYPE_CHECKING:
         on_call_return,
         on_call_signature,
         on_call_state,
+        on_class_batch,
         on_class_transform,
+        on_manifest,
         on_mutation,
         on_project_index,
         optional,
         positional_or_keyword,
         project_index,
-        set_manifest,
+        project_index_keys,
+        project_index_value,
         snapshot_expression,
         snapshot_nominal,
         snapshot_tuple,
@@ -59,11 +63,15 @@ if typing.TYPE_CHECKING:
         CallSignatureResponse,
         CallStateResponse,
         CallSummary,
+        ClassBatchRequest,
+        ClassBatchResponse,
+        ClassModelIndex,
         ClassRequest,
         ClassResponse,
         ClassSummary,
         Contribution,
         Diagnostic,
+        DjangoIndex,
         FieldData,
         FieldPatch,
         FieldSummary,
@@ -299,9 +307,42 @@ def relation_kind(call: "CallSummary") -> "RelationKind | None":
     return kinds.get(short(call_name(call)))
 
 
-def resolve_model(module: str, raw: str, models: "Collection[str]") -> "str":
+def model_scope(module: str) -> str | None:
+    parts = module.split(".")
+    scope = None
+    for index, part in enumerate(parts):
+        if part == "models":
+            scope = ".".join(parts[: index + 1])
+    return scope
+
+
+def model_name_lookup(models: "Collection[str]") -> dict[str, str | None]:
+    """Index conventional models packages once per project, including ambiguity."""
+    lookup: dict[str, str | None] = {}
+    for name in models:
+        scope = model_scope(module_of(name))
+        if scope is not None:
+            key = scope + "." + short(name)
+            lookup[key] = None if key in lookup else name
+    return lookup
+
+
+def resolve_model(
+    module: str,
+    raw: str,
+    models: "Collection[str]",
+    lookup: dict[str, str | None] | None = None,
+) -> "str":
     if "." not in raw:
-        return module + "." + raw
+        local = module + "." + raw
+        if local in models:
+            return local
+        scope = model_scope(module)
+        if scope is None:
+            return local
+        if lookup is None:
+            lookup = model_name_lookup(models)
+        return lookup.get(scope + "." + raw) or local
     if raw in models:
         return raw
     app, name = raw.split(".", 1)
@@ -313,14 +354,23 @@ def resolve_model(module: str, raw: str, models: "Collection[str]") -> "str":
     return raw
 
 
-def relation_target(
-    model: str, call: "CallSummary", settings: dict[str, str], models: "Collection[str]"
-) -> "str | None":
+def relation_argument(call: "CallSummary") -> "Argument | None":
     args = call.get("arguments", [])
     target = named(args, "to")
     if target is None:
         positional = [arg for arg in args if arg.get("kind") == "positional"]
         target = positional[0] if positional else None
+    return target
+
+
+def relation_target(
+    model: str,
+    call: "CallSummary",
+    settings: dict[str, str],
+    models: "Collection[str]",
+    lookup: dict[str, str | None] | None = None,
+) -> "str | None":
+    target = relation_argument(call)
     if target is None:
         return None
     value = target.get("value")
@@ -348,7 +398,11 @@ def relation_target(
             raw = settings[raw]
     else:
         raw = (target.get("type-expr") or {}).get("expression")
-    return resolve_model(module_of(model), raw, models) if raw is not None else None
+    return (
+        resolve_model(module_of(model), raw, models, lookup)
+        if raw is not None
+        else None
+    )
 
 
 def choice_target(model: str, call: "CallSummary") -> "str | None":
@@ -368,6 +422,7 @@ def field_data(
     field: "FieldSummary",
     settings: dict[str, str],
     models: "Collection[str]",
+    lookup: dict[str, str | None] | None = None,
 ) -> "FieldData | None":
     call = call_of(field)
     if call is None or manager_call(call):
@@ -380,7 +435,9 @@ def field_data(
         for arg in args
     )
     relation = relation_kind(call)
-    target = relation_target(model, call, settings, models) if relation else None
+    target = (
+        relation_target(model, call, settings, models, lookup) if relation else None
+    )
     target_type = target or "django.db.models.base.Model"
     if relation == "many-to-many":
         get_text = MANAGER_BASE + "[" + target_type + "]"
@@ -586,7 +643,10 @@ def signal_receiver(
 
 
 def local_index(
-    cls: "ClassSummary", settings: dict[str, str], models: "Collection[str]"
+    cls: "ClassSummary",
+    settings: dict[str, str],
+    models: "Collection[str]",
+    lookup: dict[str, str | None],
 ) -> "LocalModelIndex":
     name = cls["qualified-name"]
     result: "LocalModelIndex" = {
@@ -607,7 +667,7 @@ def local_index(
         call = call_of(field)
         if call is None:
             continue
-        data = field_data(name, field, settings, models)
+        data = field_data(name, field, settings, models, lookup)
         if data is not None:
             result["fields"][field["name"]] = (
                 "int" if auto_field(call) else canonical(data["get"])
@@ -651,12 +711,18 @@ def local_index(
 
 
 def inherited_indexes(
-    classes: "list[ClassSummary]", settings: dict[str, str], names: set[str]
+    classes: "list[ClassSummary]",
+    settings: dict[str, str],
+    names: set[str],
+    lookup: dict[str, str | None],
 ) -> "dict[str, LocalModelIndex]":
     selected = {
         cls["qualified-name"]: cls for cls in classes if cls["qualified-name"] in names
     }
-    local = {name: local_index(cls, settings, names) for name, cls in selected.items()}
+    local = {
+        name: local_index(cls, settings, names, lookup)
+        for name, cls in selected.items()
+    }
     resolved = local
     for iteration in range(len(names)):
         following: "dict[str, LocalModelIndex]" = {}
@@ -832,7 +898,8 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         decorated.extend(cls.get("methods", []))
     decorators = [dec for item in decorated for dec in item.get("decorators", [])]
     names = derived_names(classes, MODEL_BASES)
-    indexes = inherited_indexes(classes, settings, names)
+    lookup = model_name_lookup(names)
+    indexes = inherited_indexes(classes, settings, names, lookup)
     queryset_names = derived_names(classes, [QUERYSET_BASE], generic=True)
     querysets = {
         cls["qualified-name"]: cls
@@ -954,7 +1021,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
             kind = relation_kind(call)
             if kind is None:
                 continue
-            target = relation_target(name, call, settings, names)
+            target = relation_target(name, call, settings, names, lookup)
             if target is None:
                 continue
             if target not in names:
@@ -1026,6 +1093,10 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
     ]
     return project_index(
         {"models": models, "settings": settings, "auth_user_model": auth},
+        class_indexes={
+            cls["qualified-name"]: class_project_index(cls, settings, models, lookup)
+            for cls in classes
+        },
         contributions=contributions,
         virtual_types=virtuals,
         dependencies=deps,
@@ -1033,16 +1104,53 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
     )
 
 
+def class_project_index(
+    cls: "ClassSummary",
+    settings: dict[str, str],
+    models: "dict[str, ModelIndex]",
+    lookup: dict[str, str | None] | None = None,
+) -> "DjangoIndex":
+    """Keep the model and resolved relation targets needed by its class hook."""
+    name = cls["qualified-name"]
+    scoped: "dict[str, ClassModelIndex]" = {}
+    used_settings: dict[str, str] = {}
+    if name in models:
+        scoped[name] = {
+            "auto_primary_key_default": models[name]["auto_primary_key_default"],
+            "manager_queryset": models[name]["manager_queryset"],
+        }
+    for field in cls.get("fields", []):
+        call = call_of(field)
+        if call is not None and relation_kind(call):
+            argument = relation_argument(call)
+            value = argument.get("value") if argument is not None else None
+            key = None
+            if value is not None:
+                if value["kind"] == "str":
+                    key = value["value"]
+                elif value["kind"] == "enum-ref" or value["kind"] == "symbol-ref":
+                    key = value["qualified-name"]
+            if key is not None and key in settings:
+                used_settings[key] = settings[key]
+            target = relation_target(name, call, settings, models, lookup)
+            if target is not None and target in models:
+                if target not in scoped:
+                    scoped[target] = {}
+    return {"class_models": scoped, "settings": used_settings}
+
+
 @on_class_transform
 def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
     cls = request["class"]
     name = cls["qualified-name"]
-    indexed = (request.get("project-index") or {}).get("models") or {}
+    indexed = project_index_value(request, ["class_models"])
+    if indexed is None:
+        indexed = project_index_value(request, ["models"], {}) or {}
     if name not in indexed and not any(
         base["expression"] in MODEL_BASES for base in cls.get("bases", [])
     ):
         return None
-    settings = (request.get("project-index") or {}).get("settings") or {}
+    settings = project_index_value(request, ["settings"], {}) or {}
     fields = default_fields((indexed.get(name) or {}).get("auto_primary_key_default"))
     members = default_members(name)
     instance = []
@@ -1080,8 +1188,14 @@ def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
     return class_patch(fields=fields, class_members=members, instance_members=instance)
 
 
+@on_class_batch
+def analyze_django_classes(request: "ClassBatchRequest") -> "ClassBatchResponse":
+    """Share interpreter setup; each class keeps its own complete input index."""
+    return class_batch([analyze_django_class(item) for item in request["requests"]])
+
+
 def model_entry(request: "IndexedRequest", name: str) -> "ModelIndex | None":
-    return ((request.get("project-index") or {}).get("models") or {}).get(name)
+    return project_index_value(request, ["models", name])
 
 
 def model_fields(request: "IndexedRequest", name: str) -> "dict[str, str] | None":
@@ -1627,7 +1741,7 @@ def values_list_row(
 
 
 def qualified_model(request: "CallRequest", name: str) -> "str":
-    models = (request.get("project-index") or {}).get("models") or {}
+    models = project_index_keys(request, ["models"])
     if name in models:
         return name
     matches = [candidate for candidate in sorted(models) if short(candidate) == name]
@@ -1786,7 +1900,7 @@ def get_registry_model(request: "CallRequest") -> "CallReturnResponse | None":
         return None
     app_text, model_text = reference.split(".", 1)
     matches = []
-    for name in sorted((request.get("project-index") or {}).get("models") or {}):
+    for name in sorted(project_index_keys(request, ["models"])):
         if "." not in name:
             continue
         module = module_of(name)
@@ -1811,7 +1925,7 @@ def django_call_return(request: "CallRequest") -> "CallReturnResponse | None":
     if callee_text == "django.utils.translation.gettext_lazy":
         return call_return_patch(ann("str"))
     if callee_text == "django.contrib.auth.get_user_model":
-        model = (request.get("project-index") or {}).get("auth_user_model")
+        model = project_index_value(request, ["auth_user_model"])
         return (
             call_return_patch(ann("type[" + model + "]"))
             if isinstance(model, str)
@@ -2001,18 +2115,19 @@ def django_state(request: "CallRequest") -> "CallStateResponse | None":
 
 
 # Packaged manifest
-set_manifest(
-    json.loads(r"""
+@on_manifest
+def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
+    return json.loads(r"""
 {
   "id": "django-ty",
   "name": "Django ty plugin",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "protocol-version": {
     "major": 0,
-    "minor": 7
+    "minor": 9
   },
   "ty-compatibility": {
-    "requirement": ">=0.87.0,<0.88.0"
+    "requirement": ">=0.89.0,<0.90.0"
   },
   "runtime": {
     "kind": "monty",
@@ -2031,7 +2146,9 @@ set_manifest(
     "cross-symbol-contributions": true,
     "settings-data": true,
     "virtual-types": true,
-    "mutation-validation": true
+    "mutation-validation": true,
+    "project-index-lookup": true,
+    "class-batch": true
   },
   "claims": {
     "classes": [
@@ -2840,4 +2957,3 @@ set_manifest(
   ]
 }
 """)
-)

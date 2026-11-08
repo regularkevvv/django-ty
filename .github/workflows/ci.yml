@@ -31,12 +31,12 @@ jobs:
       - name: Check Monty packaging and Python tooling
         run: |
           python scripts/build-monty.py --check
-          python -m unittest discover -s tests
+          uv run --no-project --with ty-extended==0.89.0 python -m unittest discover -s tests
           python scripts/evaluate_django_stubs_coverage.py --check
       - name: Check Python formatting and imports
         run: |
-          uv run --no-project --with ruff==0.16.10 ruff check --no-cache --isolated --select E4,E7,E9,F,I python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi python/django_ty/runtime.py python/django_ty/__main__.py scripts/build-monty.py scripts/check_monty_types.py scripts/check_monty_parity.py scripts/runtime_config.py scripts/lsp_client.py scripts/check_companion_install.py scripts/check_companion_scalability.py scripts/check_latest_python.py tests/test_runtime_config.py tests/test_companion_scalability.py
-          uv run --no-project --with ruff==0.16.10 ruff format --no-cache --isolated --check python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi python/django_ty/runtime.py python/django_ty/__main__.py scripts/build-monty.py scripts/check_monty_types.py scripts/check_monty_parity.py scripts/runtime_config.py scripts/lsp_client.py scripts/check_companion_install.py scripts/check_companion_scalability.py scripts/check_latest_python.py tests/test_runtime_config.py tests/test_companion_scalability.py
+          uv run --no-project --with ruff==0.16.10 ruff check --no-cache --isolated --select E4,E7,E9,F,I python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi python/django_ty/runtime.py python/django_ty/__main__.py scripts/build-monty.py scripts/check_monty_types.py scripts/check_monty_parity.py scripts/runtime_config.py scripts/lsp_client.py scripts/check_companion_install.py scripts/check_companion_scalability.py scripts/check_latest_python.py tests/test_runtime_config.py tests/test_companion_scalability.py tests/test_class_indexes.py
+          uv run --no-project --with ruff==0.16.10 ruff format --no-cache --isolated --check python/django_ty/monty.py python/django_ty/_monty_types.pyi python/django_ty/_monty_sdk.pyi python/django_ty/runtime.py python/django_ty/__main__.py scripts/build-monty.py scripts/check_monty_types.py scripts/check_monty_parity.py scripts/runtime_config.py scripts/lsp_client.py scripts/check_companion_install.py scripts/check_companion_scalability.py scripts/check_latest_python.py tests/test_runtime_config.py tests/test_companion_scalability.py tests/test_class_indexes.py
       - name: Build the universal wheel without Rust
         run: bash scripts/build-wheel.sh
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -106,7 +106,7 @@ jobs:
           test -f "$wheel"
           printf '%s\n' "DJANGO_TY_WHEEL=$wheel" "DJANGO_TY_CONFORMANCE_DIR=$RUNNER_TEMP/django-ty-conformance" "DJANGO_TY_E2E_DIR=$RUNNER_TEMP/django-ty-e2e" >> "$GITHUB_ENV"
       - name: Check SDK declarations and reject invalid types
-        run: uv run --no-project --python 3.13 --with ty-extended==0.87.0 python scripts/check_monty_types.py
+        run: uv run --no-project --python 3.13 --with ty-extended==0.89.0 python scripts/check_monty_types.py
       - name: Verify official Django contracts
         run: bash scripts/differential-conformance.sh --check
       - name: Verify all 21 Django and Python pairs
