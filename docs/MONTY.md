@@ -81,6 +81,14 @@ with Django 6.1.3. The full stress fixture measures 5.187 seconds versus MyPy's
 6.560 seconds in that paired series; the one-second target remains unmet. The
 21-pair installed matrix above retains its earlier companion identity.
 
+The subsequent [factory specialization qualification](https://github.com/regularkevvv/ty-extended/blob/e4aec42383c15f42eb62f3882271e31fb648dd8f/docs/qualification/factory-specialization.json)
+also passes those 166 assertions and six controls on all 16 Ty versions with
+these unchanged Django sources. Its three rotated runs per stack measure 5.124
+seconds versus MyPy's 6.715 seconds; both deliberate errors are detected and
+source bytes and modification times are preserved. Bare Ty takes 0.265 seconds
+but fails the ORM assertions. This remains an unreleased candidate above the
+one-second target, with the full samples and executable identities in the receipt.
+
 Django-ty 0.7 supplies a reduced index for each class and looks up additional
 model data through the companion's read-only index interface. It opts into bounded
 class batches, preserving the response order and individual class results. The
