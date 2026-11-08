@@ -517,8 +517,14 @@ def field_class(model: str, call: "CallSummary") -> "str":
     return name + "[typing.Any, typing.Any]"
 
 
-def default_members(model: str) -> "list[MemberPatch]":
-    ty = ann(virtual_name(model, "Manager"))
+def manager_type(model: str, queryset: str | None) -> str:
+    return (
+        virtual_name(model, "Manager") if queryset else MANAGER_BASE + "[" + model + "]"
+    )
+
+
+def default_members(model: str, queryset: str | None = None) -> "list[MemberPatch]":
+    ty = ann(manager_type(model, queryset))
     return [replace_member("objects", ty), replace_member("_default_manager", ty)]
 
 
@@ -804,25 +810,23 @@ def model_virtual_types(
     model: str, fields: dict[str, str], queryset: "ClassSummary | None"
 ) -> "list[VirtualType]":
     entries = [virtual_field(name, ann(fields[name])) for name in sorted(fields)]
-    return [
-        virtual_type(
-            virtual_name(model, "Manager"),
-            virtual_class(
-                bases=[type_expr(MANAGER_BASE + "[" + model + "]")],
-                members=queryset_manager_members(queryset) if queryset else [],
-            ),
-        ),
-        virtual_type(
-            virtual_name(model, "QuerySet"),
-            virtual_class(
-                bases=[type_expr(QUERYSET_BASE + "[" + model + ", " + model + "]")]
-            ),
-        ),
+    result = [
         virtual_type(virtual_name(model, "ValuesRow"), virtual_typed_dict(entries)),
         virtual_type(
             virtual_name(model, "ValuesListRow"), virtual_named_tuple(entries)
         ),
     ]
+    if queryset is not None:
+        result.append(
+            virtual_type(
+                virtual_name(model, "Manager"),
+                virtual_class(
+                    bases=[type_expr(MANAGER_BASE + "[" + model + "]")],
+                    members=queryset_manager_members(queryset),
+                ),
+            )
+        )
+    return result
 
 
 def symbol_name(
@@ -963,7 +967,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         queryset = manager_queryset(cls, querysets, generated)
         virtuals.extend(model_virtual_types(name, fields, querysets.get(queryset)))
         if not any(base["expression"] in MODEL_BASES for base in cls.get("bases", [])):
-            for patch in default_members(name):
+            for patch in default_members(name, queryset):
                 contributions.append(
                     contribution(
                         cls.get("source") or {},
@@ -1071,7 +1075,11 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
                 reverse_sources[key] = source
                 continue
             reverse_sources[key] = source
-            ty = ann(name if kind == "one-to-one" else virtual_name(name, "Manager"))
+            ty = ann(
+                name
+                if kind == "one-to-one"
+                else manager_type(name, models[name]["manager_queryset"])
+            )
             patch = field_patch(
                 reverse,
                 ty,
@@ -1143,16 +1151,23 @@ def class_project_index(
 def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
     cls = request["class"]
     name = cls["qualified-name"]
-    indexed = project_index_value(request, ["class_models"])
-    if indexed is None:
-        indexed = project_index_value(request, ["models"], {}) or {}
+    scoped = request.get("project-index") or {}
+    if isinstance(scoped.get("class_models"), dict):
+        # Class-scoped requests already own these dictionaries. This hook only
+        # reads them, so the SDK's defensive JSON copies are unnecessary here.
+        indexed = scoped["class_models"]
+        settings = scoped.get("settings", {}) or {}
+    else:
+        indexed = project_index_value(request, ["class_models"])
+        if indexed is None:
+            indexed = project_index_value(request, ["models"], {}) or {}
+        settings = project_index_value(request, ["settings"], {}) or {}
     if name not in indexed and not any(
         base["expression"] in MODEL_BASES for base in cls.get("bases", [])
     ):
         return None
-    settings = project_index_value(request, ["settings"], {}) or {}
     fields = default_fields((indexed.get(name) or {}).get("auto_primary_key_default"))
-    members = default_members(name)
+    members = default_members(name, (indexed.get(name) or {}).get("manager_queryset"))
     instance = []
     for field in cls.get("fields", []):
         call = call_of(field)
@@ -1163,7 +1178,9 @@ def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
             if isinstance(
                 (indexed.get(name) or {}).get("manager_queryset"), str
             ) or callee_name.startswith("django.db.models."):
-                ty = virtual_name(name, "Manager")
+                ty = manager_type(
+                    name, (indexed.get(name) or {}).get("manager_queryset")
+                )
             else:
                 ty = (
                     callee_name

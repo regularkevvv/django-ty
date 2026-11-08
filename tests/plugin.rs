@@ -450,6 +450,50 @@ fn project_index_converges_on_wide_shallow_hierarchies() {
 }
 
 #[test]
+fn ordinary_managers_preserve_qualified_models_without_synthetic_classes() {
+    let classes = vec![
+        model_class("left.Record", Vec::new()),
+        model_class("right.Record", Vec::new()),
+        derived_model_class("right.Child", "right.Record", Vec::new()),
+    ];
+    let PluginResponse::ProjectIndex(index) = build_index(classes.clone()) else {
+        panic!("expected project index");
+    };
+    assert_eq!(index.virtual_types.len(), 6);
+    for class in classes {
+        let PluginResponse::ClassPatch(patch) =
+            DjangoTyPlugin.analyze_class(&AnalyzeClassRequest {
+                context: semantic_context("use"),
+                class: class.clone(),
+                project_index: Some(index.plugin_index.clone()),
+            })
+        else {
+            panic!("expected class patch");
+        };
+        for name in ["objects", "_default_manager"] {
+            let manager = patch
+                .class_members
+                .iter()
+                .find(|member| member.name == name)
+                .unwrap();
+            let MemberAccessPatch::Value { type_expr } = &manager.access else {
+                panic!("expected manager value");
+            };
+            assert_eq!(
+                type_expr.expression,
+                format!("django.db.models.manager.Manager[{}]", class.qualified_name)
+            );
+        }
+    }
+    assert!(index.contributions.iter().any(|contribution| {
+        contribution.conflict_key == "right.Child.objects"
+            && matches!(&contribution.patch, ContributionPatch::Member(member)
+                if matches!(&member.access, MemberAccessPatch::Value { type_expr }
+                    if type_expr.expression == "django.db.models.manager.Manager[right.Child]"))
+    }));
+}
+
+#[test]
 fn from_queryset_signature_accepts_custom_querysets_and_preserves_the_manager_class() {
     let receiver = ReceiverSummary {
         type_expr: TypeExpr::annotation(
@@ -551,19 +595,19 @@ fn project_index_collects_models_settings_fields_virtual_types_and_reverse_relat
         index.plugin_index["models"][BOOK]["fields"]["owner_id"],
         "int | None"
     );
-    assert!(
-        index
-            .virtual_types
-            .iter()
-            .any(|ty| ty.name == format!("django_ty.virtual.{BOOK}.Manager"))
-    );
+    assert!(!index.virtual_types.iter().any(|ty| {
+        ty.name == format!("django_ty.virtual.{BOOK}.Manager")
+            || ty.name == format!("django_ty.virtual.{BOOK}.QuerySet")
+    }));
     assert!(index.virtual_types.iter().any(|ty| {
         ty.name == format!("django_ty.virtual.{BOOK}.ValuesRow")
             && matches!(&ty.shape, VirtualTypeShape::TypedDict { fields, .. } if fields.iter().any(|field| field.name == "title"))
     }));
     assert!(index.contributions.iter().any(|contribution| {
         contribution.conflict_key == format!("{AUTHOR}.books")
-            && matches!(&contribution.patch, ContributionPatch::Field(field) if field.name == "books")
+            && matches!(&contribution.patch, ContributionPatch::Field(field)
+                if field.name == "books"
+                    && field.instance_get_type.expression == format!("django.db.models.manager.Manager[{BOOK}]"))
     }));
     assert!(index.contributions.iter().any(|contribution| {
         contribution.conflict_key == format!("{TAG}.book_set")
@@ -1271,11 +1315,8 @@ fn lazy_strings_custom_managers_and_queryset_subclasses_take_their_specific_path
     }));
     assert!(patch.class_members.iter().any(|member| {
         member.name == "secondary"
-            && member
-                .access
-                .instance_get_type()
-                .expression
-                .contains("django_ty.virtual.library.models.CustomManaged.Manager")
+            && member.access.instance_get_type().expression
+                == "django.db.models.manager.Manager[library.models.CustomManaged]"
     }));
 
     let concrete_queryset = ReceiverSummary {

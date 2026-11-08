@@ -167,6 +167,80 @@ class ClassIndexesTest(unittest.TestCase):
         self.assertIn("one.accounts.models.User", scoped["class_models"])
         self.assertIn("two.accounts.models.User", scoped["class_models"])
 
+    def test_managers_keep_qualified_models_and_custom_queryset_methods(self):
+        queryset = self.model(
+            "left.Rows",
+            base="django.db.models.query.QuerySet[left.Custom, left.Custom]",
+        )
+        queryset["methods"] = [
+            {
+                "name": "active",
+                "is-public": True,
+                "parameters": [{"name": "self", "kind": "positional-or-keyword"}],
+                "return-type": {"expression": "Self", "mode": "annotation"},
+            }
+        ]
+        custom = self.model(
+            "left.Custom",
+            fields=[
+                {
+                    "name": "objects",
+                    "assigned-value": {
+                        "kind": "call",
+                        "callee": {"qualified-name": "left.Rows.as_manager"},
+                        "receiver": {"symbol": {"qualified-name": "left.Rows"}},
+                        "arguments": [],
+                    },
+                }
+            ],
+        )
+        classes = [
+            self.model("left.Record"),
+            self.model("right.Record"),
+            custom,
+            queryset,
+        ]
+        request = {
+            "kind": "build-project-index",
+            "context": {
+                "config": {},
+                "python-version": "3.13",
+                "platform": "linux",
+                "root": "/project",
+            },
+            "classes": classes,
+            "settings": [],
+        }
+        index = self.compare_classes(request)
+        for model in classes[:3]:
+            name = model["qualified-name"]
+            response = self.response(
+                {
+                    "kind": "analyze-class",
+                    "context": request["context"],
+                    "class": model,
+                    "project-index": index["class-indexes"][name],
+                }
+            )
+            members = {
+                m["name"]: m["access"]["type-expr"] for m in response["class-members"]
+            }
+            expected = (
+                "django_ty.virtual.left.Custom.Manager"
+                if name == "left.Custom"
+                else f"django.db.models.manager.Manager[{name}]"
+            )
+            for member in ["objects", "_default_manager"]:
+                self.assertEqual(members[member]["expression"], expected)
+        definitions = {v["name"]: v for v in index["virtual-types"]}
+        custom_manager = definitions["django_ty.virtual.left.Custom.Manager"]
+        self.assertEqual(
+            custom_manager["shape"]["members"][0]["access"]["signature"]["return-type"][
+                "expression"
+            ],
+            "left.Rows",
+        )
+
     def test_unqualified_relation_resolves_inside_the_same_models_package(self):
         target = self.model("project.books.models.authors.Author")
         unrelated = self.model("other.models.authors.Author")
@@ -231,6 +305,39 @@ class ClassIndexesTest(unittest.TestCase):
             sizes.append(len(json.dumps(scopes)))
         self.assertLess(sizes[1], sizes[0] * 2.1)
         self.assertLess(sizes[2], sizes[1] * 2.1)
+
+    def test_inline_class_hooks_do_not_mutate_or_alias_their_index(self):
+        model = self.model(
+            "app.models.Item",
+            [self.relation("parent", {"kind": "str", "value": "self"})],
+        )
+        response = self.response(
+            {
+                "kind": "build-project-index",
+                "context": {"config": {}},
+                "classes": [model],
+                "settings": [],
+            }
+        )
+        hook = self.namespace["analyze_django_class"]
+        for index in [
+            response["plugin-index"],
+            response["class-indexes"][model["qualified-name"]],
+        ]:
+            with self.subTest(scoped="class_models" in index):
+                request = {
+                    "kind": "analyze-class",
+                    "context": {"config": {}},
+                    "class": model,
+                    "project-index": index,
+                }
+                original = json.dumps(request, sort_keys=True)
+                expected = json.loads(json.dumps(hook(request)))
+                changed = hook(request)
+                changed["fields"][0]["instance-get-type"]["expression"] = "bytes"
+                changed["class-members"].clear()
+                self.assertEqual(hook(request), expected)
+                self.assertEqual(json.dumps(request, sort_keys=True), original)
 
 
 if __name__ == "__main__":

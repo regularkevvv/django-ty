@@ -144,7 +144,7 @@ bash scripts/e2e.sh
 
 The Rust crate is an independent development oracle. Its tests and 98% coverage gate
 remain in CI; it is not part of the consumer build. Native test artifacts are cleaned
-after each phase. The Python implementation also matches 152 native regression
+after each phase. The Python implementation also matches 156 native regression
 responses through CPython and Monty 1.5.0. Consumers use the companion's embedded
 runtime and do not depend on that separate development interpreter.
 

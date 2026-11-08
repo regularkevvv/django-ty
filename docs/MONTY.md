@@ -19,11 +19,11 @@ The [version matrix](DJANGO-VERSIONS.md) records 21 complete Django/Python pairs
 including Django 6.1.3. Each checks all 166 assertions over 38 capabilities,
 83 framework runtime contracts and nine QueryDict cases. The native reference retains SDK 0.0.8 as an independent semantic baseline.
 CPython/Monty replay compares those original protocol fields and separately checks
-the exact packaged manifest. The companion's current protocol tests additionally
-compare 2,582 scoped class results and 3,012 ordered batches with the full-index
-CPython results. Native reference line
+the exact packaged manifest. The development candidate additionally compares
+2,585 scoped class results and 3,017 ordered batches with full-index CPython
+results through standalone Monty. Native reference line
 coverage is enforced at 98%; the runtime/protocol corpus includes cross-module
-model relations and has 152 responses per interpreter.
+model relations and has 156 responses per interpreter in the current development tree.
 
 Python 3.15 has a separate Django 6.1.3 qualification using the same official
 assertions and actual framework runtime. Its mypy baseline runs on Python 3.13:
@@ -61,6 +61,25 @@ outside `sys.executable`'s environment, which these subprocess checks pass to ty
 On Windows, use the environment's `Scripts/python.exe` in place of `bin/python`.
 
 ## Large-project performance
+
+The development candidate uses fully qualified `Manager[Model]` annotations for
+ordinary managers. It retains generated manager classes for custom QuerySet
+methods and keeps the virtual row types used by `values()` and `values_list()`.
+Unused per-model QuerySet declarations are removed. Class hooks read their scoped
+index without copying it; regressions check that hooks preserve shared input.
+This candidate needs the companion's imported-class qualification fix before a
+Django release can declare compatibility with that companion version.
+Its [local qualification receipt](../compatibility/manager-projection-candidate.json)
+records the installed-wheel checks across all 21 Django/Python pairs, exact
+published-companion diagnostics, native replay and coverage. Hosted CI and
+published-artifact acceptance remain separate gates.
+
+A [later companion qualification](https://github.com/regularkevvv/ty-extended/blob/f75e7d4a170aa976a6d24d8a46e8c480b3aa077d/docs/qualification/field-access-projection.json)
+uses these unchanged Django sources with the corrected field projection. All 166
+assertions and six error controls pass on each of the 16 supported Ty versions
+with Django 6.1.3. The full stress fixture measures 5.187 seconds versus MyPy's
+6.560 seconds in that paired series; the one-second target remains unmet. The
+21-pair installed matrix above retains its earlier companion identity.
 
 Django-ty 0.7 supplies a reduced index for each class and looks up additional
 model data through the companion's read-only index interface. It opts into bounded

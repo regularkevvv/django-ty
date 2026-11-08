@@ -84,8 +84,12 @@ pub fn manager_virtual_type_name(model_name: &str) -> String {
     format!("django_ty.virtual.{model_name}.Manager")
 }
 
-pub fn queryset_virtual_type_name(model_name: &str) -> String {
-    format!("django_ty.virtual.{model_name}.QuerySet")
+pub fn model_manager_type(model_name: &str, custom_queryset: bool) -> TypeExpr {
+    annotation(if custom_queryset {
+        manager_virtual_type_name(model_name)
+    } else {
+        format!("{}[{model_name}]", crate::constants::MANAGER_BASE)
+    })
 }
 
 pub fn values_row_virtual_type_name(model_name: &str) -> String {

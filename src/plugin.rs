@@ -15,7 +15,7 @@ use crate::index::{
 };
 use crate::querysets::{adjust_model_method, adjust_options_get_field, adjust_queryset_return};
 use crate::settings::settings_index_from_project_index;
-use crate::types::{annotation, manager_virtual_type_name, member};
+use crate::types::{annotation, member, model_manager_type};
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct DjangoTyPlugin;
@@ -99,7 +99,14 @@ impl Plugin for DjangoTyPlugin {
         for field in default_model_fields(primary_key_default) {
             patch = patch.field(field);
         }
-        for member_patch in default_model_members(&request.class.qualified_name) {
+        let custom_queryset = request
+            .project_index
+            .as_ref()
+            .and_then(|index| index.get("models"))
+            .and_then(|models| models.get(&request.class.qualified_name))
+            .and_then(|model| model.get("manager_queryset"))
+            .is_some_and(|queryset| queryset.is_string());
+        for member_patch in default_model_members(&request.class.qualified_name, custom_queryset) {
             patch = patch.class_member(member_patch);
         }
 
@@ -248,7 +255,7 @@ fn manager_member_type(
         .and_then(|model| model.get("manager_queryset"))
         .is_some_and(|queryset| queryset.is_string());
     if project_manager || qualified_name.starts_with("django.db.models.") {
-        annotation(manager_virtual_type_name(model_name))
+        model_manager_type(model_name, project_manager)
     } else {
         let qualified_name = if qualified_name.contains('.') {
             qualified_name.clone()
