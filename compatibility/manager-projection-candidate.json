@@ -390,6 +390,41 @@
     "scope": "Additional latest-Django checks with specialized field factories; the 21-pair installed matrix above retains its earlier companion identity.",
     "one_second_target_met": false,
     "published": false,
-    "companion_binary_sha256": "769e4dd1f836298e4bdc6306a540c466ba9b9a7a8741425aaa2e6ab4a4dad5f6"
+    "companion_binary_sha256": "769e4dd1f836298e4bdc6306a540c466ba9b9a7a8741425aaa2e6ab4a4dad5f6",
+    "querydict_runtime_regression": {
+      "scope": "Existing QueryDict runtime and exact mutation-diagnostic regression; only checker executable/configuration redirected to final development sources.",
+      "companion_source": "86c3a2109d42fcaf2d619e392b5c6c9eda6c01a0",
+      "companion_sha256": "769e4dd1f836298e4bdc6306a540c466ba9b9a7a8741425aaa2e6ab4a4dad5f6",
+      "django_source_sha256": "391d00c6b8afefcb99aab629eaa79428b2491f6936d5ac43ac65be76eb2fcc5c",
+      "original_script_sha256": "e9a04b5933fb34166e6481352d12523851c91b7814109ad3b8701b403a8eeb36",
+      "official_ty": "0.0.99",
+      "django": "6.1.3",
+      "python": "3.13",
+      "modes": {
+        "disk": {
+          "fresh-get": "accept",
+          "fresh-post": "accept",
+          "asgi-get": "reject",
+          "asgi-post": "reject",
+          "framework-get": "reject",
+          "framework-post": "reject",
+          "default-querydict": "reject",
+          "explicit-mutable": "accept",
+          "mutable-copy": "accept"
+        },
+        "memory": {
+          "fresh-get": "accept",
+          "fresh-post": "accept",
+          "asgi-get": "reject",
+          "asgi-post": "reject",
+          "framework-get": "reject",
+          "framework-post": "reject",
+          "default-querydict": "reject",
+          "explicit-mutable": "accept",
+          "mutable-copy": "accept"
+        }
+      },
+      "passed": true
+    }
   }
 }
