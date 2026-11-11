@@ -1,5 +1,5 @@
-from re import Pattern
+from typing import Any
 
-hex_regex: Pattern[str]
-wkt_regex: Pattern[str]
-json_regex: Pattern[str]
+hex_regex: Any
+wkt_regex: Any
+json_regex: Any

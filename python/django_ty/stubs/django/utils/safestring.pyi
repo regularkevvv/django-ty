@@ -1,29 +1,20 @@
-from collections.abc import Callable
-from typing import Any, TypeAlias, overload
+from typing import Any, overload
+
 from typing_extensions import Self
-
-from django.utils.functional import _StrOrPromise
-from typing_extensions import TypeVar, override
-
-_SD = TypeVar("_SD", bound=SafeData)
 
 class SafeData:
     def __html__(self) -> Self: ...
 
-class SafeString(str, SafeData):
+class SafeText(str, SafeData):
     @overload
-    @override
-    def __add__(self, rhs: SafeString) -> SafeString: ...
+    def __add__(self, rhs: SafeText) -> SafeText: ...
     @overload
     def __add__(self, rhs: str) -> str: ...
+    @overload
+    def __iadd__(self, rhs: SafeText) -> SafeText: ...
+    @overload
+    def __iadd__(self, rhs: str) -> str: ...
 
-SafeText: TypeAlias = SafeString
+SafeString = SafeText
 
-_C = TypeVar("_C", bound=Callable[..., Any])
-
-@overload
-def mark_safe(s: _SD) -> _SD: ...
-@overload
-def mark_safe(s: _C) -> _C: ...
-@overload
-def mark_safe(s: _StrOrPromise) -> SafeString: ...
+def mark_safe(s: Any) -> SafeText: ...

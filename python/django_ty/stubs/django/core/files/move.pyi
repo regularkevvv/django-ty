@@ -1,5 +1,6 @@
 def file_move_safe(
-    old_file_name: str, new_file_name: str, chunk_size: int = 65536, allow_overwrite: bool = False
+    old_file_name: str,
+    new_file_name: str,
+    chunk_size: int = ...,
+    allow_overwrite: bool = ...,
 ) -> None: ...
-
-__all__ = ["file_move_safe"]

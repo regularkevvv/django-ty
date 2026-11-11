@@ -1,10 +1,9 @@
-from typing import Any, ClassVar
+from typing import Any
 
-from django.contrib import admin
-from django.contrib.redirects.models import Redirect
+from django.contrib import admin as admin
 
-class RedirectAdmin(admin.ModelAdmin[Redirect]):
-    list_display: Any
-    list_filter: ClassVar[Any]
-    search_fields: ClassVar[Any]
-    radio_fields: ClassVar[Any]
+class RedirectAdmin(admin.ModelAdmin[Any]):
+    list_display: Any = ...
+    list_filter: Any = ...
+    search_fields: Any = ...
+    radio_fields: Any = ...

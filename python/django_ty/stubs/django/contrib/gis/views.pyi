@@ -1,4 +1,3 @@
-from django.contrib.gis.feeds import Feed
-from django.http import HttpRequest, HttpResponse
+from typing import Any
 
-def feed(request: HttpRequest, url: str, feed_dict: dict[str, type[Feed]] | None = ...) -> HttpResponse: ...
+def feed(request: Any, url: Any, feed_dict: Any | None = ...) -> Any: ...

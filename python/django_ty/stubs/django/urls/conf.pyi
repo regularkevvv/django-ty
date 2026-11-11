@@ -1,67 +1,61 @@
-from collections.abc import Callable, Coroutine, Sequence
-from types import ModuleType
+from collections.abc import Callable, Coroutine
 from typing import Any, TypeAlias, overload
 
-from django.urls import URLPattern, URLResolver, _AnyURL
-from django.utils.functional import _StrOrPromise
-
+from ..conf.urls import IncludedURLConf
 from ..http.response import HttpResponseBase
+from .resolvers import URLPattern, URLResolver
 
-_URLConf: TypeAlias = str | ModuleType | Sequence[_AnyURL]
-_IncludedURLConf: TypeAlias = tuple[Sequence[URLResolver | URLPattern], str | None, str | None]
+_ResponseType: TypeAlias = (
+    HttpResponseBase | Coroutine[Any, Any, HttpResponseBase] | Coroutine[Any, Any, None]
+)
 
-def include(arg: _URLConf | tuple[_URLConf, str], namespace: str | None = None) -> _IncludedURLConf: ...
+def include(
+    arg: Any, namespace: str | None = ...
+) -> tuple[list[URLResolver], str | None, str | None]: ...
 
 # path()
 @overload
 def path(
-    route: _StrOrPromise,
-    view: Callable[..., HttpResponseBase],
-    kwargs: dict[str, Any] | None = None,
-    name: str | None = None,
+    route: str,
+    view: Callable[..., _ResponseType],
+    kwargs: dict[str, Any] = ...,
+    name: str = ...,
 ) -> URLPattern: ...
 @overload
 def path(
-    route: _StrOrPromise,
-    view: Callable[..., Coroutine[Any, Any, HttpResponseBase]],
-    kwargs: dict[str, Any] | None = None,
-    name: str | None = None,
-) -> URLPattern: ...
-@overload
-def path(
-    route: _StrOrPromise, view: _IncludedURLConf, kwargs: dict[str, Any] | None = None, name: str | None = None
+    route: str, view: IncludedURLConf, kwargs: dict[str, Any] = ..., name: str = ...
 ) -> URLResolver: ...
 @overload
 def path(
-    route: _StrOrPromise,
-    view: Sequence[URLResolver | str],
-    kwargs: dict[str, Any] | None = None,
-    name: str | None = None,
+    route: str,
+    view: list[URLResolver | str],
+    kwargs: dict[str, Any] = ...,
+    name: str = ...,
+) -> URLResolver: ...
+@overload
+def path(
+    route: str,
+    view: tuple[list[URLResolver | URLPattern], str, str],
+    kwargs: dict[str, Any] = ...,
+    name: str = ...,
 ) -> URLResolver: ...
 
 # re_path()
 @overload
 def re_path(
-    route: _StrOrPromise,
-    view: Callable[..., HttpResponseBase],
-    kwargs: dict[str, Any] | None = None,
-    name: str | None = None,
+    route: str,
+    view: Callable[..., _ResponseType],
+    kwargs: dict[str, Any] = ...,
+    name: str = ...,
 ) -> URLPattern: ...
 @overload
 def re_path(
-    route: _StrOrPromise,
-    view: Callable[..., Coroutine[Any, Any, HttpResponseBase]],
-    kwargs: dict[str, Any] | None = None,
-    name: str | None = None,
-) -> URLPattern: ...
-@overload
-def re_path(
-    route: _StrOrPromise, view: _IncludedURLConf, kwargs: dict[str, Any] | None = None, name: str | None = None
+    route: str, view: IncludedURLConf, kwargs: dict[str, Any] = ..., name: str = ...
 ) -> URLResolver: ...
 @overload
 def re_path(
-    route: _StrOrPromise,
-    view: Sequence[URLResolver | str],
-    kwargs: dict[str, Any] | None = None,
-    name: str | None = None,
+    route: str,
+    view: list[URLResolver | str],
+    kwargs: dict[str, Any] = ...,
+    name: str = ...,
 ) -> URLResolver: ...

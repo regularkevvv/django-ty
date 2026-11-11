@@ -1,45 +1,36 @@
 from typing import Any
 
-from django import forms
-from typing_extensions import override
+from django import forms as forms
 
 class GeometryField(forms.Field):
-    widget: Any
-    geom_type: str
-    max_geom_collections: int
-    srid: Any
+    widget: Any = ...
+    geom_type: str = ...
+    default_error_messages: Any = ...
+    srid: Any = ...
     def __init__(
-        self,
-        *,
-        srid: Any | None = ...,
-        geom_type: Any | None = ...,
-        max_geom_collections: int | None = None,
-        **kwargs: Any,
+        self, *, srid: Any | None = ..., geom_type: Any | None = ..., **kwargs: Any
     ) -> None: ...
-    @override
     def to_python(self, value: Any) -> Any: ...
-    @override
     def clean(self, value: Any) -> Any: ...
-    @override
     def has_changed(self, initial: Any, data: Any) -> Any: ...
 
 class GeometryCollectionField(GeometryField):
-    geom_type: str
+    geom_type: str = ...
 
 class PointField(GeometryField):
-    geom_type: str
+    geom_type: str = ...
 
 class MultiPointField(GeometryField):
-    geom_type: str
+    geom_type: str = ...
 
 class LineStringField(GeometryField):
-    geom_type: str
+    geom_type: str = ...
 
 class MultiLineStringField(GeometryField):
-    geom_type: str
+    geom_type: str = ...
 
 class PolygonField(GeometryField):
-    geom_type: str
+    geom_type: str = ...
 
 class MultiPolygonField(GeometryField):
-    geom_type: str
+    geom_type: str = ...

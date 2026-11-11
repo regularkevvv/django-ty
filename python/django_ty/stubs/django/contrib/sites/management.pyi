@@ -5,9 +5,9 @@ from django.apps.registry import Apps
 
 def create_default_site(
     app_config: AppConfig,
-    verbosity: int = 2,
-    interactive: bool = True,
-    using: str = "default",
+    verbosity: int = ...,
+    interactive: bool = ...,
+    using: str = ...,
     apps: Apps = ...,
-    **kwargs: Any,
+    **kwargs: Any
 ) -> None: ...

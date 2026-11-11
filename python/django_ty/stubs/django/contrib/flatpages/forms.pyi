@@ -1,13 +1,7 @@
-from typing import Any, ClassVar
+from typing import Any
 
 from django import forms
-from django.contrib.flatpages.models import FlatPage
 
-class FlatpageForm(forms.ModelForm[FlatPage]):
-    url: Any
-
-    class Meta:
-        model: ClassVar[type[FlatPage]]
-        fields: ClassVar[str]
-
+class FlatpageForm(forms.ModelForm):
+    url: Any = ...
     def clean_url(self) -> str: ...

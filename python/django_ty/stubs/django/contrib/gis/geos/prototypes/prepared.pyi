@@ -1,14 +1,14 @@
 from typing import Any
 
-from django.contrib.gis.geos.libgeos import GEOSFuncFactory
+from django.contrib.gis.geos.libgeos import GEOSFuncFactory as GEOSFuncFactory
 
 geos_prepare: Any
 prepared_destroy: Any
 
 class PreparedPredicate(GEOSFuncFactory):
-    argtypes: Any
-    restype: Any
-    errcheck: Any
+    argtypes: Any = ...
+    restype: Any = ...
+    errcheck: Any = ...
 
 prepared_contains: Any
 prepared_contains_properly: Any

@@ -22,7 +22,6 @@ if typing.TYPE_CHECKING:
         class_target,
         contribution,
         diagnostic,
-        field_contribution,
         field_patch,
         import_binding,
         instance_target,
@@ -31,12 +30,15 @@ if typing.TYPE_CHECKING:
         member,
         member_contribution,
         member_descriptor,
+        member_patch,
+        member_response,
         mutation_diagnostics,
         on_call_return,
         on_call_signature,
         on_call_state,
         on_class_batch,
         on_class_transform,
+        on_instance_member,
         on_manifest,
         on_mutation,
         on_project_index,
@@ -51,10 +53,7 @@ if typing.TYPE_CHECKING:
         type_annotation,
         type_expr,
         virtual_class,
-        virtual_field,
-        virtual_named_tuple,
         virtual_type,
-        virtual_typed_dict,
     )
     from django_ty._monty_types import (
         Argument,
@@ -69,6 +68,9 @@ if typing.TYPE_CHECKING:
         ClassRequest,
         ClassResponse,
         ClassSummary,
+        CompactClass,
+        CompactField,
+        CompactModelIndex,
         Contribution,
         Diagnostic,
         DjangoIndex,
@@ -81,7 +83,10 @@ if typing.TYPE_CHECKING:
         LiteralValue,
         LocalModelIndex,
         MemberPatch,
+        MemberRequest,
+        MemberResponse,
         ModelIndex,
+        ModelTraits,
         MutationRequest,
         MutationResponse,
         ProjectIndexRequest,
@@ -180,6 +185,8 @@ SCALAR_FIELDS = {
 
 
 def ann(text: str) -> "TypeExpr":
+    if "." not in text:
+        return type_annotation(text)
     imports = []
     for qualified, alias in [
         ("datetime.datetime", "__django_ty_datetime"),
@@ -223,14 +230,16 @@ def merge_imports(types: "list[TypeExpr]") -> "list[ImportBinding]":
 
 def qs_type(model: "TypeExpr", row: "TypeExpr") -> "TypeExpr":
     result = ann(
-        "django.db.models.query.QuerySet["
+        "django.db.models.query.ValuesQuerySet["
         + model["expression"]
         + ", "
         + row["expression"]
         + "]"
     )
     result["imports"] = merge_imports([result, model, row])
-    result["snapshot"] = snapshot_nominal(QUERYSET_BASE, [snap(model), snap(row)])
+    result["snapshot"] = snapshot_nominal(
+        "django.db.models.query.ValuesQuerySet", [snap(model), snap(row)]
+    )
     return result
 
 
@@ -345,6 +354,20 @@ def resolve_model(
         return lookup.get(scope + "." + raw) or local
     if raw in models:
         return raw
+    if lookup is not None:
+        # Preserve sorted-first resolution for every qualified spelling,
+        # including nested and ambiguous module scopes. Build only on demand;
+        # repeated app.Model relations must not sort and scan the project.
+        if "@qualified" not in lookup:
+            for candidate in sorted(models):
+                parts = candidate.split(".")
+                for component in parts[:-1]:
+                    for start in range(1, len(parts)):
+                        key = "@qualified:" + component + "." + ".".join(parts[start:])
+                        if key not in lookup:
+                            lookup[key] = candidate
+            lookup["@qualified"] = None
+        return lookup.get("@qualified:" + raw) or raw
     app, name = raw.split(".", 1)
     for candidate in sorted(models):
         if candidate.endswith("." + name) and (
@@ -514,7 +537,7 @@ def field_class(model: str, call: "CallSummary") -> "str":
         name = "django.db." + name
     elif "." not in name:
         name = module_of(model) + "." + name
-    return name + "[typing.Any, typing.Any]"
+    return name
 
 
 def manager_type(model: str, queryset: str | None) -> str:
@@ -653,13 +676,13 @@ def local_index(
     settings: dict[str, str],
     models: "Collection[str]",
     lookup: dict[str, str | None],
+    include_fields: bool = True,
 ) -> "LocalModelIndex":
     name = cls["qualified-name"]
     result: "LocalModelIndex" = {
         "fields": {"id": "int", "pk": "int"},
         "field_types": {
-            "id": "django.db.models.fields.AutoField[typing.Any, typing.Any]",
-            "pk": "django.db.models.fields.AutoField[typing.Any, typing.Any]",
+            "id": settings.get("DEFAULT_AUTO_FIELD", "django.db.models.AutoField"),
         },
         "auto_primary_key": None,
         "auto_primary_key_default": None,
@@ -669,11 +692,17 @@ def local_index(
         "custom_save": False,
     }
     primary = None
+    declared_id = False
     for field in cls.get("fields", []):
         call = call_of(field)
         if call is None:
             continue
-        data = field_data(name, field, settings, models, lookup)
+        declared_id = declared_id or field["name"] == "id"
+        data = (
+            field_data(name, field, settings, models, lookup)
+            if include_fields
+            else None
+        )
         if data is not None:
             result["fields"][field["name"]] = (
                 "int" if auto_field(call) else canonical(data["get"])
@@ -692,6 +721,11 @@ def local_index(
             primary = (field, call)
     if primary is not None:
         primary_field, call = primary
+        if primary_field["name"] != "id" and not declared_id:
+            # The pk query alias is separate from Options.get_field(). A
+            # custom primary key also prevents Django creating an implicit id.
+            result["field_types"].pop("id", None)
+            result["fields"].pop("id", None)
         result["auto_primary_key"] = primary_field["name"] if auto_field(call) else None
         result["custom_primary_key"] = not auto_field(call)
         default = named(call.get("arguments", []), "default")
@@ -708,6 +742,33 @@ def local_index(
         else:
             default_type = "int | None"
         result["auto_primary_key_default"] = default_type
+        data = field_data(name, primary_field, settings, models, lookup)
+        pk_patch: "FieldPatch | None" = None
+        if auto_field(call):
+            pk_patch = default_fields(default_type)[1]
+            result["fields"]["pk"] = "int"
+        elif data is not None:
+            patches = field_patches(data)
+            if patches:
+                template = (
+                    patches[-1]
+                    if data["relation"] in ["foreign-key", "one-to-one"]
+                    else patches[0]
+                )
+                pk_patch = {**template, "name": "pk"}
+                parameter = template.get("constructor-parameter")
+                if parameter is not None:
+                    pk_patch["constructor-parameter"] = {**parameter, "name": "pk"}
+            result["fields"]["pk"] = (
+                "int"
+                if data["relation"] in ["foreign-key", "one-to-one"]
+                else canonical(data["get"])
+            )
+        else:
+            # An unsupported explicit key must retain native inference rather
+            # than acquiring the implicit integer key's descriptor.
+            result["fields"]["pk"] = "typing.Any"
+        result["primary_key_patch"] = pk_patch
     methods = [method["name"] for method in cls.get("methods", [])]
     result["custom_loading"] = any(
         method in methods for method in ["__new__", "__init__", "from_db"]
@@ -749,6 +810,8 @@ def inherited_indexes(
                 if base_name not in resolved:
                     continue
                 indexed = resolved[base_name]
+                if "primary_key_patch" in indexed and "primary_key_patch" not in result:
+                    result["primary_key_patch"] = indexed["primary_key_patch"]
                 result["auto_primary_key"] = indexed["auto_primary_key"]
                 result["auto_primary_key_default"] = indexed["auto_primary_key_default"]
                 result["custom_primary_key"] = (
@@ -767,6 +830,8 @@ def inherited_indexes(
                 for field_map in ["fields", "field_types"]:
                     result[field_map].update(indexed[field_map])
             own = local[name]
+            if "primary_key_patch" in own:
+                result["primary_key_patch"] = own["primary_key_patch"]
             if own["auto_primary_key"] is not None or own["custom_primary_key"]:
                 result["auto_primary_key"] = own["auto_primary_key"]
                 result["auto_primary_key_default"] = own["auto_primary_key_default"]
@@ -774,7 +839,17 @@ def inherited_indexes(
             for flag in ["custom_loading", "custom_save"]:
                 result[flag] = result[flag] or own[flag]
             for field_map in ["fields", "field_types"]:
-                result[field_map].update(own[field_map])
+                values = own[field_map]
+                if "primary_key_patch" in result and "primary_key_patch" not in own:
+                    declared_id = any(
+                        field["name"] == "id" for field in cls.get("fields", [])
+                    )
+                    values = {
+                        key: value
+                        for key, value in values.items()
+                        if key != "pk" and (key != "id" or declared_id)
+                    }
+                result[field_map].update(values)
                 result[field_map] = {
                     key: result[field_map][key] for key in sorted(result[field_map])
                 }
@@ -809,13 +884,9 @@ def queryset_manager_members(cls: "ClassSummary") -> "list[MemberPatch]":
 def model_virtual_types(
     model: str, fields: dict[str, str], queryset: "ClassSummary | None"
 ) -> "list[VirtualType]":
-    entries = [virtual_field(name, ann(fields[name])) for name in sorted(fields)]
-    result = [
-        virtual_type(virtual_name(model, "ValuesRow"), virtual_typed_dict(entries)),
-        virtual_type(
-            virtual_name(model, "ValuesListRow"), virtual_named_tuple(entries)
-        ),
-    ]
+    # Row declarations are built only when a query actually requests them.
+    # Class manager identities still need an index-time nominal declaration.
+    result = []
     if queryset is not None:
         result.append(
             virtual_type(
@@ -861,6 +932,228 @@ def manager_queryset(
     return None
 
 
+def deferred_model_class(cls: "ClassSummary") -> "ClassSummary":
+    fields: "list[FieldSummary]" = []
+    for field in cls.get("fields", []):
+        call = call_of(field)
+        if call is None:
+            continue
+        relation = relation_kind(call) is not None
+        arguments: "list[Argument]" = []
+        for argument in call.get("arguments", []):
+            if argument.get("name") not in [
+                "null",
+                "default",
+                "db_default",
+                "primary_key",
+                "choices",
+                "to",
+            ] and not (relation and argument.get("kind") == "positional"):
+                continue
+            # Retain typed values; argument locations do not participate in
+            # deferred model semantics. Field locations still own diagnostics.
+            compact: "Argument" = {"kind": argument["kind"]}
+            if "name" in argument:
+                compact["name"] = argument["name"]
+            if "value" in argument:
+                compact["value"] = argument["value"]
+            if "type-expr" in argument:
+                compact["type-expr"] = argument["type-expr"]
+            arguments.append(compact)
+        fields.append(
+            {
+                "name": field["name"],
+                "assigned-value": {
+                    "kind": "call",
+                    "callee": {"qualified-name": call_name(call)},
+                    "arguments": arguments,
+                },
+            }
+        )
+    return {
+        "qualified-name": cls["qualified-name"],
+        "bases": cls.get("bases", []),
+        "fields": fields,
+        "methods": [{"name": method["name"]} for method in cls.get("methods", [])],
+    }
+
+
+def plain_model_index(
+    classes: "list[ClassSummary]",
+    settings: dict[str, str],
+    names: set[str],
+    lookup: dict[str, str | None],
+    model_aliases: dict[str, str | None],
+    auth: str | None,
+    generated: dict[str, str],
+    decorators: "list[CallSummary]",
+) -> "tuple[DjangoIndex, list[Diagnostic]] | None":
+    """Fuse the index for direct, undecorated models with implicit keys.
+
+    Custom keys, model methods, Meta, managers and inheritance keep the general
+    path. The result is the same private format and retains global relation
+    diagnostics even when no call site uses a model.
+    """
+    if decorators:
+        return None
+    models: "dict[str, CompactModelIndex]" = {}
+    deferred: "dict[str, ClassRequest | CompactClass]" = {}
+    reverse: dict[str, dict[str, str]] = {}
+    queries: dict[str, dict[str, str]] = {}
+    reverse_sources: "dict[str, SymbolSource]" = {}
+    diagnostics: "list[Diagnostic]" = []
+    for cls in classes:
+        name = cls["qualified-name"]
+        if name not in names:
+            continue
+        bases = cls.get("bases", [])
+        if (
+            len(bases) != 1
+            or bases[0]["expression"] not in MODEL_BASES
+            or cls.get("decorators")
+            or cls.get("methods")
+            or cls.get("nested-classes")
+        ):
+            return None
+        fields: "list[CompactField]" = []
+        targets: list[str] = []
+        used_settings: dict[str, str] = {}
+        for field in cls.get("fields", []):
+            if field["name"] == "objects":
+                return None
+            call = call_of(field)
+            if call is None:
+                continue
+            callee = call_name(call)
+            if (
+                auto_field(call)
+                or callee.endswith(".CompositePrimaryKey")
+                or typed_literal(
+                    named(call.get("arguments", []), "primary_key"), "bool"
+                )
+                is True
+                or manager_call(call)
+                or callee in generated
+                or ("." not in callee and module_of(name) + "." + callee in generated)
+            ):
+                return None
+            kind = relation_kind(call)
+            arguments: "list[Argument]" = []
+            for argument in call.get("arguments", []):
+                if argument.get("name") not in [
+                    "null",
+                    "default",
+                    "db_default",
+                    "primary_key",
+                    "choices",
+                    "to",
+                ] and not (kind is not None and argument.get("kind") == "positional"):
+                    continue
+                item: "Argument" = {"kind": argument["kind"]}
+                if "name" in argument:
+                    item["name"] = argument["name"]
+                if "value" in argument:
+                    item["value"] = argument["value"]
+                if "type-expr" in argument:
+                    item["type-expr"] = argument["type-expr"]
+                arguments.append(item)
+            fields.append({"n": field["name"], "c": callee, "a": arguments})
+            if kind is None:
+                continue
+            argument = relation_argument(call)
+            value = argument.get("value") if argument is not None else None
+            key = None
+            if value is not None:
+                if value["kind"] == "str":
+                    key = value["value"]
+                elif value["kind"] == "enum-ref" or value["kind"] == "symbol-ref":
+                    key = value["qualified-name"]
+            if key is not None and key in settings and key != "DEFAULT_AUTO_FIELD":
+                used_settings[key] = settings[key]
+            target = relation_target(name, call, settings, names, lookup)
+            if target is None:
+                continue
+            if target not in names:
+                diagnostics.append(
+                    diag(
+                        "unknown-relation-target",
+                        "Unknown Django relation target `"
+                        + target
+                        + "` for field `"
+                        + name
+                        + "."
+                        + field["name"]
+                        + "`",
+                        field.get("source"),
+                    )
+                )
+                continue
+            if target != name and target not in targets:
+                targets.append(target)
+            query_name = typed_literal(
+                named(call.get("arguments", []), "related_query_name"), "str"
+            )
+            if query_name is not None and query_name != "+":
+                queries.setdefault(target, {})[query_name] = name
+            accessor = typed_literal(
+                named(call.get("arguments", []), "related_name"), "str"
+            )
+            if accessor == "+":
+                continue
+            if accessor is None:
+                accessor = short(name).lower() + (
+                    "" if kind == "one-to-one" else "_set"
+                )
+            key = target + "." + accessor
+            source = field.get("source") or {}
+            if key in reverse_sources:
+                first = reverse_sources[key]
+                metadata: "dict[str, JsonValue]" = (
+                    {"first-file-path": first["file-path"]}
+                    if first.get("file-path")
+                    else {}
+                )
+                diagnostics.append(
+                    diag(
+                        "reverse-relation-conflict",
+                        "Conflicting Django reverse relation `" + key + "`",
+                        source,
+                        metadata,
+                    )
+                )
+                reverse_sources[key] = source
+                continue
+            reverse_sources[key] = source
+            reverse.setdefault(target, {})[accessor] = (
+                name if kind == "one-to-one" else manager_type(name, None)
+            )
+        record: "CompactClass" = {"v": 1, "f": fields}
+        if bases != [
+            {"expression": "django.db.models.base.Model", "mode": "annotation"}
+        ]:
+            record["b"] = bases
+        if targets:
+            record["t"] = targets
+        if "DEFAULT_AUTO_FIELD" in settings:
+            record["a"] = settings["DEFAULT_AUTO_FIELD"]
+        if used_settings:
+            record["s"] = used_settings
+        models[name] = {"v": 1}
+        deferred[name] = record
+    for name in sorted(queries):
+        model = models[name]
+        model["j"] = queries[name]
+    return {
+        "index_format": 1,
+        "models": {name: model for name, model in models.items()},
+        "deferred_classes": deferred,
+        "model_aliases": model_aliases,
+        "settings": settings,
+        "auth_user_model": auth,
+        "reverse_members": reverse,
+    }, diagnostics
+
+
 @on_project_index
 def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse":
     settings: dict[str, str] = {}
@@ -903,7 +1196,18 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
     decorators = [dec for item in decorated for dec in item.get("decorators", [])]
     names = derived_names(classes, MODEL_BASES)
     lookup = model_name_lookup(names)
-    indexes = inherited_indexes(classes, settings, names, lookup)
+    model_aliases: dict[str, str | None] = {}
+    for name in names:
+        alias = short(name)
+        model_aliases[alias] = None if alias in model_aliases else name
+    # With no model inheritance, a field schema depends only on its own class.
+    # Keep compact traits now and resolve complete schemas on actual query use.
+    flat_models = not any(
+        resolve_class(cls["qualified-name"], base["expression"], names) in names
+        for cls in classes
+        if cls["qualified-name"] in names
+        for base in cls.get("bases", [])
+    )
     queryset_names = derived_names(classes, [QUERYSET_BASE], generic=True)
     querysets = {
         cls["qualified-name"]: cls
@@ -953,11 +1257,41 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
                 "django.http.request.HttpRequest.user",
             )
         )
+    if (
+        flat_models
+        and request.get("context", {}).get("config", {}).get("compact-model-index")
+        is not False
+    ):
+        fused = plain_model_index(
+            classes, settings, names, lookup, model_aliases, auth, generated, decorators
+        )
+        if fused is not None:
+            data, diagnostics = fused
+            return project_index(
+                data,
+                contributions=contributions,
+                dependencies=[
+                    dep
+                    for module in request.get("settings", [])
+                    for dep in module.get("dependencies", [])
+                ],
+                diagnostics=diagnostics,
+            )
+    indexes = (
+        {
+            cls["qualified-name"]: local_index(cls, settings, names, lookup, False)
+            for cls in classes
+            if cls["qualified-name"] in names
+        }
+        if flat_models
+        else inherited_indexes(classes, settings, names, lookup)
+    )
     models: "dict[str, ModelIndex]" = {}
     virtuals: "list[VirtualType]" = []
     diagnostics = []
     reverse_sources: "dict[str, SymbolSource]" = {}
     query_fields: dict[str, dict[str, str]] = {}
+    reverse_members: dict[str, dict[str, str]] = {}
     for cls in classes:
         name = cls["qualified-name"]
         if name not in names:
@@ -966,34 +1300,18 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         fields = indexed["fields"]
         queryset = manager_queryset(cls, querysets, generated)
         virtuals.extend(model_virtual_types(name, fields, querysets.get(queryset)))
-        if not any(base["expression"] in MODEL_BASES for base in cls.get("bases", [])):
-            for patch in default_members(name, queryset):
-                contributions.append(
-                    contribution(
-                        cls.get("source") or {},
-                        class_target(name),
-                        member_contribution(patch),
-                        name + "." + patch["name"],
-                    )
-                )
-            for field in sorted(fields):
-                ty = ann(fields[field])
-                patch = field_patch(
-                    field,
-                    ty,
-                    mode="replace-existing",
-                    instance_set_type=ty,
-                    has_default=True,
-                )
-                contributions.append(
-                    contribution(
-                        cls.get("source") or {},
-                        instance_target(name),
-                        field_contribution(patch),
-                        name + "." + field,
-                    )
-                )
         models[name] = {
+            "native_default_manager": (
+                len(cls.get("bases", [])) == 1
+                and cls["bases"][0]["expression"] in MODEL_BASES
+                and not cls.get("decorators")
+                and not cls.get("methods")
+                and not cls.get("nested-classes")
+                and not any(
+                    field["name"] == "objects" for field in cls.get("fields", [])
+                )
+            ),
+            "lazy_fields": flat_models,
             "fields": fields,
             "field_types": indexed["field_types"],
             "manager_queryset": queryset,
@@ -1005,6 +1323,8 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
             "custom_save": indexed["custom_save"],
             "signal_receivers": signal_receiver(request, name, decorators),
         }
+        if "primary_key_patch" in indexed:
+            models[name]["primary_key_patch"] = indexed["primary_key_patch"]
         for field in cls.get("fields", []):
             call = call_of(field)
             if call is None:
@@ -1075,22 +1395,10 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
                 reverse_sources[key] = source
                 continue
             reverse_sources[key] = source
-            ty = ann(
+            reverse_members.setdefault(target, {})[reverse] = (
                 name
                 if kind == "one-to-one"
                 else manager_type(name, models[name]["manager_queryset"])
-            )
-            patch = field_patch(
-                reverse,
-                ty,
-                mode="replace-existing",
-                descriptor=member_descriptor(ty),
-                has_default=True,
-            )
-            contributions.append(
-                contribution(
-                    source, instance_target(target), field_contribution(patch), key
-                )
             )
     for name in sorted(query_fields):
         models[name]["query_fields"] = query_fields[name]
@@ -1099,17 +1407,194 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         for module in request.get("settings", [])
         for dep in module.get("dependencies", [])
     ]
+    deferred: "dict[str, ClassRequest]" = {
+        cls["qualified-name"]: {
+            "class": deferred_model_class(cls),
+            "project-index": class_project_index(cls, settings, models, lookup),
+        }
+        for cls in classes
+        if cls["qualified-name"] in models
+    }
+    # Custom querysets add class members that native lookup must see directly.
+    # Ordinary model fields stay in the unchanged native declaration tree.
+    for name in models:
+        if not models[name]["manager_queryset"]:
+            continue
+        patch = analyze_django_class(deferred[name])
+        for member_patch in (patch or {}).get("class-members", []):
+            contributions.append(
+                contribution(
+                    {},
+                    class_target(name),
+                    member_contribution(member_patch),
+                    name + "." + member_patch["name"],
+                )
+            )
+    stored_models: "dict[str, ModelIndex | CompactModelIndex]" = {
+        name: model for name, model in models.items()
+    }
+    stored_classes: "dict[str, ClassRequest | CompactClass]" = {
+        name: item for name, item in deferred.items()
+    }
+    compact = (
+        flat_models
+        and request.get("context", {}).get("config", {}).get("compact-model-index")
+        is not False
+    )
+    if compact:
+        stored_models = {name: compact_model(model) for name, model in models.items()}
+        stored_classes = {
+            name: compact_class(name, item) for name, item in deferred.items()
+        }
+    data: "DjangoIndex" = {
+        "models": stored_models,
+        "model_aliases": model_aliases,
+        "settings": settings,
+        "auth_user_model": auth,
+        "deferred_classes": stored_classes,
+        "reverse_members": reverse_members,
+    }
+    if compact:
+        data["index_format"] = 1
     return project_index(
-        {"models": models, "settings": settings, "auth_user_model": auth},
-        class_indexes={
-            cls["qualified-name"]: class_project_index(cls, settings, models, lookup)
-            for cls in classes
-        },
+        data,
         contributions=contributions,
         virtual_types=virtuals,
         dependencies=deps,
         diagnostics=diagnostics,
     )
+
+
+def compact_model(model: "ModelIndex") -> "CompactModelIndex":
+    """Flat models resolve field maps only on use; retain nondefault traits."""
+    result: "CompactModelIndex" = {"v": 1}
+    if model["auto_primary_key"] != "id":
+        result["p"] = model["auto_primary_key"]
+    if model["auto_primary_key_default"] is not None:
+        result["d"] = model["auto_primary_key_default"]
+    if model["manager_queryset"] is not None:
+        result["q"] = model["manager_queryset"]
+    if model["custom_loading"]:
+        result["l"] = True
+    if model["custom_save"]:
+        result["s"] = True
+    if model["signal_receivers"]:
+        result["r"] = True
+    if not model.get("native_default_manager", False):
+        result["n"] = False
+    if "query_fields" in model:
+        result["j"] = model["query_fields"]
+    if "primary_key_patch" in model:
+        result["k"] = model["primary_key_patch"]
+    return result
+
+
+def expanded_traits(model: "CompactModelIndex") -> "ModelTraits":
+    result: "ModelTraits" = {
+        "native_default_manager": model.get("n", True),
+        "lazy_fields": True,
+        "manager_queryset": model.get("q"),
+        "auto_primary_key": model.get("p", "id"),
+        "auto_primary_key_default": model.get("d"),
+        "custom_loading": model.get("l", False),
+        "custom_save": model.get("s", False),
+        "signal_receivers": model.get("r", False),
+    }
+    if "j" in model:
+        result["query_fields"] = model["j"]
+    if "k" in model:
+        result["primary_key_patch"] = model["k"]
+    return result
+
+
+def compact_class(name: str, request: "ClassRequest") -> "ClassRequest | CompactClass":
+    cls = request["class"]
+    scoped = request.get("project-index") or {}
+    owners = scoped.get("class_models", {})
+    # Preserve any future scope shape this codec does not know how to encode.
+    if any(value for owner, value in owners.items() if owner != name):
+        return request
+    if any(
+        key not in ["auto_primary_key_default", "manager_queryset"]
+        for key in owners.get(name, {})
+    ):
+        return request
+    fields: "list[CompactField]" = []
+    for field in cls.get("fields", []):
+        call = call_of(field)
+        assert call is not None  # deferred_model_class retains calls only.
+        fields.append(
+            {"n": field["name"], "c": call_name(call), "a": call.get("arguments", [])}
+        )
+    result: "CompactClass" = {"v": 1, "f": fields}
+    bases = cls.get("bases", [])
+    if bases != [{"expression": "django.db.models.base.Model", "mode": "annotation"}]:
+        result["b"] = bases
+    methods = [method["name"] for method in cls.get("methods", [])]
+    if methods:
+        result["m"] = methods
+    targets = [owner for owner in owners if owner != name]
+    if targets:
+        result["t"] = targets
+    own = owners.get(name, {})
+    default = own.get("auto_primary_key_default")
+    if default is not None:
+        result["d"] = default
+    queryset = own.get("manager_queryset")
+    if queryset is not None:
+        result["q"] = queryset
+    settings = scoped.get("settings", {})
+    if "DEFAULT_AUTO_FIELD" in settings:
+        result["a"] = settings["DEFAULT_AUTO_FIELD"]
+    extra = {
+        key: value for key, value in settings.items() if key != "DEFAULT_AUTO_FIELD"
+    }
+    if extra:
+        result["s"] = extra
+    return result
+
+
+def deferred_request(request: "IndexedRequest", name: str) -> "ClassRequest | None":
+    stored = project_index_value(request, ["deferred_classes", name])
+    if stored is None or "class" in stored or stored.get("v") != 1:
+        return stored
+    return expanded_class(name, stored)
+
+
+def expanded_class(name: str, stored: "CompactClass") -> "ClassRequest":
+    owners: "dict[str, ClassModelIndex]" = {
+        name: {
+            "auto_primary_key_default": stored.get("d"),
+            "manager_queryset": stored.get("q"),
+        }
+    }
+    for target in stored.get("t", []):
+        owners[target] = {}
+    settings = dict(stored.get("s", {}))
+    if "a" in stored:
+        settings["DEFAULT_AUTO_FIELD"] = stored["a"]
+    return {
+        "class": {
+            "qualified-name": name,
+            "bases": stored.get(
+                "b",
+                [{"expression": "django.db.models.base.Model", "mode": "annotation"}],
+            ),
+            "methods": [{"name": method} for method in stored.get("m", [])],
+            "fields": [
+                {
+                    "name": field["n"],
+                    "assigned-value": {
+                        "kind": "call",
+                        "callee": {"qualified-name": field["c"]},
+                        "arguments": field["a"],
+                    },
+                }
+                for field in stored["f"]
+            ],
+        },
+        "project-index": {"class_models": owners, "settings": settings},
+    }
 
 
 def class_project_index(
@@ -1122,11 +1607,15 @@ def class_project_index(
     name = cls["qualified-name"]
     scoped: "dict[str, ClassModelIndex]" = {}
     used_settings: dict[str, str] = {}
+    if "DEFAULT_AUTO_FIELD" in settings:
+        used_settings["DEFAULT_AUTO_FIELD"] = settings["DEFAULT_AUTO_FIELD"]
     if name in models:
         scoped[name] = {
             "auto_primary_key_default": models[name]["auto_primary_key_default"],
             "manager_queryset": models[name]["manager_queryset"],
         }
+        if "primary_key_patch" in models[name]:
+            scoped[name]["primary_key_patch"] = models[name]["primary_key_patch"]
     for field in cls.get("fields", []):
         call = call_of(field)
         if call is not None and relation_kind(call):
@@ -1161,13 +1650,23 @@ def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
         indexed = project_index_value(request, ["class_models"])
         if indexed is None:
             indexed = project_index_value(request, ["models"], {}) or {}
+            indexed = {
+                owner: expanded_traits(model) if model.get("v") == 1 else model
+                for owner, model in indexed.items()
+            }
         settings = project_index_value(request, ["settings"], {}) or {}
     if name not in indexed and not any(
         base["expression"] in MODEL_BASES for base in cls.get("bases", [])
     ):
         return None
-    fields = default_fields((indexed.get(name) or {}).get("auto_primary_key_default"))
-    members = default_members(name, (indexed.get(name) or {}).get("manager_queryset"))
+    own = indexed.get(name) or {}
+    if "primary_key_patch" in own:
+        primary_key = own["primary_key_patch"]
+        fields = [primary_key] if primary_key is not None else []
+    else:
+        fields = default_fields(own.get("auto_primary_key_default"))
+    queryset = (indexed.get(name) or {}).get("manager_queryset")
+    members = default_members(name, queryset) if queryset else []
     instance = []
     for field in cls.get("fields", []):
         call = call_of(field)
@@ -1187,7 +1686,8 @@ def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
                     if "." in callee_name
                     else module_of(name) + "." + callee_name
                 )
-            members.append(replace_member(field["name"], ann(ty)))
+            if isinstance((indexed.get(name) or {}).get("manager_queryset"), str):
+                members.append(replace_member(field["name"], ann(ty)))
             continue
         if choice_target(name, call):
             instance.append(
@@ -1201,7 +1701,11 @@ def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
             )
         data = field_data(name, field, settings, indexed)
         if data is not None:
-            fields.extend(field_patches(data))
+            patches = field_patches(data)
+            if data["relation"] is None and not auto_field(call):
+                for patch in patches:
+                    patch["mode"] = "fill-on-miss"
+            fields.extend(patches)
     return class_patch(fields=fields, class_members=members, instance_members=instance)
 
 
@@ -1211,8 +1715,37 @@ def analyze_django_classes(request: "ClassBatchRequest") -> "ClassBatchResponse"
     return class_batch([analyze_django_class(item) for item in request["requests"]])
 
 
+def model_traits(request: "IndexedRequest", name: str) -> "ModelTraits | None":
+    name = qualified_model(request, name)
+    model = project_index_value(request, ["models", name])
+    if model is not None and model.get("v") == 1:
+        return expanded_traits(model)
+    return model
+
+
 def model_entry(request: "IndexedRequest", name: str) -> "ModelIndex | None":
-    return project_index_value(request, ["models", name])
+    name = qualified_model(request, name)
+    model = project_index_value(request, ["models", name])
+    if model is not None and model.get("v") == 1:
+        expanded: "ModelIndex" = {
+            **expanded_traits(model),
+            "fields": {},
+            "field_types": {},
+        }
+        model = expanded
+    if model is not None and model.get("lazy_fields"):
+        deferred = deferred_request(request, name)
+        if deferred is not None:
+            scoped = deferred["project-index"]
+            indexed = local_index(
+                deferred["class"],
+                scoped.get("settings", {}),
+                scoped["class_models"],
+                model_name_lookup(scoped["class_models"]),
+            )
+            model["fields"] = indexed["fields"]
+            model["field_types"] = indexed["field_types"]
+    return model
 
 
 def model_fields(request: "IndexedRequest", name: str) -> "dict[str, str] | None":
@@ -1650,14 +2183,24 @@ def validate_field_collection(
 def validate_arguments(
     request: "CallRequest", model: str, method: str
 ) -> "list[Diagnostic]":
-    if model_fields(request, model) is None:
+    fields = model_fields(request, model)
+    if fields is None:
         return []
     result = []
     args = request.get("arguments", [])
     if method in LOOKUP_METHODS:
         for arg in args:
             if arg.get("kind") == "keyword" and not creation_defaults(method, arg):
-                found = validate_lookup(request, model, arg)
+                name = arg.get("name")
+                if name is not None and "__" not in name and name in fields:
+                    expected = fields[name]
+                    found = (
+                        None
+                        if lookup_matches(expected, None, arg)
+                        else invalid_lookup_diag(model, name, name, expected, arg)
+                    )
+                else:
+                    found = validate_lookup(request, model, arg)
                 if found is not None:
                     result.append(found)
         for arg in args:
@@ -1715,7 +2258,7 @@ def values_row(request: "CallRequest", model: str) -> "TypeExpr | None":
         return None
     names = positional_strings(request)
     if not names:
-        return ann(virtual_name(model, "ValuesRow"))
+        names = sorted(fields)
     return ann(
         "TypedDict({"
         + ", ".join(
@@ -1738,7 +2281,7 @@ def values_list_row(
         if fields is None:
             return None
         if not names:
-            return ann(virtual_name(model, "ValuesListRow"))
+            names = sorted(fields)
         return ann(
             'NamedTuple("DjangoTyValuesListRow", {'
             + ", ".join(
@@ -1757,12 +2300,11 @@ def values_list_row(
     return tuple_type([ann((fields or {}).get(name, "object")) for name in names])
 
 
-def qualified_model(request: "CallRequest", name: str) -> "str":
-    models = project_index_keys(request, ["models"])
-    if name in models:
+def qualified_model(request: "IndexedRequest", name: str) -> "str":
+    if "." in name:
         return name
-    matches = [candidate for candidate in sorted(models) if short(candidate) == name]
-    return matches[0] if len(matches) == 1 else name
+    resolved = project_index_value(request, ["model_aliases", name])
+    return resolved if isinstance(resolved, str) else name
 
 
 def prefetched_row(request: "CallRequest", row: "TypeExpr") -> "TypeExpr | None":
@@ -1774,7 +2316,9 @@ def prefetched_row(request: "CallRequest", row: "TypeExpr") -> "TypeExpr | None"
         parts = generic_args(ty["expression"], "Prefetch")
         if parts is None or len(parts) != 3:
             continue
-        queryset = generic_args(parts[1], "QuerySet")
+        queryset = generic_args(parts[1], "QuerySet") or generic_args(
+            parts[1], "ValuesQuerySet"
+        )
         attr = parts[2].strip()
         if not queryset or not attr.startswith('Literal["') or not attr.endswith('"]'):
             continue
@@ -1804,8 +2348,28 @@ def query_return(request: "CallRequest", method: str) -> "CallReturnResponse | N
     if not arguments:
         return None
     model = arguments[0]
+    original_model = model["expression"]
+    qualified = qualified_model(request, original_model)
+    if qualified != original_model:
+        model = ann(qualified)
+        model["snapshot"] = snapshot_nominal(qualified)
+    if request.get("context", {}).get("speculative", False):
+        indexed = model_traits(request, qualified)
+        actual = canonical(receiver_value.get("type-expr") or ann("object"))
+        if (
+            method != "get"
+            or actual.split("[", 1)[0] not in [BASE_MANAGER_BASE, MANAGER_BASE]
+            or indexed is None
+            or not indexed.get("native_default_manager", False)
+        ):
+            return None
+        return call_return_patch(
+            ann(qualified), validate_arguments(request, qualified, method)
+        )
     is_queryset = (receiver_value.get("nominal-class") or "").endswith("QuerySet")
     row = arguments[1] if is_queryset and len(arguments) > 1 else model
+    if row["expression"] == original_model:
+        row = model
     diagnostics = validate_arguments(request, model["expression"], method)
     if method == "prefetch_related":
         prefetched = prefetched_row(request, row)
@@ -1893,6 +2457,15 @@ def query_return(request: "CallRequest", method: str) -> "CallReturnResponse | N
         )
         coroutine["imports"] = coroutine.get("imports", []) + result.get("imports", [])
         result = coroutine
+    native = request.get("default-return-type")
+    if native is not None:
+        native_snapshot = snap(native)
+        if native_snapshot.get("kind") == "nominal" and native_snapshot == snap(result):
+            # Keep native inference when its complete nominal identity and type
+            # arguments match. Other snapshots retain the explicit projection.
+            if not diagnostics:
+                return None
+            result = native
     return call_return_patch(result, diagnostics)
 
 
@@ -2001,9 +2574,110 @@ def django_call_return(request: "CallRequest") -> "CallReturnResponse | None":
     return query_return(request, method)
 
 
+def deferred_class_patch(
+    request: "IndexedRequest", name: str
+) -> "ClassResponse | None":
+    deferred = deferred_request(request, name)
+    return analyze_django_class(deferred) if deferred is not None else None
+
+
+def native_scalar_member(stored: "CompactClass", member_name: str) -> bool:
+    """Ordinary scalar fields already use their native descriptor.
+
+    Default key aliases and earlier relation descriptors retain precedence;
+    a later scalar with a colliding name must not hide their replacement.
+    """
+    if member_name in ["id", "pk"]:
+        return False
+    for field in stored["f"]:
+        call: "CallSummary" = {"kind": "call", "callee": {"qualified-name": field["c"]}}
+        relation = relation_kind(call)
+        if field["n"] == member_name:
+            return (
+                relation is None
+                and not auto_field(call)
+                and short(field["c"]) in SCALAR_FIELDS
+            )
+        if (
+            relation in ["foreign-key", "one-to-one"]
+            and field["n"] + "_id" == member_name
+        ):
+            return False
+    return False
+
+
+@on_instance_member
+def django_native_member(request: "MemberRequest") -> "MemberResponse | None":
+    name = request["owner"]["expression"]
+    reverse = project_index_value(
+        request, ["reverse_members", name, request["member-name"]]
+    )
+    if isinstance(reverse, str):
+        return member_response(replace_member(request["member-name"], ann(reverse)))
+    stored = project_index_value(request, ["deferred_classes", name])
+    if stored is None:
+        return None
+    member_name = request["member-name"]
+    if "class" not in stored and stored.get("v") == 1:
+        if native_scalar_member(stored, member_name):
+            return None
+        deferred = expanded_class(name, stored)
+    else:
+        deferred = stored
+    patch = analyze_django_class(deferred)
+    if patch is None:
+        return None
+    for field in patch.get("fields", []):
+        if field["name"] == member_name:
+            if field["mode"] != "replace-existing":
+                return None
+            return member_response(
+                member_patch(
+                    member_name,
+                    field.get("descriptor")
+                    or member_descriptor(
+                        field["instance-get-type"],
+                        instance_set_type=field.get("instance-set-type"),
+                    ),
+                    mode="replace-existing",
+                )
+            )
+    for candidate in patch.get("instance-members", []):
+        if candidate["name"] == member_name:
+            return member_response(candidate)
+    return None
+
+
 @on_call_signature
 def django_signature(request: "CallRequest") -> "CallSignatureResponse | None":
-    if short(request["callee"]["expression"]) != "from_queryset":
+    callee = request["callee"]["expression"]
+    if request.get("receiver") is None:
+        deferred = deferred_request(request, callee)
+        if deferred is not None:
+            own = (
+                (deferred.get("project-index") or {})
+                .get("class_models", {})
+                .get(callee, {})
+            )
+            if "primary_key_patch" in own and own["primary_key_patch"] is None:
+                return None
+            if any(
+                method["name"] == "__init__"
+                for method in deferred["class"].get("methods", [])
+            ):
+                return None
+            patch = analyze_django_class(deferred)
+            parameters = {}
+            for field in (patch or {}).get("fields", []):
+                parameter = field.get("constructor-parameter")
+                if parameter is not None:
+                    parameters[parameter["name"]] = parameter
+            return call_signature_patch(
+                callable_signature(
+                    [parameters[name] for name in sorted(parameters)], ann(callee)
+                )
+            )
+    if short(callee) != "from_queryset":
         return None
     ret = (request.get("receiver") or {}).get("type-expr") or ann(
         "type[django.db.models.manager.BaseManager[typing.Any]]"
@@ -2013,9 +2687,7 @@ def django_signature(request: "CallRequest") -> "CallSignatureResponse | None":
             [
                 positional_or_keyword(
                     "queryset_class",
-                    ann(
-                        "type[django.db.models.query.QuerySet[typing.Any, typing.Any]]"
-                    ),
+                    ann("type[django.db.models.query.QuerySet[typing.Any]]"),
                 ),
                 optional("class_name", ann("str | None")),
             ],
@@ -2052,7 +2724,7 @@ def django_state(request: "CallRequest") -> "CallStateResponse | None":
         return None
     receiver_value = request.get("receiver")
     if receiver_value is None:
-        model = model_entry(request, request["callee"]["expression"])
+        model = model_traits(request, request["callee"]["expression"])
         key = model.get("auto_primary_key") if model is not None else None
         if (
             model is None
@@ -2103,7 +2775,7 @@ def django_state(request: "CallRequest") -> "CallStateResponse | None":
         name = generic[0]["expression"]
     else:
         return None
-    model = model_entry(request, name)
+    model = model_traits(request, name)
     key = model.get("auto_primary_key") if model is not None else None
     if model is None or not isinstance(key, str):
         return None
@@ -2152,9 +2824,9 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
   },
   "capabilities": {
     "stub-overlays": true,
-    "class-transform": true,
+    "class-transform": false,
     "class-member": false,
-    "instance-member": false,
+    "instance-member": true,
     "call-signature": true,
     "call-return": true,
     "call-state": true,
@@ -2165,23 +2837,10 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     "virtual-types": true,
     "mutation-validation": true,
     "project-index-lookup": true,
-    "class-batch": true
+    "class-batch": false
   },
   "claims": {
-    "classes": [
-      {
-        "kind": "subclass-of",
-        "base-qualified-name": "django.db.models.base.Model"
-      },
-      {
-        "kind": "subclass-of",
-        "base-qualified-name": "django.db.models.Model"
-      },
-      {
-        "kind": "subclass-of",
-        "base-qualified-name": "django.db.models.base.ModelBase.__call__"
-      }
-    ],
+    "classes": [],
     "functions": [
       {
         "qualified-name": "django.http.request.HttpRequest"
@@ -2885,62 +3544,427 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
         "kind": "on-subclass-of",
         "base-qualified-name": "django.db.models.options.Options",
         "method-name": "get_field"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "all"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "all"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "filter"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "filter"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "exclude"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "exclude"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "complex_filter"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "complex_filter"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "get"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "get"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "bulk_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "bulk_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "bulk_update"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "bulk_update"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "get_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "get_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "update_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "update_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "first"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "first"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "last"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "last"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "earliest"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "earliest"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "latest"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "latest"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "count"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "count"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "exists"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "exists"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "values"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "values"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "values_list"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "values_list"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "annotate"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "annotate"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "alias"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "alias"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "order_by"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "order_by"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "distinct"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "distinct"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "none"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "none"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "only"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "only"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "defer"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "defer"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "select_related"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "select_related"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "prefetch_related"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "prefetch_related"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "select_for_update"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "select_for_update"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "reverse"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "reverse"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "using"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "using"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "union"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "union"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "intersection"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "intersection"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "difference"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "difference"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "aget"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "aget"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "acreate"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "acreate"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "aget_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "aget_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "aupdate_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "aupdate_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "afirst"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "afirst"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "alast"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "alast"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "acount"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "acount"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "aexists"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "aexists"
       }
     ],
     "attributes": [
       {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.conf.LazySettings",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.http.request.HttpRequest",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.base.Model",
-        "scope": "class"
-      },
-      {
-        "kind": "contribution-target",
+        "kind": "on-subclass-of",
         "owner-base-qualified-name": "django.db.models.base.Model",
         "scope": "instance"
       },
       {
-        "kind": "contribution-target",
+        "kind": "on-subclass-of",
         "owner-base-qualified-name": "django.db.models.Model",
-        "scope": "class"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.Model",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.base.ModelBase.__call__",
-        "scope": "class"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.base.ModelBase.__call__",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.enums.Choices",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.enums.TextChoices",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.enums.IntegerChoices",
         "scope": "instance"
       }
     ],
@@ -2971,6 +3995,30 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
       "module": "django.db.models.query",
       "path": "stubs/django/db/models/query.pyi"
     }
-  ]
+  ],
+  "default-config": {
+    "companion-project-inputs": {
+      "assignment-kinds": [
+        "call"
+      ],
+      "class-source": false,
+      "field-call-keywords": [
+        "null",
+        "default",
+        "db_default",
+        "primary_key",
+        "choices",
+        "to",
+        "to_field",
+        "related_name",
+        "related_query_name"
+      ],
+      "overlay-index": "imports",
+      "field-call-argument-source": false
+    },
+    "companion-early-call-returns": [
+      "get"
+    ]
+  }
 }
 """)

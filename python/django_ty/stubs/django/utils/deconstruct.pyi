@@ -1,19 +1,11 @@
-from collections.abc import Callable, Sequence
-from typing import Any, overload, type_check_only
-from typing_extensions import Self
+from collections.abc import Callable
+from typing import Any, TypeVar, overload
 
-from typing_extensions import TypeVar
-
-# Contains additions from a class being decorated with '@deconstructible'
-@type_check_only
-class _Deconstructible:
-    def __new__(cls, *args: Any, **kwargs: Any) -> Self: ...
-    def deconstruct(obj) -> tuple[str, Sequence[Any], dict[str, Any]]: ...
-
-_T = TypeVar("_T")
-_TCallable = TypeVar("_TCallable", bound=Callable[..., Any])
+T = TypeVar("T")
 
 @overload
-def deconstructible(_type: type[_T]) -> type[_T]: ...
+def deconstructible(klass: type[T]) -> type[T]: ...
 @overload
-def deconstructible(*, path: str | None = None) -> Callable[[_TCallable], _TCallable]: ...
+def deconstructible(
+    *args: Any, path: str | None = ...
+) -> Callable[[type[T]], type[T]]: ...

@@ -1,51 +1,25 @@
-from typing import Any, Literal, type_check_only
-from typing_extensions import Self
+from typing import Any
 
 from django.utils.functional import LazyObject
-from typing_extensions import override
 
-# explicit dependency on standard settings to make it loaded
-from . import global_settings  # noqa: F401
+ENVIRONMENT_VARIABLE: str = ...
+DEFAULT_CONTENT_TYPE_DEPRECATED_MSG: str = ...
+FILE_CHARSET_DEPRECATED_MSG: str = ...
 
-ENVIRONMENT_VARIABLE: Literal["DJANGO_SETTINGS_MODULE"]
-DEFAULT_STORAGE_ALIAS: Literal["default"]
-STATICFILES_STORAGE_ALIAS: Literal["staticfiles"]
-
-# RemovedInDjango70Warning.
-SIGNED_COOKIE_LEGACY_SALT_DEPRECATED_MSG: str
-USE_BLANK_CHOICE_DASH_DEPRECATED_MSG: str
-DEPRECATED_EMAIL_SETTINGS: set[str]
-EMAIL_SETTING_DEPRECATED_MSG: str
-
-# required for plugin to be able to distinguish this specific instance of LazySettings from others
-@type_check_only
-class _DjangoConfLazyObject(LazyObject[Any]):
-    @override
+class _DjangoConfLazyObject(LazyObject):
     def __getattr__(self, item: Any) -> Any: ...
 
 class LazySettings(_DjangoConfLazyObject):
-    SETTINGS_MODULE: str
-    @property
-    def configured(self) -> bool: ...
-    def configure(self, default_settings: Any = ..., **options: Any) -> None: ...
+    configured: bool
+    def configure(self, default_settings: Any = ..., **options: Any) -> Any: ...
 
-settings: LazySettings
+settings: LazySettings = ...
 
 class Settings:
-    SETTINGS_MODULE: str
     def __init__(self, settings_module: str) -> None: ...
     def is_overridden(self, setting: str) -> bool: ...
 
-class UserSettingsHolder:
-    SETTINGS_MODULE: None
-    def __init__(self, default_settings: Any) -> None: ...
-    def __getattr__(self, name: str) -> Any: ...
-    @override
-    def __setattr__(self, name: str, value: Any) -> None: ...
-    @override
-    def __delattr__(self, name: str) -> None: ...
-    def is_overridden(self, setting: str) -> bool: ...
+class UserSettingsHolder: ...
 
 class SettingsReference(str):
-    def __new__(self, value: Any, setting_name: str) -> Self: ...
     def __init__(self, value: str, setting_name: str) -> None: ...

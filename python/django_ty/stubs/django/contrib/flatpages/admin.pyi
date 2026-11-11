@@ -1,11 +1,10 @@
-from typing import Any, ClassVar
+from typing import Any
 
-from django.contrib import admin
-from django.contrib.flatpages.models import FlatPage
+from django.contrib import admin as admin
 
-class FlatPageAdmin(admin.ModelAdmin[FlatPage]):
-    form: Any
-    fieldsets: ClassVar[Any]
-    list_display: Any
-    list_filter: ClassVar[Any]
-    search_fields: ClassVar[Any]
+class FlatPageAdmin(admin.ModelAdmin[Any]):
+    form: Any = ...
+    fieldsets: Any = ...
+    list_display: Any = ...
+    list_filter: Any = ...
+    search_fields: Any = ...

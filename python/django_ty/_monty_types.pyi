@@ -251,7 +251,17 @@ MutationRequest = TypedDict(
     },
     total=False,
 )
-IndexedRequest: TypeAlias = ClassRequest | CallRequest
+MemberRequest = TypedDict(
+    "MemberRequest",
+    {
+        "owner": Required[TypeExpr],
+        "member-name": Required[str],
+        "context": Context,
+        "project-index": DjangoIndex,
+    },
+    total=False,
+)
+IndexedRequest: TypeAlias = ClassRequest | CallRequest | MemberRequest
 
 class FieldData(TypedDict):
     name: str
@@ -263,6 +273,7 @@ class FieldData(TypedDict):
     target: str | None
 
 class LocalModelIndex(TypedDict):
+    primary_key_patch: NotRequired[FieldPatch | None]
     fields: dict[str, str]
     field_types: dict[str, str]
     auto_primary_key: str | None
@@ -272,9 +283,10 @@ class LocalModelIndex(TypedDict):
     custom_loading: bool
     custom_save: bool
 
-class ModelIndex(TypedDict):
-    fields: dict[str, str]
-    field_types: dict[str, str]
+class ModelTraits(TypedDict):
+    primary_key_patch: NotRequired[FieldPatch | None]
+    native_default_manager: NotRequired[bool]
+    lazy_fields: NotRequired[bool]
     manager_queryset: str | None
     auto_primary_key: str | None
     auto_primary_key_default: str | None
@@ -283,12 +295,49 @@ class ModelIndex(TypedDict):
     signal_receivers: bool
     query_fields: NotRequired[dict[str, str]]
 
+class ModelIndex(ModelTraits):
+    fields: dict[str, str]
+    field_types: dict[str, str]
+
+class CompactModelIndex(TypedDict, total=False):
+    k: FieldPatch | None
+    v: Required[Literal[1]]
+    p: str | None
+    d: str
+    q: str
+    l: bool
+    s: bool
+    r: bool
+    n: bool
+    j: dict[str, str]
+
+class CompactField(TypedDict):
+    n: str
+    c: str
+    a: list[Argument]
+
+class CompactClass(TypedDict):
+    v: Literal[1]
+    f: list[CompactField]
+    b: NotRequired[list[TypeExpr]]
+    m: NotRequired[list[str]]
+    t: NotRequired[list[str]]
+    a: NotRequired[str]
+    s: NotRequired[dict[str, str]]
+    d: NotRequired[str]
+    q: NotRequired[str]
+
 class ClassModelIndex(TypedDict, total=False):
+    primary_key_patch: FieldPatch | None
     auto_primary_key_default: str | None
     manager_queryset: str | None
 
 class DjangoIndex(TypedDict, total=False):
-    models: dict[str, ModelIndex]
+    reverse_members: dict[str, dict[str, str]]
+    deferred_classes: dict[str, ClassRequest | CompactClass]
+    model_aliases: dict[str, str | None]
+    models: dict[str, ModelIndex | CompactModelIndex]
+    index_format: int
     class_models: dict[str, ClassModelIndex]
     settings: dict[str, str]
     auth_user_model: str | None
@@ -406,6 +455,16 @@ ProjectIndexResponse = TypedDict(
         "virtual-types": NotRequired[list[VirtualType]],
         "dependencies": NotRequired[list[Dependency]],
         "diagnostics": NotRequired[list[Diagnostic]],
+    },
+)
+MemberResponse = TypedDict(
+    "MemberResponse",
+    {
+        "kind": Literal["member-patch"],
+        "name": str,
+        "mode": PatchMode,
+        "access": MemberAccess,
+        "read-only": bool,
     },
 )
 ClassResponse = TypedDict(

@@ -1,55 +1,84 @@
 from collections.abc import Iterable
-from typing import Any, ClassVar, Literal
+from typing import Any, Literal, TypeVar, overload
 
-from django.core.validators import _ValidatorCallable
-from django.db import models
-from django.db.backends.base.base import BaseDatabaseWrapper
-from django.db.models.expressions import Expression
-from django.db.models.fields import _ErrorMessagesMapping
-from django.db.models.sql import Query
-from django.utils.choices import _ChoicesInput
-from django.utils.datastructures import DictWrapper
-from django.utils.functional import _StrOrPromise, cached_property
-from typing_extensions import override
+from django.db.models import Combinable, Expression, ForeignObjectRel
+from django.db.models.expressions import Col
+from typing_extensions import Never
 
-class GeneratedField(models.Field[Any, Any]):
-    generated: ClassVar[Literal[True]]
+from . import Field, _ErrorMessagesToOverride, _ValidatorCallable
+from .mixins import CheckFieldDefaultMixin
+
+_GT = TypeVar("_GT", bound=Any | None)
+
+class GeneratedField(CheckFieldDefaultMixin, Field[Never, _GT]):
+    generated: Literal[True]
     db_returning: Literal[True]
-    _query: Query | None
-    output_field: models.Field[Any, Any] | None
+    expression: Combinable | Expression
 
-    def __init__(
-        self,
+    @overload
+    def __new__(
+        cls,
         *,
-        expression: Expression,
-        output_field: models.Field[Any, Any],
+        expression: Combinable | Expression,
+        output_field: Field[Any, _GT],
         db_persist: bool,
-        verbose_name: _StrOrPromise | None = ...,
+        #
+        verbose_name: str | None = ...,
         name: str | None = ...,
         primary_key: bool = ...,
+        max_length: int | None = ...,
         unique: bool = ...,
-        blank: bool = ...,
-        null: bool = ...,
-        default: Any = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
+        blank: Literal[True] = ...,
+        null: Literal[False] = False,
+        db_index: bool = ...,
+        rel: ForeignObjectRel | None = ...,
+        editable: Literal[False] = ...,
         serialize: bool = ...,
         unique_for_date: str | None = ...,
         unique_for_month: str | None = ...,
         unique_for_year: str | None = ...,
-        choices: _ChoicesInput | None = ...,
-        help_text: _StrOrPromise = ...,
+        choices: Iterable[tuple[Any, str] | tuple[str, Iterable[tuple[Any, str]]]] = ...,
+        help_text: str = ...,
         db_column: str | None = ...,
-        db_comment: str | None = ...,
         db_tablespace: str | None = ...,
+        auto_created: bool = ...,
         validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesMapping | None = ...,
-        **kwargs: Any,
-    ) -> None: ...
-    def generated_sql(self, connection: BaseDatabaseWrapper) -> tuple[str, Any]: ...
-    @cached_property
-    def referenced_fields(self) -> frozenset[models.Field[Any, Any]]: ...
-    @override
-    def db_type_parameters(self, connection: BaseDatabaseWrapper) -> DictWrapper[Any]: ...
+        error_messages: _ErrorMessagesToOverride | None = ...,
+        db_comment: str | None = ...,
+    ) -> GeneratedField[_GT]: ...
+    @overload
+    def __new__(
+        cls,
+        *,
+        expression: Combinable | Expression,
+        output_field: Field[Any, _GT],
+        db_persist: bool,
+        #
+        verbose_name: str | None = ...,
+        name: str | None = ...,
+        primary_key: bool = ...,
+        max_length: int | None = ...,
+        unique: bool = ...,
+        blank: Literal[True] = ...,
+        null: Literal[True],
+        db_index: bool = ...,
+        rel: ForeignObjectRel | None = ...,
+        editable: Literal[False] = ...,
+        serialize: bool = ...,
+        unique_for_date: str | None = ...,
+        unique_for_month: str | None = ...,
+        unique_for_year: str | None = ...,
+        choices: Iterable[tuple[Any, str] | tuple[str, Iterable[tuple[Any, str]]]] = ...,
+        help_text: str = ...,
+        db_column: str | None = ...,
+        db_tablespace: str | None = ...,
+        auto_created: bool = ...,
+        validators: Iterable[_ValidatorCallable] = ...,
+        error_messages: _ErrorMessagesToOverride | None = ...,
+        db_comment: str | None = ...,
+    ) -> GeneratedField[_GT | None]: ...
+    @property
+    def cached_col(self) -> Col: ...
+    def generated_sql(self, connection: Any) -> tuple[str, list[Any]]: ...
 
 __all__ = ["GeneratedField"]

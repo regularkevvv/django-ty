@@ -29,6 +29,8 @@ from ._monty_types import (
     Location,
     MemberAccess,
     MemberPatch,
+    MemberRequest,
+    MemberResponse,
     MutationRequest,
     MutationResponse,
     Parameter,
@@ -51,6 +53,17 @@ def on_project_index(
 def on_manifest(
     fn: Callable[[dict[str, JsonValue]], dict[str, JsonValue]],
 ) -> Callable[[dict[str, JsonValue]], dict[str, JsonValue]]: ...
+def on_instance_member(
+    fn: Callable[[MemberRequest], MemberResponse | None],
+) -> Callable[[MemberRequest], MemberResponse | None]: ...
+def member_patch(
+    name: str,
+    access: MemberAccess,
+    mode: PatchMode = ...,
+    read_only: bool = ...,
+    diagnostics: list[Diagnostic] | None = ...,
+) -> MemberPatch: ...
+def member_response(patch: MemberPatch) -> MemberResponse: ...
 def on_class_transform(
     fn: Callable[[ClassRequest], ClassResponse | None],
 ) -> Callable[[ClassRequest], ClassResponse | None]: ...

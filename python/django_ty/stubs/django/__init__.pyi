@@ -1,8 +1,8 @@
-from typing import Literal
+from typing import Any
 
 from .utils.version import get_version as get_version
 
-VERSION: tuple[int, int, int, Literal["alpha", "beta", "rc", "final"], int]
+VERSION: Any
 __version__: str
 
 def setup(set_prefix: bool = ...) -> None: ...

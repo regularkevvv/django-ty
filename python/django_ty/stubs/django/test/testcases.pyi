@@ -1,49 +1,41 @@
 import threading
 import unittest
-from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
-from contextlib import AbstractContextManager
+from collections.abc import Callable, Iterable
 from types import TracebackType
-from typing import Any, Literal, overload
-from typing_extensions import Self
+from typing import Any, ClassVar, TypeVar, overload
 
-from _typeshed import Unused
 from django.core.exceptions import ImproperlyConfigured
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import ThreadedWSGIServer, WSGIRequestHandler
 from django.db import connections as connections
-from django.db.backends.base.base import BaseDatabaseWrapper
-from django.db.models.base import Model
-from django.db.models.query import QuerySet, RawQuerySet
-from django.forms import BaseForm, BaseFormSet
+from django.db.backends.sqlite3.base import DatabaseWrapper
+from django.db.models import Model
+from django.db.models.query import ValuesQuerySet, _BaseQuerySet
 from django.forms.fields import EmailField
-from django.http import HttpRequest
-from django.http.response import FileResponse, HttpResponseBase
+from django.http.response import HttpResponse, HttpResponseBase
 from django.template.base import Template
-from django.test.client import AsyncClient, Client
-from django.test.html import Element
+from django.test.client import Client
 from django.test.utils import CaptureQueriesContext, ContextList
-from django.utils.functional import _StrOrPromise, classproperty
-from typing_extensions import override
-
-def to_list(value: Any) -> list[Any]: ...
-def assert_and_parse_html(self: Any, html: str, user_msg: str, msg: str) -> Element: ...
+from django.utils.safestring import SafeText
 
 class _AssertNumQueriesContext(CaptureQueriesContext):
-    test_case: SimpleTestCase
-    num: int
-    def __init__(self, test_case: Any, num: Any, connection: BaseDatabaseWrapper) -> None: ...
+    test_case: SimpleTestCase = ...
+    num: int = ...
+    def __init__(self, test_case: Any, num: Any, connection: Any) -> None: ...
 
 class _AssertTemplateUsedContext:
-    test_case: SimpleTestCase
-    template_name: str
-    rendered_templates: list[Template]
-    context: ContextList
-    def __init__(self, test_case: Any, template_name: Any, msg_prefix: str = "", count: int | None = None) -> None: ...
-    def on_template_render(self, sender: Any, signal: Any, template: Any, context: Any, **kwargs: Any) -> None: ...
-    @property
-    def rendered_template_names(self) -> list[str]: ...
-    def test(self) -> None: ...
-    def __enter__(self) -> Self: ...
+    test_case: SimpleTestCase = ...
+    template_name: str = ...
+    rendered_templates: list[Template] = ...
+    rendered_template_names: list[str] = ...
+    context: ContextList[Any] = ...
+    def __init__(self, test_case: Any, template_name: Any) -> None: ...
+    def on_template_render(
+        self, sender: Any, signal: Any, template: Any, context: Any, **kwargs: Any
+    ) -> None: ...
+    def test(self) -> Any: ...
+    def message(self) -> Any: ...
+    def __enter__(self) -> Any: ...
     def __exit__(
         self,
         exc_type: type[BaseException] | None,
@@ -53,182 +45,203 @@ class _AssertTemplateUsedContext:
 
 class _AssertTemplateNotUsedContext(_AssertTemplateUsedContext): ...
 
-class _DatabaseFailure:
-    wrapped: Any
-    message: str
-    def __init__(self, wrapped: Any, message: str) -> None: ...
-    def __call__(self, *args: Unused, **kwargs: Unused) -> None: ...
+class _CursorFailure:
+    cls_name: str = ...
+    wrapped: Callable[..., Any] = ...
+    def __init__(self, cls_name: Any, wrapped: Any) -> None: ...
+    def __call__(self) -> None: ...
 
 class SimpleTestCase(unittest.TestCase):
-    client_class: type[Client]
+    client_class: Any = ...
     client: Client
-    async_client_class: type[AsyncClient]
-    async_client: AsyncClient
-    databases: set[str] | Literal["__all__"]
-    @classmethod
-    def ensure_connection_patch_method(cls) -> None: ...
-    @override
-    def __call__(self, result: unittest.TestResult | None = None) -> None: ...
+    allow_database_queries: bool = ...
+    # TODO: str -> Literal['__all__']
+    databases: set[str] | str = ...
+    def __call__(self, result: unittest.TestResult | None = ...) -> None: ...
     def settings(self, **kwargs: Any) -> Any: ...
     def modify_settings(self, **kwargs: Any) -> Any: ...
     def assertRedirects(
         self,
-        response: HttpResponseBase,
+        response: HttpResponse,
         expected_url: str,
-        status_code: int = 302,
-        target_status_code: int = 200,
-        msg_prefix: str = "",
-        fetch_redirect_response: bool = True,
-    ) -> None: ...
-    def assertURLEqual(
-        self,
-        url1: _StrOrPromise,
-        url2: _StrOrPromise,
-        msg_prefix: str = "",
+        status_code: int = ...,
+        target_status_code: int = ...,
+        msg_prefix: str = ...,
+        fetch_redirect_response: bool = ...,
     ) -> None: ...
     def assertContains(
         self,
         response: HttpResponseBase,
-        text: bytes | int | _StrOrPromise,
-        count: int | None = None,
-        status_code: int = 200,
-        msg_prefix: str = "",
-        html: bool = False,
+        text: bytes | int | str,
+        count: int | None = ...,
+        status_code: int = ...,
+        msg_prefix: str = ...,
+        html: bool = ...,
     ) -> None: ...
     def assertNotContains(
         self,
         response: HttpResponseBase,
-        text: bytes | int | _StrOrPromise,
-        status_code: int = 200,
-        msg_prefix: str = "",
-        html: bool = False,
+        text: bytes | int | str,
+        status_code: int = ...,
+        msg_prefix: str = ...,
+        html: bool = ...,
     ) -> None: ...
     def assertFormError(
         self,
-        form: BaseForm,
+        response: HttpResponse,
+        form: str,
         field: str | None,
         errors: list[str] | str,
-        msg_prefix: str = "",
+        msg_prefix: str = ...,
     ) -> None: ...
-    def assertFormSetError(
+    def assertFormsetError(
         self,
-        formset: BaseFormSet[Any],
+        response: HttpResponse,
+        formset: str,
         form_index: int | None,
         field: str | None,
         errors: list[str] | str,
-        msg_prefix: str = "",
+        msg_prefix: str = ...,
     ) -> None: ...
-    # with self.assertTemplateUsed("template.html"): ...
-    @overload
     def assertTemplateUsed(
         self,
-        response: str,
-        template_name: None = None,
-        msg_prefix: str = "",
-        count: int | None = None,
-    ) -> _AssertTemplateUsedContext: ...
-    # with self.assertTemplateUsed(template_name="template.html"): ...
-    @overload
-    def assertTemplateUsed(
+        response: HttpResponse | str | None = ...,
+        template_name: str | None = ...,
+        msg_prefix: str = ...,
+        count: int | None = ...,
+    ) -> _AssertTemplateUsedContext | None: ...
+    def assertTemplateNotUsed(
         self,
-        response: None = None,
-        template_name: str | None = None,
-        msg_prefix: str = "",
-        count: int | None = None,
-    ) -> _AssertTemplateUsedContext: ...
-    # self.assertTemplateUsed(response, "template.html")
-    @overload
-    def assertTemplateUsed(
-        self,
-        response: HttpResponseBase,
-        template_name: str | None = None,
-        msg_prefix: str = "",
-        count: int | None = None,
-    ) -> None: ...
-    # with self.assertTemplateNotUsed("template.html"): ...
-    @overload
-    def assertTemplateNotUsed(
-        self, response: str, template_name: None = None, msg_prefix: str = ""
-    ) -> _AssertTemplateNotUsedContext: ...
-    # with self.assertTemplateNotUsed(template_name="template.html"): ...
-    @overload
-    def assertTemplateNotUsed(
-        self, response: None = None, template_name: str | None = None, msg_prefix: str = ""
-    ) -> _AssertTemplateNotUsedContext: ...
-    # self.assertTemplateNotUsed(response, "template.html")
-    @overload
-    def assertTemplateNotUsed(
-        self, response: HttpResponseBase, template_name: str | None = None, msg_prefix: str = ""
-    ) -> None: ...
+        response: HttpResponse | str = ...,
+        template_name: str | None = ...,
+        msg_prefix: str = ...,
+    ) -> _AssertTemplateNotUsedContext | None: ...
     def assertRaisesMessage(
-        self, expected_exception: type[Exception], expected_message: str, *args: Any, **kwargs: Any
+        self,
+        expected_exception: type[Exception],
+        expected_message: str,
+        *args: Any,
+        **kwargs: Any
     ) -> Any: ...
     def assertWarnsMessage(
-        self, expected_warning: type[Exception], expected_message: str, *args: Any, **kwargs: Any
+        self,
+        expected_warning: type[Exception],
+        expected_message: str,
+        *args: Any,
+        **kwargs: Any
     ) -> Any: ...
     def assertFieldOutput(
         self,
         fieldclass: type[EmailField],
         valid: dict[str, str],
         invalid: dict[str, list[str]],
-        field_args: Iterable[Any] | None = None,
-        field_kwargs: Mapping[str, Any] | None = None,
-        empty_value: str = "",
+        field_args: None = ...,
+        field_kwargs: None = ...,
+        empty_value: str = ...,
     ) -> Any: ...
-    def assertHTMLEqual(self, html1: str, html2: str, msg: str | None = None) -> None: ...
-    def assertHTMLNotEqual(self, html1: str, html2: str, msg: str | None = None) -> None: ...
-    def assertInHTML(self, needle: str, haystack: str, count: int | None = None, msg_prefix: str = "") -> None: ...
-    def assertNotInHTML(self, needle: str, haystack: str, msg_prefix: str = "") -> None: ...
+    def assertHTMLEqual(
+        self, html1: str, html2: str, msg: str | None = ...
+    ) -> None: ...
+    def assertHTMLNotEqual(
+        self, html1: str, html2: str, msg: str | None = ...
+    ) -> None: ...
+    def assertInHTML(
+        self,
+        needle: str,
+        haystack: SafeText,
+        count: int | None = ...,
+        msg_prefix: str = ...,
+    ) -> None: ...
     def assertJSONEqual(
         self,
         raw: str | bytes | bytearray,
         expected_data: dict[str, Any] | list[Any] | str | int | float | bool | None,
-        msg: str | None = None,
+        msg: str | None = ...,
     ) -> None: ...
     def assertJSONNotEqual(
         self,
         raw: str | bytes | bytearray,
         expected_data: dict[str, Any] | list[Any] | str | int | float | bool | None,
-        msg: str | None = None,
+        msg: str | None = ...,
     ) -> None: ...
-    def assertXMLEqual(self, xml1: str, xml2: str, msg: str | None = None) -> None: ...
-    def assertXMLNotEqual(self, xml1: str, xml2: str, msg: str | None = None) -> None: ...
+    def assertXMLEqual(self, xml1: str, xml2: str, msg: str | None = ...) -> None: ...
+    def assertXMLNotEqual(
+        self, xml1: str, xml2: str, msg: str | None = ...
+    ) -> None: ...
+
+_T = TypeVar("_T")
+_M = TypeVar("_M", bound=Model)
+_R = TypeVar("_R")
 
 class TransactionTestCase(SimpleTestCase):
-    reset_sequences: bool
-    available_apps: Any
-    fixtures: Any
-    serialized_rollback: bool
+    reset_sequences: bool = ...
+    available_apps: Any = ...
+    fixtures: Any = ...
+    multi_db: bool = ...
+    serialized_rollback: bool = ...
+    @overload
     def assertQuerySetEqual(
         self,
-        qs: Iterator[Any] | list[Model] | QuerySet[Any] | RawQuerySet[Any],
-        values: Iterable[Any],
-        transform: Callable[[Model], Any] | type[str] | None = None,
-        ordered: bool = True,
-        msg: str | None = None,
+        qs: _BaseQuerySet[_M],
+        values: Iterable[_T],
+        transform: Callable[[_M], _T] = ...,
+        ordered: bool = ...,
+        msg: str | None = ...,
     ) -> None: ...
     @overload
-    def assertNumQueries(self, num: int, func: None = None, *, using: str = ...) -> _AssertNumQueriesContext: ...
+    def assertQuerySetEqual(  # pyright: ignore[reportOverlappingOverload]
+        self,
+        qs: ValuesQuerySet[_M, _R],
+        values: Iterable[_T],
+        transform: Callable[[_R], _T] = ...,
+        ordered: bool = ...,
+        msg: str | None = ...,
+    ) -> None: ...
+    # Deprecated alias to assertQuerySetEqual
+    @overload
+    def assertQuerysetEqual(
+        self,
+        qs: _BaseQuerySet[_M],
+        values: Iterable[_T],
+        transform: Callable[[_M], _T] = ...,
+        ordered: bool = ...,
+        msg: str | None = ...,
+    ) -> None: ...
+    @overload
+    def assertQuerysetEqual(  # pyright: ignore[reportOverlappingOverload]
+        self,
+        qs: ValuesQuerySet[_M, _R],
+        values: Iterable[_T],
+        transform: Callable[[_R], _T] = ...,
+        ordered: bool = ...,
+        msg: str | None = ...,
+    ) -> None: ...
     @overload
     def assertNumQueries(
-        self, num: int, func: Callable[..., Any], *args: Any, using: str = ..., **kwargs: Any
+        self,
+        num: int,
+        func: Callable[..., Any],
+        *args: Any,
+        using: str = ...,
+        **kwargs: Any
     ) -> None: ...
+    @overload
+    def assertNumQueries(
+        self, num: int, func: None = ..., *args: Any, using: str = ..., **kwargs: Any
+    ) -> _AssertNumQueriesContext: ...
 
 class TestCase(TransactionTestCase):
     @classmethod
     def setUpTestData(cls) -> None: ...
-    @classmethod
-    def captureOnCommitCallbacks(
-        cls, *, using: str = "default", execute: bool = False
-    ) -> AbstractContextManager[list[Callable[[], Any]]]: ...
 
 class CheckCondition:
-    conditions: Sequence[tuple[Callable[..., Any], str]]
-    def __init__(self, *conditions: tuple[Callable[..., Any], str]) -> None: ...
-    def add_condition(self, condition: Callable[..., Any], reason: str) -> CheckCondition: ...
-    def __get__(self, instance: None, cls: type[TransactionTestCase] | None = ...) -> bool: ...
+    conditions: tuple[tuple[Callable[..., Any], str]] = ...
+    def __init__(self, *conditions: Any) -> None: ...
+    def add_condition(
+        self, condition: Callable[..., Any], reason: str
+    ) -> CheckCondition: ...
+    def __get__(self, instance: None, cls: type[TransactionTestCase] = ...) -> bool: ...
 
-def connections_support_transactions(aliases: Iterable[str] | None = None) -> bool: ...
 def skipIfDBFeature(*features: Any) -> Callable[..., Any]: ...
 def skipUnlessDBFeature(*features: Any) -> Callable[..., Any]: ...
 def skipUnlessAnyDBFeature(*features: Any) -> Callable[..., Any]: ...
@@ -236,52 +249,50 @@ def skipUnlessAnyDBFeature(*features: Any) -> Callable[..., Any]: ...
 class QuietWSGIRequestHandler(WSGIRequestHandler): ...
 
 class FSFilesHandler(WSGIHandler):
-    application: Any
-    base_url: Any
+    application: Any = ...
+    base_url: Any = ...
     def __init__(self, application: Any) -> None: ...
-    def file_path(self, url: Any) -> str: ...
-    def serve(self, request: HttpRequest) -> FileResponse: ...
+    def file_path(self, url: Any) -> Any: ...
+    def serve(self, request: Any) -> Any: ...
 
 class _StaticFilesHandler(FSFilesHandler):
-    def get_base_dir(self) -> str: ...
-    def get_base_url(self) -> str: ...
+    def get_base_dir(self) -> Any: ...
+    def get_base_url(self) -> Any: ...
 
 class _MediaFilesHandler(FSFilesHandler):
-    def get_base_dir(self) -> str: ...
-    def get_base_url(self) -> str: ...
+    def get_base_dir(self) -> Any: ...
+    def get_base_url(self) -> Any: ...
 
 class LiveServerThread(threading.Thread):
-    host: str
-    port: int
-    is_ready: threading.Event
-    error: ImproperlyConfigured | None
-    static_handler: type[WSGIHandler]
-    connections_override: dict[str, BaseDatabaseWrapper] | None
-    server_class: type[ThreadedWSGIServer]
+    host: str = ...
+    port: int = ...
+    is_ready: threading.Event = ...
+    error: ImproperlyConfigured | None = ...
+    static_handler: type[WSGIHandler] = ...
+    connections_override: dict[str, Any] = ...
     def __init__(
         self,
         host: str,
         static_handler: type[WSGIHandler],
-        connections_override: dict[str, BaseDatabaseWrapper] | None = None,
-        port: int = 0,
+        connections_override: dict[str, DatabaseWrapper] = ...,
+        port: int = ...,
     ) -> None: ...
-    httpd: ThreadedWSGIServer
+    httpd: ThreadedWSGIServer = ...
     def terminate(self) -> None: ...
 
 class LiveServerTestCase(TransactionTestCase):
-    host: str
-    port: int
-    server_thread_class: type[Any]
+    live_server_url: ClassVar[str]
+    host: str = ...
+    port: int = ...
+    server_thread_class: type[Any] = ...
     server_thread: Any
-    static_handler: Any
-    @classproperty
-    def live_server_url(cls: Any) -> str: ...
-    @classproperty
-    def allowed_host(cls: Any) -> str: ...
+    static_handler: Any = ...
 
 class SerializeMixin:
-    lockfile: Any
+    lockfile: Any = ...
     @classmethod
     def setUpClass(cls) -> None: ...
+    @classmethod
+    def tearDownClass(cls) -> None: ...
 
-__all__ = ("SimpleTestCase", "TestCase", "TransactionTestCase", "skipIfDBFeature", "skipUnlessDBFeature")
+def connections_support_transactions() -> bool: ...

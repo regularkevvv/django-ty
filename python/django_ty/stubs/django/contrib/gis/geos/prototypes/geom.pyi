@@ -1,25 +1,25 @@
 from ctypes import c_char_p
 from typing import Any
 
-from django.contrib.gis.geos.libgeos import GEOSFuncFactory
+from django.contrib.gis.geos.libgeos import GEOSFuncFactory as GEOSFuncFactory
 
 c_uchar_p: Any
 
 class geos_char_p(c_char_p): ...
 
 class GeomOutput(GEOSFuncFactory):
-    restype: Any
-    errcheck: Any
+    restype: Any = ...
+    errcheck: Any = ...
 
 class IntFromGeom(GEOSFuncFactory):
-    argtypes: Any
-    restype: Any
-    errcheck: Any
+    argtypes: Any = ...
+    restype: Any = ...
+    errcheck: Any = ...
 
 class StringFromGeom(GEOSFuncFactory):
-    argtypes: Any
-    restype: Any
-    errcheck: Any
+    argtypes: Any = ...
+    restype: Any = ...
+    errcheck: Any = ...
 
 geos_normalize: Any
 geos_type: Any
@@ -41,4 +41,3 @@ geom_clone: Any
 destroy_geom: Any
 geos_get_srid: Any
 geos_set_srid: Any
-geos_makevalid: Any

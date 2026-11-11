@@ -1,31 +1,29 @@
 from typing import Any
 
-from django.contrib.gis.geos.libgeos import GEOSFuncFactory
+from django.contrib.gis.geos.libgeos import GEOSFuncFactory as GEOSFuncFactory
 
 class UnaryPredicate(GEOSFuncFactory):
-    argtypes: Any
-    restype: Any
-    errcheck: Any
+    argtypes: Any = ...
+    restype: Any = ...
+    errcheck: Any = ...
 
 class BinaryPredicate(UnaryPredicate):
-    argtypes: Any
+    argtypes: Any = ...
 
-geos_hasz: UnaryPredicate
-geos_hasm: UnaryPredicate
-geos_isclosed: UnaryPredicate
-geos_isempty: UnaryPredicate
-geos_isring: UnaryPredicate
-geos_issimple: UnaryPredicate
-geos_isvalid: UnaryPredicate
-geos_contains: BinaryPredicate
-geos_covers: BinaryPredicate
-geos_crosses: BinaryPredicate
-geos_disjoint: BinaryPredicate
-geos_equals: BinaryPredicate
-geos_equalsexact: BinaryPredicate
-geos_equalsidentical: BinaryPredicate
-geos_intersects: BinaryPredicate
-geos_overlaps: BinaryPredicate
-geos_relatepattern: BinaryPredicate
-geos_touches: BinaryPredicate
-geos_within: BinaryPredicate
+geos_hasz: Any
+geos_isclosed: Any
+geos_isempty: Any
+geos_isring: Any
+geos_issimple: Any
+geos_isvalid: Any
+geos_contains: Any
+geos_covers: Any
+geos_crosses: Any
+geos_disjoint: Any
+geos_equals: Any
+geos_equalsexact: Any
+geos_intersects: Any
+geos_overlaps: Any
+geos_relatepattern: Any
+geos_touches: Any
+geos_within: Any

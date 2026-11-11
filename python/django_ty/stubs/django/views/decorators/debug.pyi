@@ -1,7 +1,5 @@
 from collections.abc import Callable
-from typing import Any, Literal
-
-from typing_extensions import TypeVar
+from typing import Any, Literal, TypeVar
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 

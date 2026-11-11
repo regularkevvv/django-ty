@@ -1,16 +1,14 @@
-from re import Pattern
+from typing import Any
 
-TRANSLATOR_COMMENT_MARK: str
-
-dot_re: Pattern[str]
+dot_re: Any
 
 def blankout(src: str, char: str) -> str: ...
 
-context_re: Pattern[str]
-inline_re: Pattern[str]
-block_re: Pattern[str]
-endblock_re: Pattern[str]
-plural_re: Pattern[str]
-constant_re: Pattern[str]
+context_re: Any
+inline_re: Any
+block_re: Any
+endblock_re: Any
+plural_re: Any
+constant_re: Any
 
-def templatize(src: str, origin: str | None = None) -> str: ...
+def templatize(src: str, origin: str = ...) -> str: ...

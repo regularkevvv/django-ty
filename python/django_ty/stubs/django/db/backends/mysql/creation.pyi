@@ -1,8 +1,8 @@
-from django.db.backends.base.creation import BaseDatabaseCreation
-from django.db.backends.mysql.base import DatabaseWrapper
-from typing_extensions import override
+from typing import Any
+
+from django.db.backends.base.creation import (
+    BaseDatabaseCreation as BaseDatabaseCreation,
+)
 
 class DatabaseCreation(BaseDatabaseCreation):
-    connection: DatabaseWrapper
-    @override
-    def sql_table_creation_suffix(self) -> str: ...
+    def sql_table_creation_suffix(self) -> Any: ...

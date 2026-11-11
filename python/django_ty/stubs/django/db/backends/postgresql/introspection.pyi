@@ -1,35 +1,18 @@
-from typing import NamedTuple
+from typing import Any
 
-from django.db.backends.base.introspection import BaseDatabaseIntrospection
-from django.db.backends.postgresql.base import DatabaseWrapper
-from django.db.backends.utils import CursorWrapper
-from django.db.models.deletion import DatabaseOnDelete, _Collector
-from typing_extensions import override
-
-class FieldInfo(NamedTuple):
-    name: str
-    type_code: int
-    display_size: int | None
-    internal_size: int | None
-    precision: int | None
-    scale: int | None
-    null_ok: bool
-    default: str | None
-    collation: str | None
-    is_autofield: bool
-    comment: str | None
-
-class TableInfo(NamedTuple):
-    name: str
-    type: str
-    comment: str | None
+from django.db.backends.base.introspection import (
+    BaseDatabaseIntrospection as BaseDatabaseIntrospection,
+)
 
 class DatabaseIntrospection(BaseDatabaseIntrospection):
-    connection: DatabaseWrapper
-    data_types_reverse: dict[int, str]
-    index_default_access_method: str
-    ignored_tables: list[str]
-    on_delete_types: dict[str, _Collector | DatabaseOnDelete]
-
-    @override
-    def get_table_description(self, cursor: CursorWrapper, table_name: str) -> list[FieldInfo]: ...
+    data_types_reverse: Any = ...
+    ignored_tables: Any = ...
+    def get_field_type(self, data_type: Any, description: Any) -> Any: ...
+    def get_table_list(self, cursor: Any) -> Any: ...
+    def get_table_description(self, cursor: Any, table_name: Any) -> Any: ...
+    def get_sequences(
+        self, cursor: Any, table_name: Any, table_fields: Any = ...
+    ) -> Any: ...
+    def get_relations(self, cursor: Any, table_name: Any) -> Any: ...
+    def get_key_columns(self, cursor: Any, table_name: Any) -> Any: ...
+    def get_constraints(self, cursor: Any, table_name: Any) -> Any: ...

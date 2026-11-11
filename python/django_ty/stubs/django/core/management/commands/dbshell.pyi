@@ -1,8 +1,7 @@
-from typing import Any
+from django.core.management.base import BaseCommand as BaseCommand
+from django.core.management.base import CommandError as CommandError
+from django.core.management.base import CommandParser as CommandParser
+from django.db import DEFAULT_DB_ALIAS as DEFAULT_DB_ALIAS
+from django.db import connections as connections
 
-from django.core.management.base import BaseCommand
-from typing_extensions import override
-
-class Command(BaseCommand):
-    @override
-    def handle(self, **options: Any) -> None: ...
+class Command(BaseCommand): ...

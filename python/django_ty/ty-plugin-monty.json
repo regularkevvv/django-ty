@@ -15,9 +15,9 @@
   },
   "capabilities": {
     "stub-overlays": true,
-    "class-transform": true,
+    "class-transform": false,
     "class-member": false,
-    "instance-member": false,
+    "instance-member": true,
     "call-signature": true,
     "call-return": true,
     "call-state": true,
@@ -28,23 +28,10 @@
     "virtual-types": true,
     "mutation-validation": true,
     "project-index-lookup": true,
-    "class-batch": true
+    "class-batch": false
   },
   "claims": {
-    "classes": [
-      {
-        "kind": "subclass-of",
-        "base-qualified-name": "django.db.models.base.Model"
-      },
-      {
-        "kind": "subclass-of",
-        "base-qualified-name": "django.db.models.Model"
-      },
-      {
-        "kind": "subclass-of",
-        "base-qualified-name": "django.db.models.base.ModelBase.__call__"
-      }
-    ],
+    "classes": [],
     "functions": [
       {
         "qualified-name": "django.http.request.HttpRequest"
@@ -748,62 +735,427 @@
         "kind": "on-subclass-of",
         "base-qualified-name": "django.db.models.options.Options",
         "method-name": "get_field"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "all"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "all"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "filter"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "filter"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "exclude"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "exclude"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "complex_filter"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "complex_filter"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "get"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "get"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "bulk_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "bulk_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "bulk_update"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "bulk_update"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "get_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "get_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "update_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "update_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "first"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "first"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "last"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "last"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "earliest"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "earliest"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "latest"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "latest"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "count"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "count"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "exists"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "exists"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "values"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "values"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "values_list"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "values_list"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "annotate"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "annotate"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "alias"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "alias"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "order_by"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "order_by"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "distinct"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "distinct"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "none"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "none"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "only"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "only"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "defer"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "defer"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "select_related"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "select_related"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "prefetch_related"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "prefetch_related"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "select_for_update"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "select_for_update"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "reverse"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "reverse"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "using"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "using"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "union"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "union"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "intersection"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "intersection"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "difference"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "difference"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "aget"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "aget"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "acreate"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "acreate"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "aget_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "aget_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "aupdate_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "aupdate_or_create"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "afirst"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "afirst"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "alast"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "alast"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "acount"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "acount"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query._BaseQuerySet",
+        "method-name": "aexists"
+      },
+      {
+        "kind": "on-subclass-of",
+        "base-qualified-name": "django.db.models.query.ValuesQuerySet",
+        "method-name": "aexists"
       }
     ],
     "attributes": [
       {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.conf.LazySettings",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.http.request.HttpRequest",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.base.Model",
-        "scope": "class"
-      },
-      {
-        "kind": "contribution-target",
+        "kind": "on-subclass-of",
         "owner-base-qualified-name": "django.db.models.base.Model",
         "scope": "instance"
       },
       {
-        "kind": "contribution-target",
+        "kind": "on-subclass-of",
         "owner-base-qualified-name": "django.db.models.Model",
-        "scope": "class"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.Model",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.base.ModelBase.__call__",
-        "scope": "class"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.base.ModelBase.__call__",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.enums.Choices",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.enums.TextChoices",
-        "scope": "instance"
-      },
-      {
-        "kind": "contribution-target",
-        "owner-base-qualified-name": "django.db.models.enums.IntegerChoices",
         "scope": "instance"
       }
     ],
@@ -834,5 +1186,29 @@
       "module": "django.db.models.query",
       "path": "stubs/django/db/models/query.pyi"
     }
-  ]
+  ],
+  "default-config": {
+    "companion-project-inputs": {
+      "assignment-kinds": [
+        "call"
+      ],
+      "class-source": false,
+      "field-call-keywords": [
+        "null",
+        "default",
+        "db_default",
+        "primary_key",
+        "choices",
+        "to",
+        "to_field",
+        "related_name",
+        "related_query_name"
+      ],
+      "overlay-index": "imports",
+      "field-call-argument-source": false
+    },
+    "companion-early-call-returns": [
+      "get"
+    ]
+  }
 }

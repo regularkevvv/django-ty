@@ -1,64 +1,72 @@
-from collections.abc import Callable, Iterator, Sequence
+import functools
+from collections.abc import Callable, Sequence
 from http.cookies import SimpleCookie
-from typing import Any, TypeAlias
+from typing import Any
 
+from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.http.request import HttpRequest
-from typing_extensions import override
-
-from .backends.base import _EngineTemplate
-
-_TemplateForResponseT: TypeAlias = Sequence[str] | _EngineTemplate | str
+from django.template.base import Template
+from django.template.context import RequestContext
+from django.test.client import Client
 
 class ContentNotRenderedError(Exception): ...
 
 class SimpleTemplateResponse(HttpResponse):
-    content: Any
+    content: Any = ...
     closed: bool
     cookies: SimpleCookie
     status_code: int
-    rendering_attrs: Any
-    template_name: _TemplateForResponseT
-    context_data: dict[str, Any] | None
-    using: str | None
+    rendering_attrs: Any = ...
+    template_name: list[str] | Template | str = ...
+    context_data: dict[str, Any] | None = ...
+    using: str | None = ...
     def __init__(
         self,
-        template: _TemplateForResponseT,
+        template: list[str] | Template | str,
         context: dict[str, Any] | None = ...,
         content_type: str | None = ...,
         status: int | None = ...,
         charset: str | None = ...,
         using: str | None = ...,
-        headers: dict[str, Any] | None = ...,
     ) -> None: ...
-    def resolve_template(self, template: _TemplateForResponseT) -> _EngineTemplate: ...
-    def resolve_context(self, context: dict[str, Any] | None) -> dict[str, Any] | None: ...
+    def resolve_template(
+        self, template: Sequence[str] | Template | str
+    ) -> Template: ...
+    def resolve_context(
+        self, context: dict[str, Any] | None
+    ) -> dict[str, Any] | None: ...
     @property
     def rendered_content(self) -> str: ...
     def add_post_render_callback(self, callback: Callable[..., Any]) -> None: ...
     def render(self) -> SimpleTemplateResponse: ...
     @property
     def is_rendered(self) -> bool: ...
-    @override
-    def __iter__(self) -> Iterator[Any]: ...
+    def __iter__(self) -> Any: ...
 
 class TemplateResponse(SimpleTemplateResponse):
+    client: Client
     closed: bool
+    context: RequestContext  # pyright: ignore[reportIncompatibleVariableOverride]
     context_data: dict[str, Any] | None
     cookies: SimpleCookie
-    _request: HttpRequest
+    csrf_cookie_set: bool
+    json: functools.partial[Any]
+    redirect_chain: list[tuple[str, int]]
+    request: dict[str, int | str]
     status_code: int
-    template_name: _TemplateForResponseT
+    template_name: list[str] | Template | str
+    templates: list[Template]
     using: str | None
-    rendering_attrs: Any
+    wsgi_request: WSGIRequest
+    rendering_attrs: Any = ...
     def __init__(
         self,
         request: HttpRequest,
-        template: _TemplateForResponseT,
+        template: list[str] | Template | str,
         context: dict[str, Any] | None = ...,
         content_type: str | None = ...,
         status: int | None = ...,
-        charset: str | None = ...,
+        charset: None = ...,
         using: str | None = ...,
-        headers: dict[str, Any] | None = ...,
     ) -> None: ...

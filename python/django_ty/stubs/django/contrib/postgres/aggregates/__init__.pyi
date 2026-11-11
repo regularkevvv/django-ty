@@ -1,7 +1,6 @@
 from .general import ArrayAgg as ArrayAgg
 from .general import BitAnd as BitAnd
 from .general import BitOr as BitOr
-from .general import BitXor as BitXor
 from .general import BoolAnd as BoolAnd
 from .general import BoolOr as BoolOr
 from .general import JSONBAgg as JSONBAgg

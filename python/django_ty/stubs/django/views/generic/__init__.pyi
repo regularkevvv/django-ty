@@ -16,23 +16,3 @@ from .edit import UpdateView as UpdateView
 from .list import ListView as ListView
 
 class GenericViewError(Exception): ...
-
-__all__ = [
-    "ArchiveIndexView",
-    "CreateView",
-    "DateDetailView",
-    "DayArchiveView",
-    "DeleteView",
-    "DetailView",
-    "FormView",
-    "GenericViewError",
-    "ListView",
-    "MonthArchiveView",
-    "RedirectView",
-    "TemplateView",
-    "TodayArchiveView",
-    "UpdateView",
-    "View",
-    "WeekArchiveView",
-    "YearArchiveView",
-]

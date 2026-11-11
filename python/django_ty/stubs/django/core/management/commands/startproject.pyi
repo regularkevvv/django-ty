@@ -1,10 +1,6 @@
-from typing import Any
+from django.core.management.templates import TemplateCommand as TemplateCommand
 
-from django.core.management.templates import TemplateCommand
-from typing_extensions import override
+from ..utils import get_random_secret_key as get_random_secret_key
 
 class Command(TemplateCommand):
-    missing_args_message: str
-
-    @override
-    def handle(self, **options: Any) -> None: ...  # type: ignore[override]
+    missing_args_message: str = ...

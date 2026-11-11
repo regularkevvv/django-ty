@@ -5,6 +5,64 @@ The companion delegates to unchanged official Astral ty; it is not a fork of the
 Django's hooks and static API ship in one universal Python wheel. Consumers do not
 build Rust, install WASM artifacts or run a Python worker.
 
+## Native Ty experiment
+
+This branch is testing a `django-types==0.24.0` declaration base so unchanged
+native Ty handles ordinary Django fields, while Monty supplies Django-ty's
+additional constructor, query, relation and model-state checks. The companion's
+use-site projection is opt-in and unreleased. No consumer installation change is
+qualified yet.
+
+The v24 source passes 172 contract and row cases in memory mode, generic SDK
+field checks and runtime-backed API controls in both projection modes, and eight
+focused regressions on every official Ty release from 0.0.84 through 0.0.99,
+using Python 3.13 and Django 6.1.3. It also passes 20 focused ORM cases, four
+model-name ambiguity cases, and the larger Django example in both modes. The
+example has zero positive-case diagnostics and all nine expected negative-case
+diagnostics. All 19 broader companion SDK/editor suites pass in each mode.
+
+Five alternating fresh-process samples of the 7,082-file, 2,501-model workload
+measure **1.881 seconds** with the two-worker companion and **1.788 seconds**
+with up to eight source-loading/copy workers. Both use identical Django code,
+declarations and official Ty. Both pass all 100 assertions, both error controls
+and 20 focused ORM cases. The largest candidate sample is **1.813 seconds**;
+the one-second target remains unmet. `TY_MAX_PARALLELISM` bounds both the
+companion workers and native Ty. Three samples per thread limit measure total
+medians of 2.227, 1.935, 1.814 and 1.798 seconds at 1, 2, 4 and 8 threads.
+See the [v24 qualification receipt](https://github.com/regularkevvv/ty-extended/blob/main/docs/qualification/native-django-parallel-v24.json)
+for every observation, source identity and the source-only qualification scope.
+
+The compact private Django index retains the full decoded model/hook contracts;
+27,511 comparisons match the preceding representation, and a legacy opt-out
+remains available. Payload size falls from 2,853,625 to 1,100,506 bytes. In a
+separate same-binary comparison, that change reduced the median from 2.040 to
+1.949 seconds. It does not remove the project-index pass.
+
+The earlier [v20d four-stack comparison](https://github.com/regularkevvv/ty-extended/blob/main/docs/qualification/native-django-hybrid-v20d.json)
+measured the hybrid at 2.076 seconds, MyPy at 7.136 seconds and official Ty with
+django-types at 0.323 seconds. All pass 100 assertions and two error controls;
+the focused ORM set matches 20/20 for the hybrid and 8/20 for native Ty. Those
+measurements are a separate series from the v24 threading comparison.
+
+The native declaration tree is reproducible with
+`scripts/vendor_native_django.py`: it verifies the complete pinned django-types
+0.24.0 and Django-ty 0.7.0 input trees, restores the recorded newer modules, and
+applies eight explicit adapters. Its default mode checks all 731 packaged static
+files without writing. See `compatibility/native-types-vendor.json` for input
+hashes and the exact adapters. Reproduction does not prove API completeness.
+
+The native base changes explicit annotation conventions: `CharField[Any, Any]`
+becomes `CharField[Any]`, and `QuerySet[Model, Model]` becomes `QuerySet[Model]`.
+Row-specific querysets use `ValuesQuerySet[Model, Row]`. See
+`compatibility/native-types-migration.json`; no behavioral expectations were
+removed from the conformance corpus.
+
+Full static API, automatic consumer activation, installed-wheel/editor,
+Django/Python matrix and hosted-CI checks remain release gates. Python tests are
+50/51: the existing full-conformance receipt is stale and remains a failing gate.
+The complete API and release qualification below describes the published 0.7.0
+baseline; it does not establish compatibility of this new declaration base.
+
 ## Install and check
 
 ```sh

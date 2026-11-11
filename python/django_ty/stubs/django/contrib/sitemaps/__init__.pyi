@@ -1,52 +1,53 @@
-from collections.abc import Iterable, Mapping, Sequence
 from datetime import datetime
-from typing import Any, Generic
+from typing import Any, Protocol
 
 from django.contrib.sites.models import Site
 from django.contrib.sites.requests import RequestSite
 from django.core.paginator import Paginator
 from django.db.models.base import Model
 from django.db.models.query import QuerySet
-from typing_extensions import TypeVar, override
 
-_ItemT = TypeVar("_ItemT")
+PING_URL: str
 
-class Sitemap(Generic[_ItemT]):
-    limit: int
-    protocol: str | None
-    i18n: bool
-    languages: Sequence[str] | None
-    alternates: bool
-    x_default: bool
-    def items(self) -> Iterable[_ItemT]: ...
-    def location(self, item: _ItemT) -> str: ...
+class SitemapNotFound(Exception): ...
+
+def ping_google(sitemap_url: str | None = ..., ping_url: str = ...) -> None: ...
+
+class _SupportsLen(Protocol):
+    def __len__(self) -> int: ...
+
+class _SupportsCount(Protocol):
+    def count(self) -> int: ...
+
+class _SupportsOrdered(Protocol):
+    ordered: bool = ...
+
+class Sitemap:
+    limit: int = ...
+    protocol: str | None = ...
+    def items(self) -> _SupportsLen | _SupportsCount | _SupportsOrdered: ...
+    def location(self, obj: Model) -> str: ...
     @property
-    def paginator(self) -> Paginator[_ItemT]: ...
-    def get_languages_for_item(self, item: _ItemT) -> list[str]: ...
-    def get_protocol(self, protocol: str | None = None) -> str: ...
-    def get_domain(self, site: Site | RequestSite | None = None) -> str: ...
+    def paginator(self) -> Paginator: ...
     def get_urls(
-        self, page: int | str = 1, site: Site | RequestSite | None = None, protocol: str | None = None
+        self,
+        page: int | str = ...,
+        site: Site | RequestSite | None = ...,
+        protocol: str | None = ...,
     ) -> list[dict[str, Any]]: ...
-    def get_latest_lastmod(self) -> datetime | None: ...
 
-_ModelT = TypeVar("_ModelT", bound=Model)
-
-class GenericSitemap(Sitemap[_ModelT]):
-    priority: float | None
-    changefreq: str | None
-    queryset: QuerySet[_ModelT]
-    date_field: str | None
-    protocol: str | None
+class GenericSitemap(Sitemap):
+    priority: float | None = ...
+    changefreq: str | None = ...
+    queryset: QuerySet[Any] = ...
+    date_field: None = ...
     def __init__(
         self,
-        info_dict: Mapping[str, datetime | QuerySet[_ModelT] | str],
-        priority: float | None = None,
-        changefreq: str | None = None,
-        protocol: str | None = None,
+        info_dict: dict[str, datetime | QuerySet[Any] | str],
+        priority: float | None = ...,
+        changefreq: str | None = ...,
+        protocol: str | None = ...,
     ) -> None: ...
-    @override
-    def items(self) -> QuerySet[_ModelT]: ...
-    def lastmod(self, item: _ModelT) -> datetime | None: ...
-    @override
-    def get_latest_lastmod(self) -> datetime | None: ...
+    def lastmod(self, item: Model) -> datetime | None: ...
+
+default_app_config: str

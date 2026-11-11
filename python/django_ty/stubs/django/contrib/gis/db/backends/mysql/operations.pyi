@@ -1,40 +1,20 @@
-from collections.abc import Callable
 from typing import Any
 
-from django.contrib.gis.db.backends.base.operations import BaseSpatialOperations
-from django.contrib.gis.db.backends.utils import SpatialOperator
-from django.contrib.gis.geos.geometry import GEOSGeometryBase
-from django.db.backends.mysql.operations import DatabaseOperations
-from django.utils.functional import cached_property
-from typing_extensions import override
+from django.contrib.gis.db.backends.base.operations import (
+    BaseSpatialOperations as BaseSpatialOperations,
+)
+from django.db.backends.mysql.operations import DatabaseOperations as DatabaseOperations
 
 class MySQLOperations(BaseSpatialOperations, DatabaseOperations):
-    name: str
-    geom_func_prefix: str
-    Adapter: Any
-    @cached_property
-    @override
-    def mariadb(self) -> bool: ...  # type: ignore[override]
-    @cached_property
-    @override
-    def mysql(self) -> bool: ...  # type: ignore[override]
-    @cached_property
-    @override
-    def select(self) -> str: ...  # type: ignore[override]
-    @cached_property
-    @override
-    def from_text(self) -> str: ...  # type: ignore[override]
-    @cached_property
-    def collect(self) -> str: ...
-    @cached_property
-    def gis_operators(self) -> dict[str, SpatialOperator]: ...
-    disallowed_aggregates: Any
-    @cached_property
-    @override
-    def unsupported_functions(self) -> set[str]: ...  # type: ignore[override]
-    @override
+    mysql: bool = ...
+    name: str = ...
+    geom_func_prefix: str = ...
+    Adapter: Any = ...
+    def select(self) -> Any: ...  # type: ignore [override]
+    def from_text(self) -> Any: ...  # type: ignore [override]
+    def gis_operators(self) -> Any: ...
+    disallowed_aggregates: Any = ...
+    def unsupported_functions(self) -> Any: ...
     def geo_db_type(self, f: Any) -> Any: ...
-    @override
-    def get_distance(self, f: Any, value: Any, lookup_type: Any) -> list[Any]: ...
-    @override
-    def get_geometry_converter(self, expression: Any) -> Callable[[Any, Any, Any], GEOSGeometryBase | None]: ...
+    def get_distance(self, f: Any, value: Any, lookup_type: Any) -> Any: ...
+    def get_geometry_converter(self, expression: Any) -> Any: ...

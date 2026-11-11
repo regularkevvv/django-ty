@@ -1,11 +1,15 @@
 from collections.abc import Sequence
+from typing import Any
 
 from django.apps.config import AppConfig
-from django.core.checks.messages import CheckMessage, Warning
+from django.core.checks.messages import Warning
 
-W003: Warning
-W016: Warning
+W003: Any
+W016: Any
 
-def check_csrf_middleware(app_configs: Sequence[AppConfig] | None, **kwargs: object) -> list[CheckMessage]: ...
-def check_csrf_cookie_secure(app_configs: Sequence[AppConfig] | None, **kwargs: object) -> list[CheckMessage]: ...
-def check_csrf_failure_view(app_configs: Sequence[AppConfig] | None, **kwargs: object) -> list[CheckMessage]: ...
+def check_csrf_middleware(
+    app_configs: Sequence[AppConfig] | None = ..., **kwargs: Any
+) -> list[Warning]: ...
+def check_csrf_cookie_secure(
+    app_configs: Sequence[AppConfig] | None = ..., **kwargs: Any
+) -> list[Warning]: ...

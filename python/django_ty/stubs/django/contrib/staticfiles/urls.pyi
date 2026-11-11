@@ -1,5 +1,7 @@
-from django.urls import URLPattern, _AnyURL
+from typing import Any
 
-urlpatterns: list[_AnyURL]
+from django.urls.resolvers import URLPattern
+
+urlpatterns: list[Any] = ...
 
 def staticfiles_urlpatterns(prefix: str | None = ...) -> list[URLPattern]: ...

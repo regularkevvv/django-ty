@@ -1,6 +1,11 @@
-from django.urls import _AnyURL
+from collections.abc import Callable
+from typing import Any
 
-def i18n_patterns(*urls: _AnyURL, prefix_default_language: bool = ...) -> list[_AnyURL]: ...
+from django.urls.resolvers import URLPattern
+
+def i18n_patterns(
+    *urls: Any, prefix_default_language: bool = ...
+) -> list[list[URLPattern]]: ...
 def is_language_prefix_patterns_used(urlconf: str) -> tuple[bool, bool]: ...
 
-urlpatterns: list[_AnyURL]
+urlpatterns: list[Callable[..., Any]]

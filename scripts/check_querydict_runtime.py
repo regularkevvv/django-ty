@@ -29,7 +29,7 @@ CASES = {
 IMPORTS = "from io import BytesIO\nfrom django.core.handlers.asgi import ASGIRequest\nfrom django.http import HttpRequest, QueryDict\nfrom django.test import RequestFactory\n"
 
 
-def check(environment: Path) -> dict[str, str]:
+def check(environment: Path, ty_bin: Path | None = None) -> dict[str, str]:
     python = environment / "bin" / "python"
     runtime = (
         IMPORTS
@@ -86,7 +86,7 @@ print(json.dumps(outcomes))
             )
             result = subprocess.run(
                 [
-                    str(environment / "bin" / "ty-extended"),
+                    str(ty_bin or environment / "bin" / "ty-extended"),
                     "check",
                     *options,
                     str(path),
@@ -127,8 +127,9 @@ print(json.dumps(outcomes))
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("environment", type=Path)
+    parser.add_argument("--ty-bin", type=Path, help="candidate companion executable")
     args = parser.parse_args()
-    print(json.dumps(check(args.environment.resolve()), sort_keys=True))
+    print(json.dumps(check(args.environment.resolve(), args.ty_bin), sort_keys=True))
     return 0
 
 
