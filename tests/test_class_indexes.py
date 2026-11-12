@@ -324,7 +324,7 @@ class ClassIndexesTest(unittest.TestCase):
             name: self.namespace["deferred_request"](
                 {"project-index": response["plugin-index"]}, name
             )["project-index"]
-            for name in response["plugin-index"]["deferred_classes"]
+            for name in response["plugin-index"]["models"]
         }
 
     def compare_classes(self, request):
@@ -431,7 +431,44 @@ class ClassIndexesTest(unittest.TestCase):
         finally:
             self.namespace["plain_model_index"] = general
         self.assertEqual(actual["kind"], "project-index", actual)
-        self.assertEqual(actual, expected)
+
+        def normalized(response):
+            data = response["plugin-index"]
+            probe = {"project-index": data}
+            reverse = {
+                owner: {
+                    member: self.namespace["manager_type"](value[1], None)
+                    if isinstance(value, list)
+                    else value
+                    for member, value in members.items()
+                }
+                for owner, members in data.get("reverse_members", {}).items()
+            }
+            semantic = {
+                "traits": {
+                    name: self.namespace["model_traits"](probe, name)
+                    for name in data["models"]
+                },
+                "classes": {
+                    name: self.namespace["deferred_request"](probe, name)
+                    for name in data["models"]
+                },
+                "reverse": reverse,
+                "other": {
+                    key: value
+                    for key, value in data.items()
+                    if key
+                    not in [
+                        "models",
+                        "deferred_classes",
+                        "reverse_members",
+                        "index_format",
+                    ]
+                },
+            }
+            return {**response, "plugin-index": semantic}
+
+        self.assertEqual(normalized(actual), normalized(expected))
         self.assertEqual(any(observed), expected_fast)
         return actual
 
@@ -613,7 +650,7 @@ class ClassIndexesTest(unittest.TestCase):
 
     def test_compact_flat_index_preserves_hydrated_schemas_and_hook_contracts(self):
         request, compact, legacy = self.compact_and_legacy()
-        self.assertEqual(compact["plugin-index"].get("index_format"), 1)
+        self.assertEqual(compact["plugin-index"].get("index_format"), 2)
         self.assertLess(len(json.dumps(compact)), len(json.dumps(legacy)))
         for cls in request["classes"]:
             name = cls["qualified-name"]

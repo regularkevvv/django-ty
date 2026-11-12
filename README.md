@@ -15,11 +15,13 @@ installation change is qualified yet.
 
 The release ceiling is at most three times bare official Ty for every workload
 median and every paired repeat across all five benchmark shapes. The latest
-completed scheduling trial passes single-module stress locally, while the other
-four shapes fail the strict ceiling. Release remains blocked. A subsequent
-candidate batches independent call handlers after an explicit statelessness
-promise; grouped initialization matches fresh handlers across model scopes and
-primary-key shapes. Optimized timing is pending. See the
+completed v58 trial passes the small and single-module stress shapes locally;
+the distributed, many-files and distributed-stress shapes fail the strict
+ceiling. Release remains blocked. Independent call handlers are batched after
+an explicit statelessness promise; grouped initialization matches fresh handlers
+across model scopes and primary-key shapes. The subsequent class-reference and
+combined-record candidate has passed source-level checks; its optimized timing
+is pending. See the
 [companion performance results](https://github.com/regularkevvv/ty-extended/blob/perf/sparse-companion-analysis/docs/performance.md).
 
 The following measurements describe earlier source checkpoints:
@@ -70,9 +72,22 @@ removed from the conformance corpus.
 
 Full static API, automatic consumer activation, installed-wheel/editor,
 Django/Python matrix and hosted-CI checks remain release gates. Python tests are
-64/65: the existing full-conformance receipt is stale and remains a failing gate.
+68/69: the existing full-conformance receipt is stale and remains a failing gate.
 The complete API and release qualification below describes the published 0.7.0
 baseline; it does not establish compatibility of this new declaration base.
+
+The current development profile keeps the complete model index while combining
+plain-model traits and deferred fields in private index format 2. Readers retain
+format 1 support. Reverse-manager annotations are expanded on access. On a
+companion that offers bounded immutable class snapshots, projects with at least
+512 declarations can retain class references instead of sending their field
+summaries back through the plugin response. Other hosts and unsupported snapshots
+retain the existing representation. These changes are under performance
+qualification; they do not establish the required 3-times native Ty ceiling.
+The complete comparison preserves 10,004 reconstructed class requests, 10,000
+reverse-member responses and 800 ordinary call responses across four cases.
+Python validation currently passes 68 of 69 tests; the stale official-contract
+receipt remains an explicit release blocker.
 
 ## Install and check
 

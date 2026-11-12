@@ -71,6 +71,7 @@ if typing.TYPE_CHECKING:
         CompactClass,
         CompactField,
         CompactModelIndex,
+        CompactPlainModelIndex,
         Contribution,
         Diagnostic,
         DjangoIndex,
@@ -1011,6 +1012,7 @@ def plain_model_index(
     auth: str | None,
     generated: dict[str, str],
     decorators: "list[CallSummary]",
+    source_classes: bool = False,
 ) -> "tuple[DjangoIndex, list[Diagnostic]] | None":
     """Fuse the index for direct, undecorated models with implicit keys.
 
@@ -1023,8 +1025,7 @@ def plain_model_index(
     native_members: dict[str, dict[str, bool]] = {}
     factories: "dict[str, tuple[str, RelationKind | None, bool]]" = {}
     models: "dict[str, CompactModelIndex]" = {}
-    deferred: "dict[str, ClassRequest | CompactClass]" = {}
-    reverse: dict[str, dict[str, str]] = {}
+    reverse: dict[str, dict[str, str | list[str]]] = {}
     queries: dict[str, dict[str, str]] = {}
     reverse_sources: "dict[str, SymbolSource]" = {}
     diagnostics: "list[Diagnostic]" = []
@@ -1083,26 +1084,29 @@ def plain_model_index(
                 )
             if kind in ["foreign-key", "one-to-one"]:
                 decisions.setdefault(member_name + "_id", False)
-            arguments: "list[Argument]" = []
-            for argument in call_arguments:
-                if argument.get("name") not in [
-                    "null",
-                    "default",
-                    "db_default",
-                    "primary_key",
-                    "choices",
-                    "to",
-                ] and not (kind is not None and argument.get("kind") == "positional"):
-                    continue
-                item: "Argument" = {"kind": argument["kind"]}
-                if "name" in argument:
-                    item["name"] = argument["name"]
-                if "value" in argument:
-                    item["value"] = argument["value"]
-                if "type-expr" in argument:
-                    item["type-expr"] = argument["type-expr"]
-                arguments.append(item)
-            fields.append({"n": field["name"], "c": callee, "a": arguments})
+            if not source_classes:
+                arguments: "list[Argument]" = []
+                for argument in call_arguments:
+                    if argument.get("name") not in [
+                        "null",
+                        "default",
+                        "db_default",
+                        "primary_key",
+                        "choices",
+                        "to",
+                    ] and not (
+                        kind is not None and argument.get("kind") == "positional"
+                    ):
+                        continue
+                    item: "Argument" = {"kind": argument["kind"]}
+                    if "name" in argument:
+                        item["name"] = argument["name"]
+                    if "value" in argument:
+                        item["value"] = argument["value"]
+                    if "type-expr" in argument:
+                        item["type-expr"] = argument["type-expr"]
+                    arguments.append(item)
+                fields.append({"n": field["name"], "c": callee, "a": arguments})
             if kind is None:
                 continue
             argument = relation_argument(call)
@@ -1168,9 +1172,16 @@ def plain_model_index(
                 continue
             reverse_sources[key] = source
             reverse.setdefault(target, {})[accessor] = (
-                name if kind == "one-to-one" else manager_type(name, None)
+                name if kind == "one-to-one" else ["manager", name]
             )
-        record: "CompactClass" = {"v": 1, "f": fields}
+            existing_members = native_members.get(target)
+            if existing_members is not None and accessor in existing_members:
+                existing_members.pop(accessor)
+                if not existing_members:
+                    native_members.pop(target)
+        record: "CompactPlainModelIndex" = {"v": 1, "f": fields}
+        if source_classes:
+            record["h"] = True
         if bases != [
             {"expression": "django.db.models.base.Model", "mode": "annotation"}
         ]:
@@ -1180,25 +1191,30 @@ def plain_model_index(
         if "DEFAULT_AUTO_FIELD" in settings:
             record["a"] = settings["DEFAULT_AUTO_FIELD"]
         if used_settings:
-            record["s"] = used_settings
-        models[name] = {"v": 1}
-        deferred[name] = record
-        native_members[name] = {
-            member: True for member, native in decisions.items() if native
+            record["z"] = used_settings
+        models[name] = record
+        shadowed = reverse.get(name, {})
+        members = {
+            member: True
+            for member, native in decisions.items()
+            if native and member not in shadowed
         }
+        if members:
+            native_members[name] = members
     for name in sorted(queries):
-        model = models[name]
-        model["j"] = queries[name]
-    return {
-        "index_format": 1,
+        models[name] = {**models[name], "j": queries[name]}
+    data: "DjangoIndex" = {
+        "index_format": 2,
         "native_member_abstentions": native_members,
         "models": {name: model for name, model in models.items()},
-        "deferred_classes": deferred,
         "model_aliases": model_aliases,
         "settings": settings,
         "auth_user_model": auth,
         "reverse_members": reverse,
-    }, diagnostics
+    }
+    if source_classes:
+        data["__ty_companion_source_classes__"] = {"use": True}
+    return data, diagnostics
 
 
 @on_project_index
@@ -1297,11 +1313,21 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         is not False
     ):
         fused = plain_model_index(
-            classes, settings, names, lookup, model_aliases, auth, generated, decorators
+            classes,
+            settings,
+            names,
+            lookup,
+            model_aliases,
+            auth,
+            generated,
+            decorators,
+            project_index_value(
+                request, ["__ty_companion_source_classes__", "available"], False
+            )
+            is True,
         )
         if fused is not None:
             data, diagnostics = fused
-            declare_native_member_abstentions(data)
             return project_index(
                 data,
                 contributions=contributions,
@@ -1341,7 +1367,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
     diagnostics = []
     reverse_sources: "dict[str, SymbolSource]" = {}
     query_fields: dict[str, dict[str, str]] = {}
-    reverse_members: dict[str, dict[str, str]] = {}
+    reverse_members: dict[str, dict[str, str | list[str]]] = {}
     for cls in classes:
         name = cls["qualified-name"]
         if name not in names:
@@ -1605,11 +1631,61 @@ def compact_class(name: str, request: "ClassRequest") -> "ClassRequest | Compact
     return result
 
 
-def deferred_request(request: "IndexedRequest", name: str) -> "ClassRequest | None":
+def plain_deferred_class(model: "CompactPlainModelIndex") -> "CompactClass":
+    record: "CompactClass" = {"v": 1, "f": model["f"]}
+    if "h" in model:
+        record["h"] = model["h"]
+    if "b" in model:
+        record["b"] = model["b"]
+    if "m" in model:
+        record["m"] = model["m"]
+    if "t" in model:
+        record["t"] = model["t"]
+    if "a" in model:
+        record["a"] = model["a"]
+    if "z" in model:
+        record["s"] = model["z"]
+    return record
+
+
+def materialized_class(
+    request: "IndexedRequest", name: str, stored: "CompactClass"
+) -> "CompactClass":
+    if not stored.get("h"):
+        return stored
+    source = project_index_value(
+        request, ["__ty_companion_source_classes__", "classes", name]
+    )
+    if not isinstance(source, dict):
+        raise ValueError("Missing companion class snapshot for " + name)
+    declaration = deferred_model_class(source)
+    fields: "list[CompactField]" = []
+    for field in declaration.get("fields", []):
+        call = call_of(field)
+        assert call is not None
+        fields.append(
+            {"n": field["name"], "c": call_name(call), "a": call.get("arguments", [])}
+        )
+    result: "CompactClass" = {**stored, "f": fields}
+    result.pop("h", None)
+    return result
+
+
+def deferred_request(
+    request: "IndexedRequest", name: str, provided: "CompactClass | None" = None
+) -> "ClassRequest | None":
+    if provided is not None:
+        return expanded_class(name, materialized_class(request, name, provided))
     stored = project_index_value(request, ["deferred_classes", name])
+    if stored is None:
+        model = project_index_value(request, ["models", name])
+        if isinstance(model, dict) and "f" in model:
+            return expanded_class(
+                name, materialized_class(request, name, plain_deferred_class(model))
+            )
     if stored is None or "class" in stored or stored.get("v") != 1:
         return stored
-    return expanded_class(name, stored)
+    return expanded_class(name, materialized_class(request, name, stored))
 
 
 def expanded_class(name: str, stored: "CompactClass") -> "ClassRequest":
@@ -1777,6 +1853,11 @@ def model_traits(request: "IndexedRequest", name: str) -> "ModelTraits | None":
 def model_entry(request: "IndexedRequest", name: str) -> "ModelIndex | None":
     name = qualified_model(request, name)
     model = project_index_value(request, ["models", name])
+    stored = (
+        plain_deferred_class(model)
+        if isinstance(model, dict) and "f" in model
+        else None
+    )
     if model is not None and model.get("v") == 1:
         expanded: "ModelIndex" = {
             **expanded_traits(model),
@@ -1785,7 +1866,7 @@ def model_entry(request: "IndexedRequest", name: str) -> "ModelIndex | None":
         }
         model = expanded
     if model is not None and model.get("lazy_fields"):
-        deferred = deferred_request(request, name)
+        deferred = deferred_request(request, name, stored)
         if deferred is not None:
             scoped = deferred["project-index"]
             indexed = local_index(
@@ -2704,18 +2785,35 @@ def django_native_member(request: "MemberRequest") -> "MemberResponse | None":
     reverse = project_index_value(
         request, ["reverse_members", name, request["member-name"]]
     )
+    # Plain-model indexes retain the owner instead of constructing an unused
+    # manager annotation for every reverse relation. Expand only on access.
+    if (
+        isinstance(reverse, list)
+        and len(reverse) == 2
+        and reverse[0] == "manager"
+        and isinstance(reverse[1], str)
+    ):
+        reverse = manager_type(reverse[1], None)
     if isinstance(reverse, str):
         return member_response(replace_member(request["member-name"], ann(reverse)))
-    stored = project_index_value(request, ["deferred_classes", name])
-    if stored is None:
-        return None
+    model = project_index_value(request, ["models", name])
     member_name = request["member-name"]
-    if "class" not in stored and stored.get("v") == 1:
-        if native_scalar_member(stored, member_name):
+    if isinstance(model, dict) and "f" in model:
+        compact = materialized_class(request, name, plain_deferred_class(model))
+        if native_scalar_member(compact, member_name):
             return None
-        deferred = expanded_class(name, stored)
+        deferred = expanded_class(name, compact)
     else:
-        deferred = stored
+        stored = project_index_value(request, ["deferred_classes", name])
+        if stored is None:
+            return None
+        if "class" not in stored and stored.get("v") == 1:
+            stored = materialized_class(request, name, stored)
+            if native_scalar_member(stored, member_name):
+                return None
+            deferred = expanded_class(name, stored)
+        else:
+            deferred = stored
     patch = analyze_django_class(deferred)
     if patch is None:
         return None
@@ -4125,7 +4223,8 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     ],
     "companion-native-cli": true,
     "companion-early-project-contributions": true,
-    "companion-stateless-call-batches": true
+    "companion-stateless-call-batches": true,
+    "companion-source-class-lookups": 512
   }
 }
 """)

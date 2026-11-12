@@ -1224,6 +1224,7 @@
     ],
     "companion-native-cli": true,
     "companion-early-project-contributions": true,
-    "companion-stateless-call-batches": true
+    "companion-stateless-call-batches": true,
+    "companion-source-class-lookups": 512
   }
 }

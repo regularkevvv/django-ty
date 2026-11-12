@@ -319,6 +319,7 @@ class CompactField(TypedDict):
 class CompactClass(TypedDict):
     v: Literal[1]
     f: list[CompactField]
+    h: NotRequired[bool]
     b: NotRequired[list[TypeExpr]]
     m: NotRequired[list[str]]
     t: NotRequired[list[str]]
@@ -327,14 +328,24 @@ class CompactClass(TypedDict):
     d: NotRequired[str]
     q: NotRequired[str]
 
+class CompactPlainModelIndex(CompactModelIndex):
+    f: list[CompactField]
+    h: NotRequired[bool]
+    b: NotRequired[list[TypeExpr]]
+    m: NotRequired[list[str]]
+    t: NotRequired[list[str]]
+    a: NotRequired[str]
+    z: NotRequired[dict[str, str]]
+
 class ClassModelIndex(TypedDict, total=False):
     primary_key_patch: FieldPatch | None
     auto_primary_key_default: str | None
     manager_queryset: str | None
 
 class DjangoIndex(TypedDict, total=False):
+    __ty_companion_source_classes__: dict[str, JsonValue]
     native_member_abstentions: dict[str, dict[str, bool]]
-    reverse_members: dict[str, dict[str, str]]
+    reverse_members: dict[str, dict[str, str | list[str]]]
     deferred_classes: dict[str, ClassRequest | CompactClass]
     model_aliases: dict[str, str | None]
     models: dict[str, ModelIndex | CompactModelIndex]
