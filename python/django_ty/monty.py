@@ -400,8 +400,9 @@ def relation_target(
     settings: dict[str, str],
     models: "Collection[str]",
     lookup: dict[str, str | None] | None = None,
+    argument: "Argument | None" = None,
 ) -> "str | None":
-    target = relation_argument(call)
+    target = argument if argument is not None else relation_argument(call)
     if target is None:
         return None
     value = target.get("value")
@@ -1007,6 +1008,7 @@ def plain_model_index(
     if decorators:
         return None
     native_members: dict[str, dict[str, bool]] = {}
+    factories: "dict[str, tuple[str, RelationKind | None, bool]]" = {}
     models: "dict[str, CompactModelIndex]" = {}
     deferred: "dict[str, ClassRequest | CompactClass]" = {}
     reverse: dict[str, dict[str, str]] = {}
@@ -1037,21 +1039,28 @@ def plain_model_index(
             if call is None:
                 continue
             callee = call_name(call)
-            factory = short(callee)
-            if (
-                factory in ["AutoField", "BigAutoField", "SmallAutoField"]
-                or callee.endswith(".CompositePrimaryKey")
-                or typed_literal(
-                    named(call.get("arguments", []), "primary_key"), "bool"
+            classification = factories.get(callee)
+            if classification is None:
+                factory = short(callee)
+                classification = (
+                    factory,
+                    RELATION_FIELDS.get(factory),
+                    factory in ["AutoField", "BigAutoField", "SmallAutoField"]
+                    or callee.endswith(".CompositePrimaryKey")
+                    or factory in ["as_manager", "BaseManager"]
+                    or factory.endswith("Manager")
+                    or callee in generated,
                 )
-                is True
-                or factory in ["as_manager", "BaseManager"]
-                or factory.endswith("Manager")
-                or callee in generated
+                factories[callee] = classification
+            factory, kind, general_factory = classification
+            call_arguments = call.get("arguments", [])
+            primary = named(call_arguments, "primary_key") if call_arguments else None
+            if (
+                general_factory
+                or (primary is not None and typed_literal(primary, "bool") is True)
                 or ("." not in callee and module_of(name) + "." + callee in generated)
             ):
                 return None
-            kind = RELATION_FIELDS.get(factory)
             member_name = field["name"]
             if member_name not in decisions:
                 decisions[member_name] = (
@@ -1062,7 +1071,7 @@ def plain_model_index(
             if kind in ["foreign-key", "one-to-one"]:
                 decisions.setdefault(member_name + "_id", False)
             arguments: "list[Argument]" = []
-            for argument in call.get("arguments", []):
+            for argument in call_arguments:
                 if argument.get("name") not in [
                     "null",
                     "default",
@@ -1093,7 +1102,7 @@ def plain_model_index(
                     key = value["qualified-name"]
             if key is not None and key in settings and key != "DEFAULT_AUTO_FIELD":
                 used_settings[key] = settings[key]
-            target = relation_target(name, call, settings, names, lookup)
+            target = relation_target(name, call, settings, names, lookup, argument)
             if target is None:
                 continue
             if target not in names:
@@ -1114,12 +1123,12 @@ def plain_model_index(
             if target != name and target not in targets:
                 targets.append(target)
             query_name = typed_literal(
-                named(call.get("arguments", []), "related_query_name"), "str"
+                named(call_arguments, "related_query_name"), "str"
             )
             if query_name is not None and query_name != "+":
                 queries.setdefault(target, {})[query_name] = name
             accessor = typed_literal(
-                named(call.get("arguments", []), "related_name"), "str"
+                named(call_arguments, "related_name"), "str"
             )
             if accessor == "+":
                 continue
@@ -4102,7 +4111,10 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     "companion-call-signature-methods": [
       "from_queryset"
     ],
-    "companion-parallel-calls": true
+    "companion-parallel-calls": true,
+    "companion-third-party-overlays": [
+      "django"
+    ]
   }
 }
 """)

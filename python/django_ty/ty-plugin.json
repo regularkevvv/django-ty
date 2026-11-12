@@ -1218,6 +1218,9 @@
     "companion-call-signature-methods": [
       "from_queryset"
     ],
-    "companion-parallel-calls": true
+    "companion-parallel-calls": true,
+    "companion-third-party-overlays": [
+      "django"
+    ]
   }
 }

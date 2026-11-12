@@ -363,6 +363,36 @@ class ClassIndexesTest(unittest.TestCase):
         self.assertEqual(any(observed), expected_fast)
         return actual
 
+    def test_plain_index_reuses_factory_classification_and_keeps_local_managers(self):
+        fixture = self.compact_fixture()
+        classes = fixture["classes"]
+        names = {cls["qualified-name"] for cls in classes}
+        lookup = self.namespace["model_name_lookup"](names)
+        function = self.namespace["plain_model_index"]
+        arguments = (classes, {}, names, lookup, {}, None, {}, [])
+        expected = function(*arguments)
+        short = self.namespace["short"]
+        seen = {}
+
+        def counted(name):
+            if name.startswith("django.db.models."):
+                seen[name] = seen.get(name, 0) + 1
+            return short(name)
+
+        self.namespace["short"] = counted
+        try:
+            self.assertEqual(function(*arguments), expected)
+        finally:
+            self.namespace["short"] = short
+        self.assertEqual(seen, {"django.db.models.CharField": 1, "django.db.models.ForeignKey": 1})
+        # The same unqualified spelling can resolve to a generated manager in
+        # only one module. Its fallback decision cannot be cached by spelling.
+        local = []
+        for module in ["first.models", "second.models"]:
+            local.append(self.model(module + ".Row", [{"name":"value", "assigned-value":{"kind":"call", "callee":{"qualified-name":"Factory"}, "arguments":[]}}], base="django.db.models.base.Model"))
+        names = {cls["qualified-name"] for cls in local}
+        self.assertIsNone(function(local, {}, names, self.namespace["model_name_lookup"](names), {}, None, {"second.models.Factory":"second.models.Rows"}, []))
+
     def test_fused_index_preserves_global_relations_and_diagnostics(self):
         self.compare_fused_and_general(self.compact_fixture(), True)
         request = self.compact_fixture()
