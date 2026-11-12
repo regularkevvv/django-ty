@@ -4094,7 +4094,14 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     "companion-early-call-returns": [
       "get"
     ],
-    "companion-native-member-abstentions": "native_member_abstentions"
+    "companion-native-member-abstentions": "native_member_abstentions",
+    "companion-native-fields": true,
+    "companion-native-call-returns": [
+      "get"
+    ],
+    "companion-call-signature-methods": [
+      "from_queryset"
+    ]
   }
 }
 """)
