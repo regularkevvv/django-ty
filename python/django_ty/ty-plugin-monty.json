@@ -1223,6 +1223,7 @@
       "django"
     ],
     "companion-native-cli": true,
-    "companion-early-project-contributions": true
+    "companion-early-project-contributions": true,
+    "companion-stateless-call-batches": true
   }
 }

@@ -4124,7 +4124,8 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
       "django"
     ],
     "companion-native-cli": true,
-    "companion-early-project-contributions": true
+    "companion-early-project-contributions": true,
+    "companion-stateless-call-batches": true
   }
 }
 """)

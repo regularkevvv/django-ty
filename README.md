@@ -10,8 +10,19 @@ build Rust, install WASM artifacts or run a Python worker.
 This branch is testing a `django-types==0.24.0` declaration base so unchanged
 native Ty handles ordinary Django fields, while Monty supplies Django-ty's
 additional constructor, query, relation and model-state checks. The companion's
-use-site projection is opt-in and unreleased. No consumer installation change is
-qualified yet.
+manifest selects an unreleased native projection strategy. No consumer
+installation change is qualified yet.
+
+The release ceiling is at most three times bare official Ty for every workload
+median and every paired repeat across all five benchmark shapes. The latest
+completed scheduling trial passes single-module stress locally, while the other
+four shapes fail the strict ceiling. Release remains blocked. A subsequent
+candidate batches independent call handlers after an explicit statelessness
+promise; grouped initialization matches fresh handlers across model scopes and
+primary-key shapes. Optimized timing is pending. See the
+[companion performance results](https://github.com/regularkevvv/ty-extended/blob/perf/sparse-companion-analysis/docs/performance.md).
+
+The following measurements describe earlier source checkpoints:
 
 The v24 source passes 172 contract and row cases in memory mode, generic SDK
 field checks and runtime-backed API controls in both projection modes, and eight
@@ -59,7 +70,7 @@ removed from the conformance corpus.
 
 Full static API, automatic consumer activation, installed-wheel/editor,
 Django/Python matrix and hosted-CI checks remain release gates. Python tests are
-50/51: the existing full-conformance receipt is stale and remains a failing gate.
+64/65: the existing full-conformance receipt is stale and remains a failing gate.
 The complete API and release qualification below describes the published 0.7.0
 baseline; it does not establish compatibility of this new declaration base.
 
