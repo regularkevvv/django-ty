@@ -1222,6 +1222,7 @@
     "companion-third-party-overlays": [
       "django"
     ],
-    "companion-native-cli": true
+    "companion-native-cli": true,
+    "companion-early-project-contributions": true
   }
 }

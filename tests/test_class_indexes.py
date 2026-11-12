@@ -26,6 +26,42 @@ class ClassIndexesTest(unittest.TestCase):
     def response(self, request):
         return json.loads(self.namespace["__ty_handle__"](json.dumps(request)))
 
+    def test_settings_only_index_preserves_provider_contributions(self):
+        values = [
+            ("SECRET_KEY", {"kind": "str", "value": "test"}),
+            ("DEBUG", {"kind": "bool", "value": True}),
+            ("LIMIT", {"kind": "int", "value": 10}),
+            ("OPTIONAL", {"kind": "none"}),
+            (
+                "DEFAULT_AUTO_FIELD",
+                {"kind": "str", "value": "django.db.models.BigAutoField"},
+            ),
+        ]
+        request = {
+            "kind": "build-project-index",
+            "context": {"config": {}},
+            "settings": [
+                {
+                    "module": "settings",
+                    "values": [
+                        {"name": name, "value": value} for name, value in values
+                    ],
+                }
+            ],
+            "classes": [
+                self.model("app.models.Parent"),
+                self.model("app.models.Child"),
+            ],
+            "assignments": [],
+            "functions": [],
+        }
+        full = self.response(request)
+        early = self.response({**request, "classes": []})
+        self.assertEqual(early["contributions"], full["contributions"])
+        self.assertEqual(len(early["contributions"]), len(values))
+        self.assertEqual(early["plugin-index"]["models"], {})
+        self.assertEqual(len(full["plugin-index"]["models"]), 2)
+
     def test_plain_index_does_not_build_unused_queryset_hierarchy(self):
         request = {
             "kind": "build-project-index",

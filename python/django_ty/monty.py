@@ -4123,7 +4123,8 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     "companion-third-party-overlays": [
       "django"
     ],
-    "companion-native-cli": true
+    "companion-native-cli": true,
+    "companion-early-project-contributions": true
   }
 }
 """)
