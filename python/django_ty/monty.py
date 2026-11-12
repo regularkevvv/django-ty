@@ -4101,7 +4101,8 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     ],
     "companion-call-signature-methods": [
       "from_queryset"
-    ]
+    ],
+    "companion-parallel-calls": true
   }
 }
 """)
