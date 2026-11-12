@@ -536,6 +536,48 @@ class ClassIndexesTest(unittest.TestCase):
                 call["project-index"] = compact["plugin-index"]
                 self.assertEqual(self.response(call), expected, (name, call["kind"]))
 
+    def test_native_member_declarations_classify_each_field_once(self):
+        fields = [
+            {"n": "field" + str(index), "c": "django.db.models.CharField", "a": []}
+            for index in range(100)
+        ]
+        fields.extend(
+            [
+                {"n": "parent", "c": "django.db.models.ForeignKey", "a": []},
+                {"n": "parent_id", "c": "django.db.models.CharField", "a": []},
+                {"n": "key", "c": "django.db.models.AutoField", "a": []},
+                {"n": "id", "c": "django.db.models.CharField", "a": []},
+            ]
+        )
+        stored = {"v": 1, "f": fields}
+        reverse = {"field0": "other.Model"}
+        expected = {
+            field["n"]: True
+            for field in fields
+            if field["n"] not in reverse
+            and self.namespace["native_scalar_member"](stored, field["n"])
+        }
+        data = {
+            "deferred_classes": {"app.models.Row": stored},
+            "reverse_members": {"app.models.Row": reverse},
+        }
+        original = self.namespace["relation_kind"]
+        calls = []
+
+        def counted(call):
+            calls.append(call)
+            return original(call)
+
+        self.namespace["relation_kind"] = counted
+        try:
+            self.namespace["declare_native_member_abstentions"](data)
+        finally:
+            self.namespace["relation_kind"] = original
+        self.assertEqual(
+            data["native_member_abstentions"], {"app.models.Row": expected}
+        )
+        self.assertLessEqual(len(calls), len(fields))
+
     def test_native_scalar_members_skip_hydration_and_keep_descriptor_precedence(self):
         request = self.compact_fixture()
         response = self.response(request)
@@ -614,6 +656,8 @@ class ClassIndexesTest(unittest.TestCase):
                 }
             )
             self.assertEqual(patch is not None, replaced)
+            declared = result["plugin-index"]["native_member_abstentions"].get(name, {})
+            self.assertEqual(declared.get("parent_id") is True, not replaced)
 
     def test_state_does_not_expand_unused_field_schemas(self):
         request = self.compact_fixture()

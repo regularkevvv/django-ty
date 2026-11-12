@@ -306,14 +306,16 @@ def auto_field(call: "CallSummary") -> "bool":
     return short(call_name(call)) in ["AutoField", "BigAutoField", "SmallAutoField"]
 
 
+RELATION_FIELDS: "dict[str, RelationKind]" = {
+    "ForeignKey": "foreign-key",
+    "ForeignObject": "foreign-key",
+    "OneToOneField": "one-to-one",
+    "ManyToManyField": "many-to-many",
+}
+
+
 def relation_kind(call: "CallSummary") -> "RelationKind | None":
-    kinds: "dict[str, RelationKind]" = {
-        "ForeignKey": "foreign-key",
-        "ForeignObject": "foreign-key",
-        "OneToOneField": "one-to-one",
-        "ManyToManyField": "many-to-many",
-    }
-    return kinds.get(short(call_name(call)))
+    return RELATION_FIELDS.get(short(call_name(call)))
 
 
 def model_scope(module: str) -> str | None:
@@ -328,10 +330,14 @@ def model_scope(module: str) -> str | None:
 def model_name_lookup(models: "Collection[str]") -> dict[str, str | None]:
     """Index conventional models packages once per project, including ambiguity."""
     lookup: dict[str, str | None] = {}
+    scopes: dict[str, str | None] = {}
     for name in models:
-        scope = model_scope(module_of(name))
+        module = module_of(name)
+        if module not in scopes:
+            scopes[module] = model_scope(module)
+        scope = scopes[module]
         if scope is not None:
-            key = scope + "." + short(name)
+            key = name if scope == module else scope + "." + short(name)
             lookup[key] = None if key in lookup else name
     return lookup
 
@@ -380,10 +386,12 @@ def resolve_model(
 def relation_argument(call: "CallSummary") -> "Argument | None":
     args = call.get("arguments", [])
     target = named(args, "to")
-    if target is None:
-        positional = [arg for arg in args if arg.get("kind") == "positional"]
-        target = positional[0] if positional else None
-    return target
+    if target is not None:
+        return target
+    for argument in args:
+        if argument.get("kind") == "positional":
+            return argument
+    return None
 
 
 def relation_target(
@@ -608,8 +616,10 @@ def resolve_class(owner: str, text: str, names: "Collection[str]") -> "str | Non
     text = text.split("[", 1)[0]
     if text in names:
         return text
+    if "." in text:
+        return None
     candidate = module_of(owner) + "." + text
-    return candidate if "." not in text and candidate in names else None
+    return candidate if candidate in names else None
 
 
 def derived_names(
@@ -628,7 +638,7 @@ def derived_names(
                     cls["qualified-name"], text, names
                 ) in selected:
                     selected.add(cls["qualified-name"])
-        if len(selected) == before:
+        if len(selected) == before or len(selected) == len(names):
             return selected
 
 
@@ -996,6 +1006,7 @@ def plain_model_index(
     """
     if decorators:
         return None
+    native_members: dict[str, dict[str, bool]] = {}
     models: "dict[str, CompactModelIndex]" = {}
     deferred: "dict[str, ClassRequest | CompactClass]" = {}
     reverse: dict[str, dict[str, str]] = {}
@@ -1015,6 +1026,7 @@ def plain_model_index(
             or cls.get("nested-classes")
         ):
             return None
+        decisions: dict[str, bool] = {}
         fields: "list[CompactField]" = []
         targets: list[str] = []
         used_settings: dict[str, str] = {}
@@ -1025,19 +1037,30 @@ def plain_model_index(
             if call is None:
                 continue
             callee = call_name(call)
+            factory = short(callee)
             if (
-                auto_field(call)
+                factory in ["AutoField", "BigAutoField", "SmallAutoField"]
                 or callee.endswith(".CompositePrimaryKey")
                 or typed_literal(
                     named(call.get("arguments", []), "primary_key"), "bool"
                 )
                 is True
-                or manager_call(call)
+                or factory in ["as_manager", "BaseManager"]
+                or factory.endswith("Manager")
                 or callee in generated
                 or ("." not in callee and module_of(name) + "." + callee in generated)
             ):
                 return None
-            kind = relation_kind(call)
+            kind = RELATION_FIELDS.get(factory)
+            member_name = field["name"]
+            if member_name not in decisions:
+                decisions[member_name] = (
+                    member_name not in ["id", "pk"]
+                    and kind is None
+                    and factory in SCALAR_FIELDS
+                )
+            if kind in ["foreign-key", "one-to-one"]:
+                decisions.setdefault(member_name + "_id", False)
             arguments: "list[Argument]" = []
             for argument in call.get("arguments", []):
                 if argument.get("name") not in [
@@ -1140,11 +1163,15 @@ def plain_model_index(
             record["s"] = used_settings
         models[name] = {"v": 1}
         deferred[name] = record
+        native_members[name] = {
+            member: True for member, native in decisions.items() if native
+        }
     for name in sorted(queries):
         model = models[name]
         model["j"] = queries[name]
     return {
         "index_format": 1,
+        "native_member_abstentions": native_members,
         "models": {name: model for name, model in models.items()},
         "deferred_classes": deferred,
         "model_aliases": model_aliases,
@@ -2584,23 +2611,43 @@ def deferred_class_patch(
 
 
 def declare_native_member_abstentions(data: "DjangoIndex") -> None:
-    """Publish the same scalar abstentions as the instance-member hook.
-
-    The companion may avoid starting Monty for these exact class/member pairs.
-    Reverse members and noncompact classes retain ordinary hook dispatch.
-    """
+    """Publish exact scalar abstentions with one classification per field."""
+    prepared = data.get("native_member_abstentions")
+    if prepared is None:
+        prepared = {}
+        for name, stored in data.get("deferred_classes", {}).items():
+            if "class" in stored or stored.get("v") != 1:
+                continue
+            decisions: dict[str, bool] = {}
+            for field in stored["f"]:
+                call: "CallSummary" = {
+                    "kind": "call",
+                    "callee": {"qualified-name": field["c"]},
+                }
+                kind = relation_kind(call)
+                member_name = field["n"]
+                if member_name not in decisions:
+                    decisions[member_name] = (
+                        member_name not in ["id", "pk"]
+                        and kind is None
+                        and not auto_field(call)
+                        and short(field["c"]) in SCALAR_FIELDS
+                    )
+                if kind in ["foreign-key", "one-to-one"]:
+                    decisions.setdefault(member_name + "_id", False)
+            prepared[name] = {
+                member: True for member, native in decisions.items() if native
+            }
     result: dict[str, dict[str, bool]] = {}
-    for name, stored in data.get("deferred_classes", {}).items():
-        if "class" in stored or stored.get("v") != 1:
-            continue
+    for name, members in prepared.items():
         reverse = data.get("reverse_members", {}).get(name, {})
-        members = {
-            field["n"]: True
-            for field in stored["f"]
-            if field["n"] not in reverse and native_scalar_member(stored, field["n"])
+        selected = {
+            member: True
+            for member, native in members.items()
+            if native and member not in reverse
         }
-        if members:
-            result[name] = members
+        if selected:
+            result[name] = selected
     data["native_member_abstentions"] = result
 
 
