@@ -1140,9 +1140,7 @@ def plain_model_index(
             )
             if query_name is not None and query_name != "+":
                 queries.setdefault(target, {})[query_name] = name
-            accessor = typed_literal(
-                named(call_arguments, "related_name"), "str"
-            )
+            accessor = typed_literal(named(call_arguments, "related_name"), "str")
             if accessor == "+":
                 continue
             if accessor is None:

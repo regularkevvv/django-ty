@@ -178,11 +178,21 @@ class ClassIndexesTest(unittest.TestCase):
             for _ in range(2):
                 for i in range(100):
                     module = f"app.models.part{(i + 1) % 5}"
-                    self.assertEqual(self.namespace["resolve_model"](module, f"Item{i}", names, lookup), f"app.models.part{i % 5}.Item{i}")
+                    self.assertEqual(
+                        self.namespace["resolve_model"](
+                            module, f"Item{i}", names, lookup
+                        ),
+                        f"app.models.part{i % 5}.Item{i}",
+                    )
             self.assertEqual(len(calls), 5)
-            self.assertEqual(aliases, {f"Item{i}": f"app.models.part{i % 5}.Item{i}" for i in range(100)})
+            self.assertEqual(
+                aliases,
+                {f"Item{i}": f"app.models.part{i % 5}.Item{i}" for i in range(100)},
+            )
             duplicate_aliases = {}
-            self.namespace["model_name_lookup"]({"one.models.Row", "two.models.Row"}, duplicate_aliases)
+            self.namespace["model_name_lookup"](
+                {"one.models.Row", "two.models.Row"}, duplicate_aliases
+            )
             self.assertEqual(duplicate_aliases, {"Row": None})
         finally:
             self.namespace["model_scope"] = scope
@@ -410,14 +420,42 @@ class ClassIndexesTest(unittest.TestCase):
             self.assertEqual(function(*arguments), expected)
         finally:
             self.namespace["short"] = short
-        self.assertEqual(seen, {"django.db.models.CharField": 1, "django.db.models.ForeignKey": 1})
+        self.assertEqual(
+            seen, {"django.db.models.CharField": 1, "django.db.models.ForeignKey": 1}
+        )
         # The same unqualified spelling can resolve to a generated manager in
         # only one module. Its fallback decision cannot be cached by spelling.
         local = []
         for module in ["first.models", "second.models"]:
-            local.append(self.model(module + ".Row", [{"name":"value", "assigned-value":{"kind":"call", "callee":{"qualified-name":"Factory"}, "arguments":[]}}], base="django.db.models.base.Model"))
+            local.append(
+                self.model(
+                    module + ".Row",
+                    [
+                        {
+                            "name": "value",
+                            "assigned-value": {
+                                "kind": "call",
+                                "callee": {"qualified-name": "Factory"},
+                                "arguments": [],
+                            },
+                        }
+                    ],
+                    base="django.db.models.base.Model",
+                )
+            )
         names = {cls["qualified-name"] for cls in local}
-        self.assertIsNone(function(local, {}, names, self.namespace["model_name_lookup"](names), {}, None, {"second.models.Factory":"second.models.Rows"}, []))
+        self.assertIsNone(
+            function(
+                local,
+                {},
+                names,
+                self.namespace["model_name_lookup"](names),
+                {},
+                None,
+                {"second.models.Factory": "second.models.Rows"},
+                [],
+            )
+        )
 
     def test_fused_index_preserves_global_relations_and_diagnostics(self):
         self.compare_fused_and_general(self.compact_fixture(), True)
