@@ -1267,6 +1267,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         )
         if fused is not None:
             data, diagnostics = fused
+            declare_native_member_abstentions(data)
             return project_index(
                 data,
                 contributions=contributions,
@@ -1456,6 +1457,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
     }
     if compact:
         data["index_format"] = 1
+    declare_native_member_abstentions(data)
     return project_index(
         data,
         contributions=contributions,
@@ -2579,6 +2581,27 @@ def deferred_class_patch(
 ) -> "ClassResponse | None":
     deferred = deferred_request(request, name)
     return analyze_django_class(deferred) if deferred is not None else None
+
+
+def declare_native_member_abstentions(data: "DjangoIndex") -> None:
+    """Publish the same scalar abstentions as the instance-member hook.
+
+    The companion may avoid starting Monty for these exact class/member pairs.
+    Reverse members and noncompact classes retain ordinary hook dispatch.
+    """
+    result: dict[str, dict[str, bool]] = {}
+    for name, stored in data.get("deferred_classes", {}).items():
+        if "class" in stored or stored.get("v") != 1:
+            continue
+        reverse = data.get("reverse_members", {}).get(name, {})
+        members = {
+            field["n"]: True
+            for field in stored["f"]
+            if field["n"] not in reverse and native_scalar_member(stored, field["n"])
+        }
+        if members:
+            result[name] = members
+    data["native_member_abstentions"] = result
 
 
 def native_scalar_member(stored: "CompactClass", member_name: str) -> bool:
@@ -4018,7 +4041,8 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     },
     "companion-early-call-returns": [
       "get"
-    ]
+    ],
+    "companion-native-member-abstentions": "native_member_abstentions"
   }
 }
 """)

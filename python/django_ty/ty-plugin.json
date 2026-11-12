@@ -1209,6 +1209,7 @@
     },
     "companion-early-call-returns": [
       "get"
-    ]
+    ],
+    "companion-native-member-abstentions": "native_member_abstentions"
   }
 }

@@ -333,6 +333,7 @@ class ClassModelIndex(TypedDict, total=False):
     manager_queryset: str | None
 
 class DjangoIndex(TypedDict, total=False):
+    native_member_abstentions: dict[str, dict[str, bool]]
     reverse_members: dict[str, dict[str, str]]
     deferred_classes: dict[str, ClassRequest | CompactClass]
     model_aliases: dict[str, str | None]

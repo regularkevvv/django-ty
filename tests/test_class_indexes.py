@@ -541,6 +541,10 @@ class ClassIndexesTest(unittest.TestCase):
         response = self.response(request)
         index = response["plugin-index"]
         name = request["classes"][-1]["qualified-name"]
+        declared = index["native_member_abstentions"].get(name, {})
+        self.assertIs(declared.get("name"), True)
+        for member in ["id", "pk", "parent_id"]:
+            self.assertNotIn(member, declared)
         original = self.namespace["analyze_django_class"]
 
         def unexpected(*args, **kwargs):
@@ -571,6 +575,8 @@ class ClassIndexesTest(unittest.TestCase):
                 member,
             )
         index["reverse_members"].setdefault(name, {})["name"] = name
+        self.namespace["declare_native_member_abstentions"](index)
+        self.assertNotIn("name", index["native_member_abstentions"].get(name, {}))
         self.assertIsNotNone(
             self.namespace["django_native_member"](
                 {
