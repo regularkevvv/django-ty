@@ -264,6 +264,7 @@ MemberRequest = TypedDict(
 IndexedRequest: TypeAlias = ClassRequest | CallRequest | MemberRequest
 
 class FieldData(TypedDict):
+    key_type: str
     name: str
     get: TypeExpr
     set: TypeExpr
@@ -273,6 +274,7 @@ class FieldData(TypedDict):
     target: str | None
 
 class LocalModelIndex(TypedDict):
+    row_fields: list[str]
     primary_key_patch: NotRequired[FieldPatch | None]
     fields: dict[str, str]
     field_types: dict[str, str]
@@ -296,6 +298,8 @@ class ModelTraits(TypedDict):
     query_fields: NotRequired[dict[str, str]]
 
 class ModelIndex(ModelTraits):
+    row_fields: NotRequired[list[str]]
+    relation_key_types: NotRequired[dict[str, str]]
     fields: dict[str, str]
     field_types: dict[str, str]
 
@@ -317,6 +321,7 @@ class CompactField(TypedDict):
     a: list[Argument]
 
 class CompactClass(TypedDict):
+    e: NotRequired[dict[str, str]]
     v: Literal[1]
     f: list[CompactField]
     h: NotRequired[bool]
@@ -329,6 +334,7 @@ class CompactClass(TypedDict):
     q: NotRequired[str]
 
 class CompactPlainModelIndex(CompactModelIndex):
+    e: NotRequired[dict[str, str]]
     f: list[CompactField]
     h: NotRequired[bool]
     b: NotRequired[list[TypeExpr]]
@@ -338,6 +344,7 @@ class CompactPlainModelIndex(CompactModelIndex):
     z: NotRequired[dict[str, str]]
 
 class ClassModelIndex(TypedDict, total=False):
+    relation_key_types: dict[str, str]
     primary_key_patch: FieldPatch | None
     auto_primary_key_default: str | None
     manager_queryset: str | None

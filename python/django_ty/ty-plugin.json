@@ -1201,6 +1201,7 @@
         "choices",
         "to",
         "to_field",
+        "parent_link",
         "related_name",
         "related_query_name"
       ],

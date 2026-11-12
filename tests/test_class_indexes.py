@@ -62,6 +62,370 @@ class ClassIndexesTest(unittest.TestCase):
         self.assertEqual(early["plugin-index"]["models"], {})
         self.assertEqual(len(full["plugin-index"]["models"]), 2)
 
+    def test_selected_scalar_rows_read_one_field_schema(self):
+        fields = [
+            {
+                "name": "field" + str(index),
+                "assigned-value": {
+                    "kind": "call",
+                    "callee": {"qualified-name": "django.db.models.CharField"},
+                    "arguments": [],
+                },
+            }
+            for index in range(100)
+        ]
+        response = self.response(
+            {
+                "kind": "build-project-index",
+                "context": {"config": {}},
+                "classes": [self.model("app.models.Row", fields)],
+            }
+        )
+        request = {
+            "project-index": response["plugin-index"],
+            "arguments": [
+                {"kind": "positional", "value": {"kind": "str", "value": field["name"]}}
+                for field in fields
+            ],
+        }
+        original = self.namespace["model_fields"]
+        calls = []
+
+        def counted(request, name):
+            calls.append(name)
+            return original(request, name)
+
+        self.namespace["model_fields"] = counted
+        try:
+            row = self.namespace["values_row"](request, "app.models.Row")
+        finally:
+            self.namespace["model_fields"] = original
+        self.assertEqual(self.namespace["canonical"](row).count(": str"), 100)
+        self.assertEqual(calls, ["app.models.Row"])
+
+    def relation_query_fixture(self):
+        name = "app.models.TextKey"
+        key = {
+            "name": "slug",
+            "assigned-value": {
+                "kind": "call",
+                "callee": {"qualified-name": "django.db.models.CharField"},
+                "arguments": [
+                    {
+                        "kind": "keyword",
+                        "name": "primary_key",
+                        "value": {"kind": "bool", "value": True},
+                    }
+                ],
+            },
+        }
+        response = self.response(
+            {
+                "kind": "build-project-index",
+                "context": {"config": {}},
+                "classes": [
+                    self.model(name, [key]),
+                    self.model(
+                        "app.models.Ref",
+                        [self.relation("target", {"kind": "str", "value": name})],
+                    ),
+                ],
+            }
+        )
+        return {"project-index": response["plugin-index"]}
+
+    def test_relation_assignment_requires_a_model_instance(self):
+        request = self.relation_query_fixture()
+        patch = self.namespace["deferred_class_patch"](request, "app.models.Ref")
+        fields = {field["name"]: field for field in patch["fields"]}
+        self.assertEqual(
+            self.namespace["canonical"](fields["target"]["instance-set-type"]),
+            "app.models.TextKey",
+        )
+
+    def test_relation_filter_accepts_the_target_raw_key(self):
+        request = self.relation_query_fixture()
+        argument = {
+            "kind": "keyword",
+            "name": "target",
+            "value": {"kind": "str", "value": "alpha"},
+        }
+        request["arguments"] = [argument]
+        self.assertIsNone(
+            self.namespace["validate_lookup"](request, "app.models.Ref", argument)
+        )
+
+    def test_relation_filter_accepts_subclasses_and_rejects_other_models(self):
+        request = self.relation_query_fixture()
+        parent = request["project-index"]["deferred_classes"]["app.models.TextKey"]
+        classes = [
+            parent["class"]
+            if "class" in parent
+            else self.namespace["expanded_class"]("app.models.TextKey", parent)["class"]
+        ]
+        for name, base in [
+            ("Child", "app.models.TextKey"),
+            ("Other", "django.db.models.base.Model"),
+        ]:
+            cls = self.model("app.models." + name)
+            cls["bases"] = [{"expression": base, "mode": "annotation"}]
+            classes.append(cls)
+        cls = self.model(
+            "app.models.Ref",
+            [self.relation("target", {"kind": "str", "value": "app.models.TextKey"})],
+        )
+        classes.append(cls)
+        indexed = self.response(
+            {
+                "kind": "build-project-index",
+                "context": {"config": {}},
+                "classes": classes,
+            }
+        )
+        request = {"project-index": indexed["plugin-index"]}
+        for model, accepted in [("Child", True), ("Other", False)]:
+            argument = {
+                "kind": "keyword",
+                "name": "target",
+                "value": {"kind": "unknown"},
+                "type-expr": {
+                    "expression": "app.models." + model,
+                    "mode": "annotation",
+                },
+            }
+            diagnostic = self.namespace["validate_lookup"](
+                request, "app.models.Ref", argument
+            )
+            self.assertEqual(diagnostic is None, accepted, model)
+            request["arguments"] = [argument]
+            diagnostics = self.namespace["validate_arguments"](
+                request, "app.models.Ref", "filter"
+            )
+            self.assertEqual(not diagnostics, accepted, model)
+
+        constructor = self.namespace["django_signature"](
+            {
+                **request,
+                "callee": {"expression": "app.models.Child", "mode": "annotation"},
+            }
+        )
+        parameters = {
+            item["name"]: item for item in constructor["signature"]["parameters"]
+        }
+        self.assertIn("slug", parameters)
+        self.assertEqual(parameters["slug"]["type-expr"]["expression"], "str")
+
+    def test_relation_values_select_raw_keys_and_traverse_fields(self):
+        request = self.relation_query_fixture()
+        for name in ["target", "target_id", "target__slug"]:
+            with self.subTest(name=name):
+                request["arguments"] = [
+                    {"kind": "positional", "value": {"kind": "str", "value": name}}
+                ]
+                self.assertIsNone(
+                    self.namespace["validate_field_name"](
+                        request, "app.models.Ref", request["arguments"][0]
+                    )
+                )
+                row = self.namespace["values_row"](request, "app.models.Ref")
+                self.assertEqual(
+                    self.namespace["canonical"](row),
+                    "TypedDict({" + json.dumps(name) + ": str})",
+                )
+                request["arguments"].append(
+                    {
+                        "kind": "keyword",
+                        "name": "flat",
+                        "value": {"kind": "bool", "value": True},
+                    }
+                )
+                flat = self.namespace["values_list_row"](
+                    request, "app.models.Ref", True
+                )
+                self.assertEqual(self.namespace["canonical"](flat), "str")
+
+    def test_relation_raw_keys_follow_target_fields_in_both_index_formats(self):
+        def scalar(name, kind, primary=False):
+            return {
+                "name": name,
+                "assigned-value": {
+                    "kind": "call",
+                    "callee": {"qualified-name": "django.db.models." + kind},
+                    "arguments": [
+                        {
+                            "kind": "keyword",
+                            "name": "primary_key",
+                            "value": {"kind": "bool", "value": True},
+                        }
+                    ]
+                    if primary
+                    else [],
+                },
+            }
+
+        text = self.model("app.models.TextKey", [scalar("slug", "CharField", True)])
+        uuid = self.model("app.models.UuidKey", [scalar("key", "UUIDField", True)])
+        code = self.model("app.models.CodeKey", [scalar("code", "CharField")])
+        inherited = self.model("app.models.InheritedKey", base="app.models.TextKey")
+        for compact in [False, True]:
+            for target, to_field, nullable, key_type in [
+                (text, None, False, "str"),
+                (uuid, None, True, "uuid.UUID"),
+                (code, "code", False, "str"),
+                (inherited, None, False, "str"),
+            ]:
+                with self.subTest(compact=compact, target=target["qualified-name"]):
+                    relation = self.relation(
+                        "target", {"kind": "str", "value": target["qualified-name"]}
+                    )
+                    arguments = relation["assigned-value"]["arguments"]
+                    if to_field:
+                        arguments.append(
+                            {
+                                "kind": "keyword",
+                                "name": "to_field",
+                                "value": {"kind": "str", "value": to_field},
+                            }
+                        )
+                    if nullable:
+                        arguments.append(
+                            {
+                                "kind": "keyword",
+                                "name": "null",
+                                "value": {"kind": "bool", "value": True},
+                            }
+                        )
+                    name = "app.models.Ref"
+                    response = self.response(
+                        {
+                            "kind": "build-project-index",
+                            "context": {"config": {"compact-model-index": compact}},
+                            "classes": (
+                                [text, inherited] if target is inherited else [target]
+                            )
+                            + [self.model(name, [relation])],
+                        }
+                    )
+                    request = {"project-index": response["plugin-index"]}
+                    indexed = self.namespace["model_entry"](request, name)
+                    self.assertEqual(
+                        indexed["fields"]["target_id"],
+                        key_type + (" | None" if nullable else ""),
+                    )
+                    patch = self.namespace["deferred_class_patch"](request, name)
+                    fields = {field["name"]: field for field in patch["fields"]}
+                    raw = fields["target_id"]
+                    self.assertEqual(
+                        self.namespace["canonical"](raw["instance-get-type"]),
+                        key_type + " | None",
+                    )
+                    self.assertEqual(
+                        self.namespace["canonical"](raw["instance-set-type"]),
+                        key_type + (" | None" if nullable else ""),
+                    )
+
+    def test_constructor_mro_preserves_diamonds_and_abstains_on_invalid_graphs(self):
+        prefix = "app.models."
+        graphs = [
+            (
+                {
+                    "Root": [],
+                    "Left": ["Root"],
+                    "Right": ["Root"],
+                    "Child": ["Left", "Right"],
+                },
+                "Child",
+                ["Child", "Left", "Right", "Root"],
+            ),
+            (
+                {
+                    "A": [],
+                    "B": [],
+                    "X": ["A", "B"],
+                    "Y": ["B", "A"],
+                    "Child": ["X", "Y"],
+                },
+                "Child",
+                None,
+            ),
+            ({"A": ["B"], "B": ["A"]}, "A", None),
+        ]
+        for graph, target, expected in graphs:
+            with self.subTest(graph=graph):
+                deferred = {
+                    prefix + name: {
+                        "class": {
+                            "qualified-name": prefix + name,
+                            "bases": [
+                                {"expression": prefix + base, "mode": "annotation"}
+                                for base in bases
+                            ],
+                            "fields": [],
+                        },
+                    }
+                    for name, bases in graph.items()
+                }
+                request = {"project-index": {"deferred_classes": deferred}}
+                actual = self.namespace["constructor_mro"](
+                    request, prefix + target, set(), {}
+                )
+                self.assertEqual(
+                    actual,
+                    [prefix + name for name in expected]
+                    if expected is not None
+                    else None,
+                )
+                if expected is None:
+                    self.assertIsNone(
+                        self.namespace["constructor_parameters"](
+                            request, prefix + target
+                        )
+                    )
+
+    def test_constructor_parameters_preserve_nearest_override_and_custom_init(self):
+        names = [
+            "app.models.Root",
+            "app.models.Left",
+            "app.models.Right",
+            "app.models.Child",
+        ]
+
+        def scalar(factory):
+            return {
+                "name": "value",
+                "assigned-value": {
+                    "kind": "call",
+                    "callee": {"qualified-name": "django.db.models." + factory},
+                    "arguments": [],
+                },
+            }
+
+        classes = [
+            self.model(names[0], [scalar("IntegerField")]),
+            self.model(names[1], [scalar("CharField")], base=names[0]),
+            self.model(names[2], [scalar("BooleanField")], base=names[0]),
+            self.model(names[3], base=names[1]),
+        ]
+        classes[-1]["bases"].append({"expression": names[2], "mode": "annotation"})
+        scoped = {"class_models": {name: {} for name in names}}
+        deferred = {
+            cls["qualified-name"]: {"class": cls, "project-index": scoped}
+            for cls in classes
+        }
+        request = {"project-index": {"deferred_classes": deferred}}
+        parameters = self.namespace["constructor_parameters"](request, names[-1])
+        self.assertEqual(parameters["value"]["type-expr"]["expression"], "str")
+        classes[-1]["fields"] = [scalar("FloatField")]
+        parameters = self.namespace["constructor_parameters"](request, names[-1])
+        self.assertEqual(parameters["value"]["type-expr"]["expression"], "float")
+        classes[1]["methods"] = [{"name": "__init__"}]
+        self.assertIsNone(self.namespace["constructor_parameters"](request, names[-1]))
+        self.assertIsNone(
+            self.namespace["django_signature"](
+                {**request, "callee": {"expression": names[-1], "mode": "annotation"}}
+            )
+        )
+
     def test_plain_index_does_not_build_unused_queryset_hierarchy(self):
         request = {
             "kind": "build-project-index",

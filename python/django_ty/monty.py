@@ -90,6 +90,7 @@ if typing.TYPE_CHECKING:
         ModelTraits,
         MutationRequest,
         MutationResponse,
+        Parameter,
         ProjectIndexRequest,
         ProjectIndexResponse,
         RelationKind,
@@ -463,12 +464,106 @@ def choice_target(model: str, call: "CallSummary") -> "str | None":
     return target if "." in target else model + "." + target
 
 
+def relation_key_types(
+    classes: "list[ClassSummary]",
+    names: set[str],
+    settings: dict[str, str],
+    lookup: dict[str, str | None],
+) -> dict[str, dict[str, str]]:
+    """Resolve raw relation keys from target fields, without assuming integer IDs."""
+    selected = {
+        cls["qualified-name"]: cls for cls in classes if cls["qualified-name"] in names
+    }
+    cache: dict[tuple[str, str | None], str] = {}
+    active: set[tuple[str, str | None]] = set()
+
+    def declared(
+        model: str, field_name: str | None, seen: set[str]
+    ) -> "tuple[str, FieldSummary] | None":
+        if model in seen or model not in selected:
+            return None
+        seen = seen | {model}
+        cls = selected[model]
+        for field in cls.get("fields", []):
+            call = call_of(field)
+            if field_name is not None:
+                if field["name"] == field_name:
+                    return model, field
+            elif call is not None and (
+                auto_field(call)
+                or call_name(call).endswith(".CompositePrimaryKey")
+                or typed_literal(
+                    named(call.get("arguments", []), "primary_key"), "bool"
+                )
+                is True
+            ):
+                return model, field
+        for base in cls.get("bases", []):
+            base_name = resolve_class(model, base["expression"], names)
+            if base_name is None:
+                continue
+            found = declared(base_name, field_name, seen)
+            if found is not None:
+                return found
+        return None
+
+    def key_type(model: str, field_name: str | None) -> str:
+        key = (model, field_name)
+        if key in cache:
+            return cache[key]
+        if model not in selected or key in active:
+            return "typing.Any"
+        active.add(key)
+        found = declared(model, field_name, set())
+        result = "int" if found is None and field_name is None else "typing.Any"
+        if found is not None:
+            owner, field = found
+            call = call_of(field)
+            if call is not None:
+                if relation_kind(call) in ["foreign-key", "one-to-one"]:
+                    target = relation_target(owner, call, settings, names, lookup)
+                    argument = named(call.get("arguments", []), "to_field")
+                    target_field = typed_literal(argument, "str")
+                    if target is not None and (
+                        argument is None or isinstance(target_field, str)
+                    ):
+                        result = key_type(target, target_field)
+                else:
+                    result = SCALAR_FIELDS.get(short(call_name(call)), "typing.Any")
+        active.remove(key)
+        cache[key] = result
+        return result
+
+    result: dict[str, dict[str, str]] = {}
+    for name, cls in selected.items():
+        fields: dict[str, str] = {}
+        for field in cls.get("fields", []):
+            call = call_of(field)
+            if call is None or relation_kind(call) not in ["foreign-key", "one-to-one"]:
+                continue
+            target = relation_target(name, call, settings, names, lookup)
+            argument = named(call.get("arguments", []), "to_field")
+            target_field = typed_literal(argument, "str")
+            raw_type = (
+                key_type(target, target_field)
+                if target is not None
+                and (argument is None or isinstance(target_field, str))
+                else "typing.Any"
+            )
+            if raw_type != "int":
+                fields[field["name"]] = raw_type
+        if fields:
+            result[name] = fields
+    return result
+
+
 def field_data(
     model: str,
     field: "FieldSummary",
     settings: dict[str, str],
     models: "Collection[str]",
     lookup: dict[str, str | None] | None = None,
+    key_types: dict[str, str] | None = None,
 ) -> "FieldData | None":
     call = call_of(field)
     if call is None or manager_call(call):
@@ -497,11 +592,7 @@ def field_data(
             get_text = "int | " + DB_DEFAULT
         if nullable or auto_field(call):
             get_text += " | None"
-    set_text = (
-        target_type + " | int" + (" | None" if nullable else "")
-        if relation
-        else get_text
-    )
+    set_text = target_type + (" | None" if nullable else "") if relation else get_text
     return {
         "name": field["name"],
         "get": ann(get_text),
@@ -510,6 +601,7 @@ def field_data(
         "default": default,
         "relation": relation,
         "target": target,
+        "key_type": (key_types or {}).get(field["name"], "int"),
     }
 
 
@@ -540,11 +632,12 @@ def field_patches(data: "FieldData") -> "list[FieldPatch]":
         )
     ]
     if data["relation"] in ["foreign-key", "one-to-one"]:
-        ty = ann("int | None" if data["nullable"] else "int")
+        key = data["key_type"]
+        ty = ann(key + (" | None" if data["nullable"] else ""))
         patches.append(
             field_patch(
                 name + "_id",
-                ann("int | None"),
+                ann(key + " | None"),
                 mode="replace-existing",
                 instance_set_type=ty,
                 constructor_parameter=keyword_only(name + "_id", ty, required=False),
@@ -702,9 +795,11 @@ def local_index(
     models: "Collection[str]",
     lookup: dict[str, str | None],
     include_fields: bool = True,
+    key_types: dict[str, str] | None = None,
 ) -> "LocalModelIndex":
     name = cls["qualified-name"]
     result: "LocalModelIndex" = {
+        "row_fields": [],
         "fields": {"id": "int", "pk": "int"},
         "field_types": {
             "id": settings.get("DEFAULT_AUTO_FIELD", "django.db.models.AutoField"),
@@ -724,7 +819,7 @@ def local_index(
             continue
         declared_id = declared_id or field["name"] == "id"
         data = (
-            field_data(name, field, settings, models, lookup)
+            field_data(name, field, settings, models, lookup, key_types)
             if include_fields
             else None
         )
@@ -733,10 +828,16 @@ def local_index(
                 "int" if auto_field(call) else canonical(data["get"])
             )
             if data["relation"] in ["foreign-key", "one-to-one"]:
-                result["fields"][field["name"] + "_id"] = (
-                    "int | None" if data["nullable"] else "int"
+                result["fields"][field["name"] + "_id"] = data["key_type"] + (
+                    " | None" if data["nullable"] else ""
                 )
             result["field_types"][field["name"]] = field_class(name, call)
+            if data["relation"] != "many-to-many":
+                result["row_fields"].append(
+                    field["name"] + "_id"
+                    if data["relation"] in ["foreign-key", "one-to-one"]
+                    else field["name"]
+                )
         if primary is None and (
             auto_field(call)
             or call_name(call).endswith(".CompositePrimaryKey")
@@ -767,7 +868,7 @@ def local_index(
         else:
             default_type = "int | None"
         result["auto_primary_key_default"] = default_type
-        data = field_data(name, primary_field, settings, models, lookup)
+        data = field_data(name, primary_field, settings, models, lookup, key_types)
         pk_patch: "FieldPatch | None" = None
         if auto_field(call):
             pk_patch = default_fields(default_type)[1]
@@ -785,7 +886,7 @@ def local_index(
                 if parameter is not None:
                     pk_patch["constructor-parameter"] = {**parameter, "name": "pk"}
             result["fields"]["pk"] = (
-                "int"
+                data["key_type"]
                 if data["relation"] in ["foreign-key", "one-to-one"]
                 else canonical(data["get"])
             )
@@ -794,6 +895,12 @@ def local_index(
             # than acquiring the implicit integer key's descriptor.
             result["fields"]["pk"] = "typing.Any"
         result["primary_key_patch"] = pk_patch
+    if (
+        primary is None
+        and not meta_flag(cls, "abstract")
+        and not meta_flag(cls, "proxy")
+    ):
+        result["row_fields"].insert(0, "id")
     methods = [method["name"] for method in cls.get("methods", [])]
     result["custom_loading"] = any(
         method in methods for method in ["__new__", "__init__", "from_db"]
@@ -807,12 +914,15 @@ def inherited_indexes(
     settings: dict[str, str],
     names: set[str],
     lookup: dict[str, str | None],
+    key_types: dict[str, dict[str, str]] | None = None,
 ) -> "dict[str, LocalModelIndex]":
     selected = {
         cls["qualified-name"]: cls for cls in classes if cls["qualified-name"] in names
     }
     local = {
-        name: local_index(cls, settings, names, lookup)
+        name: local_index(
+            cls, settings, names, lookup, key_types=(key_types or {}).get(name)
+        )
         for name, cls in selected.items()
     }
     resolved = local
@@ -821,6 +931,7 @@ def inherited_indexes(
         for name in sorted(selected):
             cls = selected[name]
             result: "LocalModelIndex" = {
+                "row_fields": [],
                 "fields": {},
                 "field_types": {},
                 "auto_primary_key": None,
@@ -830,11 +941,40 @@ def inherited_indexes(
                 "custom_loading": False,
                 "custom_save": False,
             }
+            parent_links: list[str] = []
+            concrete_parent = False
             for base in cls.get("bases", []):
                 base_name = resolve_class(name, base["expression"], names)
                 if base_name not in resolved:
                     continue
                 indexed = resolved[base_name]
+                for column in indexed["row_fields"]:
+                    if column not in result["row_fields"]:
+                        result["row_fields"].append(column)
+                if not meta_flag(cls, "proxy") and not meta_flag(
+                    selected[base_name], "abstract"
+                ):
+                    concrete_parent = True
+                    explicit_link = any(
+                        call is not None
+                        and relation_kind(call) == "one-to-one"
+                        and typed_literal(
+                            named(call.get("arguments", []), "parent_link"), "bool"
+                        )
+                        is True
+                        and relation_target(name, call, settings, names, lookup)
+                        == base_name
+                        for field in cls.get("fields", [])
+                        for call in [call_of(field)]
+                    )
+                    if not explicit_link:
+                        link = short(base_name).lower() + "_ptr"
+                        parent_links.insert(0, link + "_id")
+                        result["fields"][link] = base_name
+                        result["fields"][link + "_id"] = indexed["fields"].get(
+                            "pk", "typing.Any"
+                        )
+                        result["field_types"][link] = "django.db.models.OneToOneField"
                 if "primary_key_patch" in indexed and "primary_key_patch" not in result:
                     result["primary_key_patch"] = indexed["primary_key_patch"]
                 result["auto_primary_key"] = indexed["auto_primary_key"]
@@ -878,6 +1018,26 @@ def inherited_indexes(
                 result[field_map] = {
                     key: result[field_map][key] for key in sorted(result[field_map])
                 }
+            for column in parent_links:
+                if column not in result["row_fields"]:
+                    result["row_fields"].append(column)
+            for column in own["row_fields"]:
+                if column == "id" and (
+                    concrete_parent
+                    or (
+                        "primary_key_patch" in result and "primary_key_patch" not in own
+                    )
+                ):
+                    continue
+                if column not in result["row_fields"]:
+                    if (
+                        column == "id"
+                        and own["auto_primary_key"] is None
+                        and not own["custom_primary_key"]
+                    ):
+                        result["row_fields"].insert(0, column)
+                    else:
+                        result["row_fields"].append(column)
             following[name] = result
         if following == resolved:
             break
@@ -973,6 +1133,7 @@ def deferred_model_class(cls: "ClassSummary") -> "ClassSummary":
                 "primary_key",
                 "choices",
                 "to",
+                "parent_link",
             ] and not (relation and argument.get("kind") == "positional"):
                 continue
             # Retain typed values; argument locations do not participate in
@@ -1046,6 +1207,7 @@ def plain_model_index(
         fields: "list[CompactField]" = []
         targets: list[str] = []
         used_settings: dict[str, str] = {}
+        raw_keys: dict[str, str] = {}
         for field in cls.get("fields", []):
             if field["name"] == "objects":
                 return None
@@ -1084,6 +1246,8 @@ def plain_model_index(
                 )
             if kind in ["foreign-key", "one-to-one"]:
                 decisions.setdefault(member_name + "_id", False)
+            if kind is not None and named(call_arguments, "to_field") is not None:
+                return None
             if not source_classes:
                 arguments: "list[Argument]" = []
                 for argument in call_arguments:
@@ -1120,6 +1284,9 @@ def plain_model_index(
             if key is not None and key in settings and key != "DEFAULT_AUTO_FIELD":
                 used_settings[key] = settings[key]
             target = relation_target(name, call, settings, names, lookup, argument)
+            if target is None or target not in names:
+                if kind in ["foreign-key", "one-to-one"]:
+                    raw_keys[field["name"]] = "typing.Any"
             if target is None:
                 continue
             if target not in names:
@@ -1182,6 +1349,8 @@ def plain_model_index(
         record: "CompactPlainModelIndex" = {"v": 1, "f": fields}
         if source_classes:
             record["h"] = True
+        if raw_keys:
+            record["e"] = raw_keys
         if bases != [
             {"expression": "django.db.models.base.Model", "mode": "annotation"}
         ]:
@@ -1328,6 +1497,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         )
         if fused is not None:
             data, diagnostics = fused
+            declare_native_member_abstentions(data)
             return project_index(
                 data,
                 contributions=contributions,
@@ -1353,14 +1523,17 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         for cls in classes
         if cls["qualified-name"] in queryset_names
     }
+    raw_keys = relation_key_types(classes, names, settings, lookup)
     indexes = (
         {
-            cls["qualified-name"]: local_index(cls, settings, names, lookup, False)
+            cls["qualified-name"]: local_index(
+                cls, settings, names, lookup, False, raw_keys.get(cls["qualified-name"])
+            )
             for cls in classes
             if cls["qualified-name"] in names
         }
         if flat_models
-        else inherited_indexes(classes, settings, names, lookup)
+        else inherited_indexes(classes, settings, names, lookup, raw_keys)
     )
     models: "dict[str, ModelIndex]" = {}
     virtuals: "list[VirtualType]" = []
@@ -1390,6 +1563,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
             "lazy_fields": flat_models,
             "fields": fields,
             "field_types": indexed["field_types"],
+            "row_fields": indexed["row_fields"],
             "manager_queryset": queryset,
             "auto_primary_key_default": indexed["auto_primary_key_default"],
             "auto_primary_key": None
@@ -1401,6 +1575,8 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         }
         if "primary_key_patch" in indexed:
             models[name]["primary_key_patch"] = indexed["primary_key_patch"]
+        if name in raw_keys:
+            models[name]["relation_key_types"] = raw_keys[name]
         for field in cls.get("fields", []):
             call = call_of(field)
             if call is None:
@@ -1592,7 +1768,8 @@ def compact_class(name: str, request: "ClassRequest") -> "ClassRequest | Compact
     if any(value for owner, value in owners.items() if owner != name):
         return request
     if any(
-        key not in ["auto_primary_key_default", "manager_queryset"]
+        key
+        not in ["auto_primary_key_default", "manager_queryset", "relation_key_types"]
         for key in owners.get(name, {})
     ):
         return request
@@ -1614,6 +1791,8 @@ def compact_class(name: str, request: "ClassRequest") -> "ClassRequest | Compact
     if targets:
         result["t"] = targets
     own = owners.get(name, {})
+    if "relation_key_types" in own:
+        result["e"] = own["relation_key_types"]
     default = own.get("auto_primary_key_default")
     if default is not None:
         result["d"] = default
@@ -1635,6 +1814,8 @@ def plain_deferred_class(model: "CompactPlainModelIndex") -> "CompactClass":
     record: "CompactClass" = {"v": 1, "f": model["f"]}
     if "h" in model:
         record["h"] = model["h"]
+    if "e" in model:
+        record["e"] = model["e"]
     if "b" in model:
         record["b"] = model["b"]
     if "m" in model:
@@ -1695,6 +1876,8 @@ def expanded_class(name: str, stored: "CompactClass") -> "ClassRequest":
             "manager_queryset": stored.get("q"),
         }
     }
+    if "e" in stored:
+        owners[name]["relation_key_types"] = stored["e"]
     for target in stored.get("t", []):
         owners[target] = {}
     settings = dict(stored.get("s", {}))
@@ -1743,6 +1926,8 @@ def class_project_index(
         }
         if "primary_key_patch" in models[name]:
             scoped[name]["primary_key_patch"] = models[name]["primary_key_patch"]
+        if "relation_key_types" in models[name]:
+            scoped[name]["relation_key_types"] = models[name]["relation_key_types"]
     for field in cls.get("fields", []):
         call = call_of(field)
         if call is not None and relation_kind(call):
@@ -1763,8 +1948,9 @@ def class_project_index(
     return {"class_models": scoped, "settings": used_settings}
 
 
-@on_class_transform
-def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
+def analyze_class_fields(
+    request: "ClassRequest", include_constructor: bool = False
+) -> "ClassResponse | None":
     cls = request["class"]
     name = cls["qualified-name"]
     scoped = request.get("project-index") or {}
@@ -1826,14 +2012,30 @@ def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
                     read_only=True,
                 )
             )
-        data = field_data(name, field, settings, indexed)
+        data = field_data(
+            name, field, settings, indexed, key_types=own.get("relation_key_types")
+        )
         if data is not None:
             patches = field_patches(data)
             if data["relation"] is None and not auto_field(call):
                 for patch in patches:
                     patch["mode"] = "fill-on-miss"
             fields.extend(patches)
+    if not include_constructor:
+        # Django constructors need the whole model MRO. Keep field access
+        # patches independent and let the call-signature hook validate kwargs.
+        stripped: list[FieldPatch] = []
+        for field in fields:
+            copied = field.copy()
+            copied.pop("constructor-parameter", None)
+            stripped.append(copied)
+        fields = stripped
     return class_patch(fields=fields, class_members=members, instance_members=instance)
+
+
+@on_class_transform
+def analyze_django_class(request: "ClassRequest") -> "ClassResponse | None":
+    return analyze_class_fields(request)
 
 
 @on_class_batch
@@ -1874,9 +2076,13 @@ def model_entry(request: "IndexedRequest", name: str) -> "ModelIndex | None":
                 scoped.get("settings", {}),
                 scoped["class_models"],
                 model_name_lookup(scoped["class_models"]),
+                key_types=scoped["class_models"]
+                .get(name, {})
+                .get("relation_key_types"),
             )
             model["fields"] = indexed["fields"]
             model["field_types"] = indexed["field_types"]
+            model["row_fields"] = indexed["row_fields"]
     return model
 
 
@@ -1921,9 +2127,9 @@ TERMINAL_LOOKUPS = [
 ]
 
 
-def lookup_type(
+def lookup_details(
     request: "CallRequest", model: str, lookup: str
-) -> "tuple[str, str, str | None] | None":
+) -> "tuple[str, str, str, str | None, bool] | None":
     parts = lookup.split("__")
     if not parts or any(not part for part in parts):
         return None
@@ -1931,6 +2137,7 @@ def lookup_type(
     path = parts[:-1] if terminal else parts
     if not path:
         return None
+    nullable = False
     for name in path[:-1]:
         entry = model_entry(request, model) or {}
         ty = (entry.get("fields") or {}).get(name) or (
@@ -1938,12 +2145,64 @@ def lookup_type(
         ).get(name)
         if ty is None:
             return None
+        nullable = (
+            nullable
+            or "None" in ty.split(" | ")
+            or name in (entry.get("query_fields") or {})
+        )
         related = related_model(request, ty)
         if related is None:
             return None
         model = related
     ty = (model_fields(request, model) or {}).get(path[-1])
-    return (path[-1], ty, terminal) if ty is not None else None
+    return (model, path[-1], ty, terminal, nullable) if ty is not None else None
+
+
+def lookup_type(
+    request: "CallRequest", model: str, lookup: str
+) -> "tuple[str, str, str | None] | None":
+    found = lookup_details(request, model, lookup)
+    return (found[1], found[2], found[3]) if found is not None else None
+
+
+def relation_lookup_type(
+    request: "CallRequest", model: str, field: str, expected: str
+) -> str:
+    fields = model_fields(request, model) or {}
+    key_type = fields.get(field + "_id")
+    if key_type is not None and related_model(request, expected) is not None:
+        return expected + " | " + key_type
+    return expected
+
+
+def selected_field_type(
+    request: "CallRequest", model: str, name: str, fields: dict[str, str] | None = None
+) -> str:
+    if "__" not in name and fields is not None:
+        expected = fields.get(name)
+        if expected is None:
+            return "object"
+        owner, field, nullable = model, name, False
+    else:
+        found = lookup_details(request, model, name)
+        if found is None:
+            return "object"
+        owner, field, expected, terminal, nullable = found
+        if terminal is not None:
+            return "object"
+    fields = (
+        fields
+        if owner == model and fields is not None
+        else model_fields(request, owner) or {}
+    )
+    key_type = fields.get(field + "_id")
+    if key_type is not None and related_model(request, expected) is not None:
+        expected = key_type
+    if nullable and not any(
+        part.strip() in ["None", "typing.Any", "Any"] for part in expected.split("|")
+    ):
+        expected += " | None"
+    return expected
 
 
 def field_allows(expected: str, actual: str) -> "bool":
@@ -1951,6 +2210,11 @@ def field_allows(expected: str, actual: str) -> "bool":
 
 
 def literal_matches(expected: str, value: "LiteralValue") -> "bool":
+    if any(
+        part.strip() in ["Any", "typing.Any", "Unknown", "object"]
+        for part in expected.split("|")
+    ):
+        return True
     kind = value.get("kind", "unknown")
     if kind in ["unknown", "class-ref", "enum-ref", "symbol-ref"]:
         return True
@@ -2091,6 +2355,37 @@ def argument_matches(expected: str, argument: "Argument") -> "bool":
     return type_may_match(expected, text)
 
 
+def related_instance_matches(
+    request: "CallRequest", expected: str, argument: "Argument"
+) -> bool:
+    target = related_model(request, expected)
+    actual = argument.get("type-expr")
+    if target is None or actual is None:
+        return False
+    snapshot = actual.get("snapshot") or {}
+    text = (
+        snapshot["qualified-name"]
+        if snapshot.get("kind") == "nominal"
+        else canonical(actual)
+    )
+    pending = [text]
+    visited: set[str] = set()
+    while pending:
+        name = qualified_model(request, pending.pop())
+        if name in visited:
+            continue
+        if name == target:
+            return True
+        visited.add(name)
+        deferred = deferred_request(request, name)
+        if deferred is not None:
+            pending.extend(
+                canonical(base).split("[", 1)[0].strip()
+                for base in deferred["class"].get("bases", [])
+            )
+    return False
+
+
 def string_items_match(expected: str, text: str) -> "bool":
     return all(
         field_allows(expected, "str")
@@ -2143,13 +2438,18 @@ def validate_lookup(
     lookup = arg.get("name")
     if lookup is None:
         return None
-    found = lookup_type(request, model, lookup)
+    found = lookup_details(request, model, lookup)
     if found is None:
         return unknown_lookup_diag(model, lookup, arg)
-    field, expected, terminal = found
+    owner, field, expected, terminal, _ = found
+    expected = relation_lookup_type(request, owner, field, expected)
     return (
         None
         if lookup_matches(expected, terminal, arg)
+        or (
+            terminal in [None, "exact", "iexact"]
+            and related_instance_matches(request, expected, arg)
+        )
         else invalid_lookup_diag(model, field, lookup, expected, arg)
     )
 
@@ -2263,6 +2563,9 @@ def validate_field_name(
     value = typed_literal(arg, "str")
     if fields is None or value is None or value in fields:
         return None
+    found = lookup_type(request, model, value)
+    if found is not None and found[2] is None:
+        return None
     return unknown_lookup_diag(model, value, arg)
 
 
@@ -2326,9 +2629,15 @@ def validate_arguments(
                 name = arg.get("name")
                 if name is not None and "__" not in name and name in fields:
                     expected = fields[name]
+                    if name + "_id" in fields:
+                        expected = relation_lookup_type(request, model, name, expected)
                     found = (
                         None
                         if lookup_matches(expected, None, arg)
+                        or (
+                            name + "_id" in fields
+                            and related_instance_matches(request, expected, arg)
+                        )
                         else invalid_lookup_diag(model, name, name, expected, arg)
                     )
                 else:
@@ -2384,17 +2693,29 @@ def bool_keyword(request: "CallRequest", name: str) -> "bool | None":
     )
 
 
+def default_row_fields(request: "CallRequest", model: str) -> "list[str] | None":
+    entry = model_entry(request, model)
+    return entry.get("row_fields") if entry is not None else None
+
+
 def values_row(request: "CallRequest", model: str) -> "TypeExpr | None":
     fields = model_fields(request, model)
     if fields is None:
         return None
     names = positional_strings(request)
     if not names:
-        names = sorted(fields)
+        names = default_row_fields(request, model)
+        if names is None:
+            return None
     return ann(
         "TypedDict({"
         + ", ".join(
-            [json.dumps(name) + ": " + fields.get(name, "object") for name in names]
+            [
+                json.dumps(name)
+                + ": "
+                + selected_field_type(request, model, name, fields)
+                for name in names
+            ]
         )
         + "})"
     )
@@ -2409,27 +2730,30 @@ def values_list_row(
     if flat and named_row:
         return None
     fields = model_fields(request, model)
+    if not names:
+        names = default_row_fields(request, model)
+        if names is None or not names:
+            return None
     if named_row:
         if fields is None:
             return None
-        if not names:
-            names = sorted(fields)
         return ann(
             'NamedTuple("DjangoTyValuesListRow", {'
             + ", ".join(
-                [json.dumps(name) + ": " + fields.get(name, "object") for name in names]
+                json.dumps(name)
+                + ": "
+                + selected_field_type(request, model, name, fields)
+                for name in names
             )
             + "})"
         )
-    if not names:
-        if flat or fields is None:
-            return None
-        return tuple_type([ann(fields[name]) for name in sorted(fields)])
     if flat:
-        return ann((fields or {}).get(names[0], "object"))
+        return ann(selected_field_type(request, model, names[0], fields))
     if not valid:
         return ann("tuple[object, ...]")
-    return tuple_type([ann((fields or {}).get(name, "object")) for name in names])
+    return tuple_type(
+        [ann(selected_field_type(request, model, name, fields)) for name in names]
+    )
 
 
 def qualified_model(request: "IndexedRequest", name: str) -> "str":
@@ -2838,6 +3162,76 @@ def django_native_member(request: "MemberRequest") -> "MemberResponse | None":
     return None
 
 
+def constructor_mro(
+    request: "CallRequest",
+    name: str,
+    active: set[str],
+    cache: dict[str, list[str] | None],
+) -> list[str] | None:
+    name = qualified_model(request, name)
+    if name in cache:
+        return cache[name]
+    if name in active:
+        return None
+    deferred = deferred_request(request, name)
+    if deferred is None:
+        return [name]
+    bases = [
+        qualified_model(request, canonical(base).split("[", 1)[0].strip())
+        for base in deferred["class"].get("bases", [])
+    ]
+    sequences: list[list[str]] = []
+    for base in bases:
+        lineage = constructor_mro(request, base, active | {name}, cache)
+        if lineage is None:
+            cache[name] = None
+            return None
+        sequences.append(list(lineage))
+    sequences.append(list(bases))
+    result = [name]
+    while True:
+        sequences = [sequence for sequence in sequences if sequence]
+        if not sequences:
+            cache[name] = result
+            return result
+        candidate = None
+        for sequence in sequences:
+            if all(sequence[0] not in other[1:] for other in sequences):
+                candidate = sequence[0]
+                break
+        if candidate is None:
+            cache[name] = None
+            return None
+        result.append(candidate)
+        for sequence in sequences:
+            if sequence[0] == candidate:
+                sequence.pop(0)
+
+
+def constructor_parameters(
+    request: "CallRequest", name: str
+) -> dict[str, "Parameter"] | None:
+    lineage = constructor_mro(request, name, set(), {})
+    if lineage is None:
+        return None
+    parameters: dict[str, Parameter] = {}
+    for owner in lineage:
+        deferred = deferred_request(request, owner)
+        if deferred is None:
+            continue
+        if any(
+            method["name"] == "__init__"
+            for method in deferred["class"].get("methods", [])
+        ):
+            return None
+        patch = analyze_class_fields(deferred, include_constructor=True)
+        for field in (patch or {}).get("fields", []):
+            parameter = field.get("constructor-parameter")
+            if parameter is not None:
+                parameters.setdefault(parameter["name"], parameter)
+    return parameters
+
+
 @on_call_signature
 def django_signature(request: "CallRequest") -> "CallSignatureResponse | None":
     callee = request["callee"]["expression"]
@@ -2851,17 +3245,9 @@ def django_signature(request: "CallRequest") -> "CallSignatureResponse | None":
             )
             if "primary_key_patch" in own and own["primary_key_patch"] is None:
                 return None
-            if any(
-                method["name"] == "__init__"
-                for method in deferred["class"].get("methods", [])
-            ):
+            parameters = constructor_parameters(request, callee)
+            if parameters is None:
                 return None
-            patch = analyze_django_class(deferred)
-            parameters = {}
-            for field in (patch or {}).get("fields", []):
-                parameter = field.get("constructor-parameter")
-                if parameter is not None:
-                    parameters[parameter["name"]] = parameter
             return call_signature_patch(
                 callable_signature(
                     [parameters[name] for name in sorted(parameters)], ann(callee)
@@ -4200,6 +4586,7 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
         "choices",
         "to",
         "to_field",
+        "parent_link",
         "related_name",
         "related_query_name"
       ],
