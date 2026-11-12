@@ -4224,7 +4224,7 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     "companion-native-cli": true,
     "companion-early-project-contributions": true,
     "companion-stateless-call-batches": true,
-    "companion-source-class-lookups": 512
+    "companion-source-class-lookups": false
   }
 }
 """)

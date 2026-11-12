@@ -79,10 +79,12 @@ baseline; it does not establish compatibility of this new declaration base.
 The current development profile keeps the complete model index while combining
 plain-model traits and deferred fields in private index format 2. Readers retain
 format 1 support. Reverse-manager annotations are expanded on access. On a
-companion that offers bounded immutable class snapshots, projects with at least
-512 declarations can retain class references instead of sending their field
-summaries back through the plugin response. Other hosts and unsupported snapshots
-retain the existing representation. These changes are under performance
+companion that offers bounded immutable class snapshots, an explicit
+`companion-source-class-lookups` opt-in can retain class references instead of
+sending their field summaries back through the plugin response. This experimental
+option is disabled by default: a same-binary phase comparison showed that its
+host preparation outweighed the guest savings. Other hosts and unsupported
+snapshots retain the existing representation. These changes are under performance
 qualification; they do not establish the required 3-times native Ty ceiling.
 The complete comparison preserves 10,004 reconstructed class requests, 10,000
 reverse-member responses and 800 ordinary call responses across four cases.
