@@ -161,6 +161,32 @@ class ClassIndexesTest(unittest.TestCase):
             )
         )
 
+    def test_model_scopes_and_aliases_share_one_pass_and_cached_resolution(self):
+        names = {f"app.models.part{i % 5}.Item{i}" for i in range(100)}
+        aliases = {}
+        scope = self.namespace["model_scope"]
+        calls = []
+
+        def counted(module):
+            calls.append(module)
+            return scope(module)
+
+        self.namespace["model_scope"] = counted
+        try:
+            lookup = self.namespace["model_name_lookup"](names, aliases)
+            self.assertEqual(len(calls), 5)
+            for _ in range(2):
+                for i in range(100):
+                    module = f"app.models.part{(i + 1) % 5}"
+                    self.assertEqual(self.namespace["resolve_model"](module, f"Item{i}", names, lookup), f"app.models.part{i % 5}.Item{i}")
+            self.assertEqual(len(calls), 5)
+            self.assertEqual(aliases, {f"Item{i}": f"app.models.part{i % 5}.Item{i}" for i in range(100)})
+            duplicate_aliases = {}
+            self.namespace["model_name_lookup"]({"one.models.Row", "two.models.Row"}, duplicate_aliases)
+            self.assertEqual(duplicate_aliases, {"Row": None})
+        finally:
+            self.namespace["model_scope"] = scope
+
     def test_qualified_model_lookup_preserves_legacy_order_without_repeated_scans(self):
         class CountedModels(set):
             iterations = 0

@@ -327,17 +327,24 @@ def model_scope(module: str) -> str | None:
     return scope
 
 
-def model_name_lookup(models: "Collection[str]") -> dict[str, str | None]:
-    """Index conventional models packages once per project, including ambiguity."""
+def model_name_lookup(
+    models: "Collection[str]", aliases: dict[str, str | None] | None = None
+) -> dict[str, str | None]:
+    """Index model scopes and aliases in one pass, including ambiguity."""
     lookup: dict[str, str | None] = {}
     scopes: dict[str, str | None] = {}
     for name in models:
-        module = module_of(name)
+        parts = name.rsplit(".", 1)
+        module = parts[0] if len(parts) == 2 else ""
+        alias = parts[-1]
+        if aliases is not None:
+            aliases[alias] = None if alias in aliases else name
         if module not in scopes:
             scopes[module] = model_scope(module)
+            lookup["@scope:" + module] = scopes[module]
         scope = scopes[module]
         if scope is not None:
-            key = name if scope == module else scope + "." + short(name)
+            key = name if scope == module else scope + "." + alias
             lookup[key] = None if key in lookup else name
     return lookup
 
@@ -352,7 +359,13 @@ def resolve_model(
         local = module + "." + raw
         if local in models:
             return local
-        scope = model_scope(module)
+        key = "@scope:" + module
+        if lookup is not None and key in lookup:
+            scope = lookup[key]
+        else:
+            scope = model_scope(module)
+            if lookup is not None:
+                lookup[key] = scope
         if scope is None:
             return local
         if lookup is None:
@@ -1231,11 +1244,8 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
         decorated.extend(cls.get("methods", []))
     decorators = [dec for item in decorated for dec in item.get("decorators", [])]
     names = derived_names(classes, MODEL_BASES)
-    lookup = model_name_lookup(names)
     model_aliases: dict[str, str | None] = {}
-    for name in names:
-        alias = short(name)
-        model_aliases[alias] = None if alias in model_aliases else name
+    lookup = model_name_lookup(names, model_aliases)
     # Plain models do not need a QuerySet hierarchy. Resolve it only for a
     # from_queryset assignment or after the direct-model path declines.
     queryset_names: set[str] | None = None
@@ -4114,7 +4124,8 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
     "companion-parallel-calls": true,
     "companion-third-party-overlays": [
       "django"
-    ]
+    ],
+    "companion-native-cli": true
   }
 }
 """)

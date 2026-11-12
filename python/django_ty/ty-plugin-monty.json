@@ -1221,6 +1221,7 @@
     "companion-parallel-calls": true,
     "companion-third-party-overlays": [
       "django"
-    ]
+    ],
+    "companion-native-cli": true
   }
 }
