@@ -1227,25 +1227,16 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
     for name in names:
         alias = short(name)
         model_aliases[alias] = None if alias in model_aliases else name
-    # With no model inheritance, a field schema depends only on its own class.
-    # Keep compact traits now and resolve complete schemas on actual query use.
-    flat_models = not any(
-        resolve_class(cls["qualified-name"], base["expression"], names) in names
-        for cls in classes
-        if cls["qualified-name"] in names
-        for base in cls.get("bases", [])
-    )
-    queryset_names = derived_names(classes, [QUERYSET_BASE], generic=True)
-    querysets = {
-        cls["qualified-name"]: cls
-        for cls in classes
-        if cls["qualified-name"] in queryset_names
-    }
+    # Plain models do not need a QuerySet hierarchy. Resolve it only for a
+    # from_queryset assignment or after the direct-model path declines.
+    queryset_names: set[str] | None = None
     generated = {}
     for assignment in request.get("assignments", []):
         call = call_of(assignment)
         if call is None or short(call_name(call)) != "from_queryset":
             continue
+        if queryset_names is None:
+            queryset_names = derived_names(classes, [QUERYSET_BASE], generic=True)
         positional = [
             arg for arg in call.get("arguments", []) if arg.get("kind") == "positional"
         ]
@@ -1285,8 +1276,7 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
             )
         )
     if (
-        flat_models
-        and request.get("context", {}).get("config", {}).get("compact-model-index")
+        request.get("context", {}).get("config", {}).get("compact-model-index")
         is not False
     ):
         fused = plain_model_index(
@@ -1305,6 +1295,21 @@ def build_django_index(request: "ProjectIndexRequest") -> "ProjectIndexResponse"
                 ],
                 diagnostics=diagnostics,
             )
+    # The direct path has already checked its bases. Inheritance and custom
+    # managers retain the complete general hierarchy and schema path.
+    flat_models = not any(
+        resolve_class(cls["qualified-name"], base["expression"], names) in names
+        for cls in classes
+        if cls["qualified-name"] in names
+        for base in cls.get("bases", [])
+    )
+    if queryset_names is None:
+        queryset_names = derived_names(classes, [QUERYSET_BASE], generic=True)
+    querysets = {
+        cls["qualified-name"]: cls
+        for cls in classes
+        if cls["qualified-name"] in queryset_names
+    }
     indexes = (
         {
             cls["qualified-name"]: local_index(cls, settings, names, lookup, False)

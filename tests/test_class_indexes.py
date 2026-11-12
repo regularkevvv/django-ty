@@ -26,6 +26,36 @@ class ClassIndexesTest(unittest.TestCase):
     def response(self, request):
         return json.loads(self.namespace["__ty_handle__"](json.dumps(request)))
 
+    def test_plain_index_does_not_build_unused_queryset_hierarchy(self):
+        request = {
+            "kind": "build-project-index",
+            "context": {"config": {}},
+            "classes": [self.model("app.models.Item" + str(i)) for i in range(100)],
+        }
+        expected = self.response(request)
+        derived = self.namespace["derived_names"]
+        resolve = self.namespace["resolve_class"]
+        hierarchies = []
+        resolutions = []
+
+        def derived_names(classes, bases, generic=False):
+            hierarchies.append(bases)
+            return derived(classes, bases, generic)
+
+        def resolve_class(owner, text, names):
+            resolutions.append((owner, text))
+            return resolve(owner, text, names)
+
+        self.namespace["derived_names"] = derived_names
+        self.namespace["resolve_class"] = resolve_class
+        try:
+            self.assertEqual(self.response(request), expected)
+            self.assertEqual(hierarchies, [self.namespace["MODEL_BASES"]])
+            self.assertEqual(resolutions, [])
+        finally:
+            self.namespace["derived_names"] = derived
+            self.namespace["resolve_class"] = resolve
+
     def test_explicit_primary_keys_preserve_schema_and_class_aliases(self):
         for field_type, key_name, query_type, instance_type in [
             ("CharField", "slug", "str", "str"),
