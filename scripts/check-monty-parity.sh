@@ -22,7 +22,7 @@ cleanup() {
 }
 trap cleanup EXIT
 uv venv --python 3.13 "$WORK_DIR/env"
-uv pip install --python "$WORK_DIR/env/bin/python" 'ty-extended==0.90.0' 'pydantic-monty==1.5.0'
+uv pip install --python "$WORK_DIR/env/bin/python" 'ty-extended==0.90.0' 'pydantic-monty==1.6.0'
 DJANGO_TY_ORACLE_PATH="$WORK_DIR/oracle.jsonl" cargo test --locked --test plugin
 "$WORK_DIR/env/bin/python" "$ROOT/scripts/check_monty_parity.py" \
   "$WORK_DIR/oracle.jsonl" "$WORK_DIR/cpython.jsonl" --runtime cpython

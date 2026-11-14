@@ -90,7 +90,7 @@ jobs:
       - name: Clean coverage artifacts
         if: always()
         run: cargo clean
-      - name: Compare complete CPython and Monty 1.5 responses
+      - name: Compare complete CPython and Monty responses
         run: bash scripts/check-monty-parity.sh
       - name: Clean remaining reference artifacts
         if: always()
