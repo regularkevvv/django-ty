@@ -25,6 +25,7 @@ policy = "Documentation defines expected behavior; installed Django validates re
 "querysets.async-return-methods" = "ref/models/querysets/"
 "querysets.values" = "ref/models/querysets/"
 "querysets.values-list" = "ref/models/querysets/"
+"querysets.lazy-rows" = "ref/models/querysets/#values"
 "querysets.annotate" = "ref/models/querysets/"
 "querysets.prefetch-annotations" = "ref/models/querysets/#prefetch-related"
 "querysets.ordering-field-validation" = "ref/models/querysets/#order-by"
