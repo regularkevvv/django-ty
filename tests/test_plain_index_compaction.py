@@ -87,7 +87,7 @@ class PlainIndexCompactionTest(unittest.TestCase):
         ]
         if backwards:
             classes.reverse()
-        # Exercise the same JSON boundary as the companion, rather than exposing
+        # Exercise the same JSON boundary as ty-extended, rather than exposing
         # construction-time aliases as mutable shared state to a reader.
         return json.loads(
             json.dumps(

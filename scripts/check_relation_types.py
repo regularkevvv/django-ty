@@ -1,4 +1,4 @@
-"""Check custom relation keys through the real companion in both projection modes."""
+"""Check custom relation keys through ty-extended in both projection modes."""
 
 from __future__ import annotations
 

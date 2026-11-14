@@ -127,7 +127,7 @@ print(json.dumps(outcomes))
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("environment", type=Path)
-    parser.add_argument("--ty-bin", type=Path, help="candidate companion executable")
+    parser.add_argument("--ty-bin", type=Path, help="candidate ty-extended executable")
     args = parser.parse_args()
     print(json.dumps(check(args.environment.resolve(), args.ty_bin), sort_keys=True))
     return 0

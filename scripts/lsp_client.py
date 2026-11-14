@@ -1,4 +1,4 @@
-"""Framed LSP test client for installed companion qualification."""
+"""Framed LSP test client for installed plugin qualification."""
 
 from __future__ import annotations
 

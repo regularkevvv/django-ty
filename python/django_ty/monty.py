@@ -1838,7 +1838,7 @@ def materialized_class(
         request, ["__ty_companion_source_classes__", "classes", name]
     )
     if not isinstance(source, dict):
-        raise ValueError("Missing companion class snapshot for " + name)
+        raise ValueError("Missing ty-extended class snapshot for " + name)
     declaration = deferred_model_class(source)
     fields: "list[CompactField]" = []
     for field in declaration.get("fields", []):
