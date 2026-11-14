@@ -1,4 +1,4 @@
-"""Configure the packaged Django plugin for the Monty companion."""
+"""Configure the packaged Django plugin for ty-extended."""
 
 from __future__ import annotations
 
