@@ -1,40 +1,49 @@
+import types
 from collections.abc import Iterator
-from datetime import date, datetime, time
+from datetime import date, time
+from datetime import datetime as builtin_datetime
 from decimal import Decimal
-from typing import Any
+from typing import Any, overload
 
-ISO_INPUT_FORMATS: Any
-FORMAT_SETTINGS: Any
+from typing_extensions import TypeVar
+
+ISO_INPUT_FORMATS: dict[str, list[str]]
+FORMAT_SETTINGS: frozenset[str]
 
 def reset_format_cache() -> None: ...
-def iter_format_modules(
-    lang: str, format_module_path: list[str] | str | None = ...
-) -> Iterator[Any]: ...
-def get_format_modules(lang: str | None = ..., reverse: bool = ...) -> list[Any]: ...
-def get_format(
-    format_type: str, lang: str | None = ..., use_l10n: bool | None = ...
-) -> str: ...
+def iter_format_modules(lang: str, format_module_path: list[str] | str | None = None) -> Iterator[types.ModuleType]: ...
+def get_format_modules(lang: str | None = None) -> list[types.ModuleType]: ...
+def get_format(format_type: str, lang: str | None = None, use_l10n: bool | None = None) -> Any: ...
 
-get_format_lazy: Any
+get_format_lazy: Any  # Any: lazy wrapper around get_format
 
 def date_format(
-    value: date | datetime | str,
-    format: str | None = ...,
-    use_l10n: bool | None = ...,
+    value: date | builtin_datetime | str, format: str | None = None, use_l10n: bool | None = None
 ) -> str: ...
 def time_format(
-    value: time | datetime | str,
-    format: str | None = ...,
-    use_l10n: bool | None = ...,
+    value: time | builtin_datetime | str, format: str | None = None, use_l10n: bool | None = None
 ) -> str: ...
 def number_format(
     value: Decimal | float | str,
-    decimal_pos: int | None = ...,
-    use_l10n: bool | None = ...,
-    force_grouping: bool = ...,
+    decimal_pos: int | None = None,
+    use_l10n: bool | None = None,
+    force_grouping: bool = False,
 ) -> str: ...
-def localize(value: Any, use_l10n: bool | None = ...) -> Any: ...
+
+_T = TypeVar("_T")
+
+# Mypy considers this invalid (overlapping signatures), but thanks to implementation
+# details it works as expected (all values from the union are `localize`d to str,
+# while type of others is preserved)
+@overload
+def localize(value: builtin_datetime | date | time | Decimal | float | str, use_l10n: bool | None = None) -> str: ...
+@overload
+def localize(value: _T, use_l10n: bool | None = None) -> _T: ...
+@overload
 def localize_input(
-    value: datetime | Decimal | float | str | None, default: str | None = ...
-) -> str | None: ...
-def sanitize_separators(value: Decimal | int | str) -> Decimal | int | str: ...
+    value: builtin_datetime | date | time | Decimal | float | str, default: str | None = None
+) -> str: ...
+@overload
+def localize_input(value: _T, default: str | None = None) -> _T: ...
+def sanitize_strftime_format(fmt: str) -> str: ...
+def sanitize_separators(value: _T) -> _T: ...

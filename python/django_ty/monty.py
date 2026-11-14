@@ -3386,13 +3386,13 @@ def packaged_manifest(request: dict[str, JsonValue]) -> dict[str, JsonValue]:
 {
   "id": "django-ty",
   "name": "Django ty plugin",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "protocol-version": {
     "major": 0,
     "minor": 9
   },
   "ty-compatibility": {
-    "requirement": ">=0.89.0,<0.90.0"
+    "requirement": ">=0.90.0,<1.0"
   },
   "runtime": {
     "kind": "monty",

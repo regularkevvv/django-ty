@@ -1,5 +1,3 @@
-from http import cookies
-
-SimpleCookie = cookies.SimpleCookie
+from http.cookies import SimpleCookie as SimpleCookie
 
 def parse_cookie(cookie: str) -> dict[str, str]: ...

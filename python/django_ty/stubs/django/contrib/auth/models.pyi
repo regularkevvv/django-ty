@@ -1,97 +1,92 @@
+import datetime as dt
 from collections.abc import Iterable
-from typing import Any, ClassVar, Literal, TypeAlias, TypeVar
+from typing import Any, ClassVar, Literal, TypeAlias
+from typing_extensions import Never, Self
 
-from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.base_user import AbstractBaseUser as AbstractBaseUser
 from django.contrib.auth.base_user import BaseUserManager as BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models import QuerySet
 from django.db.models.base import Model
-from django.db.models.manager import EmptyManager, ManyToManyRelatedManager
-from typing_extensions import Never, Self
+from django.db.models.expressions import Combinable
+from django.db.models.manager import EmptyManager
+from django.utils.functional import _StrOrPromise
+from typing_extensions import TypeVar
 
-_AnyUser: TypeAlias = AbstractUser | AnonymousUser
+# This is our "placeholder" type the mypy plugin refines to configured 'AUTH_USER_MODEL'
+# wherever it is used as a type. The most recognised example of this is (probably)
+# `HttpRequest.user`
+_User: TypeAlias = AbstractBaseUser
 
-_T = TypeVar("_T", bound=Model)
+_UserModel: TypeAlias = type[_User]
 
-def update_last_login(
-    sender: type[AbstractBaseUser], user: AbstractBaseUser, **kwargs: Any
-) -> None: ...
+_AnyUser: TypeAlias = _User | AnonymousUser
 
-_PermissionT = TypeVar("_PermissionT", bound=Permission)
+# These are only needed for generic classes in order to bind to a specific implementation
+_AnyUserType = TypeVar("_AnyUserType", bound=_AnyUser)  # noqa: PYI018
 
-class PermissionManager(models.Manager[_PermissionT]):
-    def get_by_natural_key(
-        self, codename: str, app_label: str, model: str
-    ) -> _PermissionT: ...
+# do not use the alias `_User` so the bound remains at `AbstractBaseUser`
+_UserType = TypeVar("_UserType", bound=AbstractBaseUser)
+
+def update_last_login(sender: _UserModel, user: _User, **kwargs: Any) -> None: ...
+
+class PermissionManager(models.Manager[Permission]):
+    def get_by_natural_key(self, codename: str, app_label: str, model: str) -> Permission: ...
 
 class Permission(models.Model):
     content_type_id: int
-    objects: ClassVar[PermissionManager[Self]]  # type: ignore[assignment]
+    objects: ClassVar[PermissionManager]
 
-    name = models.CharField(max_length=255)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    codename = models.CharField(max_length=100)
+    name: models.CharField[str | int | Combinable, str]
+    content_type: models.ForeignKey[ContentType | Combinable, ContentType]
+    codename: models.CharField[str | int | Combinable, str]
+    @property
+    def user_perm_str(self) -> str: ...
     def natural_key(self) -> tuple[str, str, str]: ...
-    group_set = ManyToManyRelatedManager["Group", "Permission"]()
 
-_GroupT = TypeVar("_GroupT", bound=Group)
-
-class GroupManager(models.Manager[_GroupT]):
-    def get_by_natural_key(self, name: str) -> _GroupT: ...
+class GroupManager(models.Manager[Group]):
+    def get_by_natural_key(self, name: str) -> Group: ...
+    async def aget_by_natural_key(self, name: str) -> Group: ...
 
 class Group(models.Model):
-    objects: ClassVar[GroupManager[Self]]  # type: ignore[assignment]
+    objects: ClassVar[GroupManager]
 
-    name = models.CharField(max_length=150)
-    permissions = models.ManyToManyField[Permission, Any](Permission)
+    name: models.CharField[str | int | Combinable, str]
+    permissions = models.ManyToManyField(Permission)
     def natural_key(self) -> tuple[str]: ...
-    user_set = ManyToManyRelatedManager["PermissionsMixin", "Group"]()
 
-class UserManager(BaseUserManager[_T]):
-    use_in_migrations: bool = ...
+class UserManager(BaseUserManager[_UserType]):
     def create_user(
-        self,
-        username: str,
-        email: str | None = ...,
-        password: str | None = ...,
-        **extra_fields: Any,
-    ) -> _T: ...
+        self, username: str, email: str | None = ..., password: str | None = ..., **extra_fields: Any
+    ) -> _UserType: ...
     async def acreate_user(
-        self,
-        username: str,
-        email: str | None = ...,
-        password: str | None = ...,
-        **extra_fields: Any,
-    ) -> _T: ...
+        self, username: str, email: str | None = ..., password: str | None = ..., **extra_fields: Any
+    ) -> _UserType: ...
     def create_superuser(
-        self,
-        username: str,
-        email: str | None,
-        password: str | None,
-        **extra_fields: Any,
-    ) -> _T: ...
+        self, username: str, email: str | None = ..., password: str | None = ..., **extra_fields: Any
+    ) -> _UserType: ...
     async def acreate_superuser(
-        self,
-        username: str,
-        email: str | None,
-        password: str | None,
-        **extra_fields: Any,
-    ) -> _T: ...
+        self, username: str, email: str | None = ..., password: str | None = ..., **extra_fields: Any
+    ) -> _UserType: ...
     def with_perm(
         self,
         perm: str | Permission,
         is_active: bool = ...,
         include_superusers: bool = ...,
-        backend: type[ModelBackend] | str | None = ...,
+        backend: str | None = ...,
         obj: Model | None = ...,
-    ) -> Self | UserManager[_T]: ...
+    ) -> QuerySet[_UserType]: ...
 
 class PermissionsMixin(models.Model):
-    is_superuser = models.BooleanField()
-    groups = models.ManyToManyField[Group, Any](Group)
-    user_permissions = models.ManyToManyField[Permission, Any](Permission)
+    is_superuser: models.BooleanField[bool | Combinable, bool]
+    groups = models.ManyToManyField(Group)
+    user_permissions = models.ManyToManyField(Permission)
+
+    class Meta:
+        abstract: ClassVar[bool]
+
     def get_user_permissions(self, obj: Model | None = ...) -> set[str]: ...
     async def aget_user_permissions(self, obj: Model | None = ...) -> set[str]: ...
     def get_group_permissions(self, obj: Model | None = ...) -> set[str]: ...
@@ -101,58 +96,67 @@ class PermissionsMixin(models.Model):
     def has_perm(self, perm: str, obj: Model | None = ...) -> bool: ...
     async def ahas_perm(self, perm: str, obj: Model | None = ...) -> bool: ...
     def has_perms(self, perm_list: Iterable[str], obj: Model | None = ...) -> bool: ...
-    async def ahas_perms(
-        self, perm_list: Iterable[str], obj: Model | None = ...
-    ) -> bool: ...
+    async def ahas_perms(self, perm_list: Iterable[str], obj: Model | None = ...) -> bool: ...
     def has_module_perms(self, app_label: str) -> bool: ...
     async def ahas_module_perms(self, app_label: str) -> bool: ...
 
 class AbstractUser(AbstractBaseUser, PermissionsMixin):
-    username_validator: UnicodeUsernameValidator = ...
+    username_validator: UnicodeUsernameValidator
 
-    username = models.CharField(max_length=150)
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    email = models.EmailField(blank=True)
-    is_staff = models.BooleanField()
-    is_active = models.BooleanField()
-    date_joined = models.DateTimeField()
+    class Meta:
+        abstract: ClassVar[bool]
+        verbose_name: ClassVar[str]
+        verbose_name_plural: ClassVar[str]
 
-    EMAIL_FIELD: str = ...
-    USERNAME_FIELD: str = ...
+    username: models.CharField[str | int | Combinable, str]
+    first_name: models.CharField[str | int | Combinable, str]
+    last_name: models.CharField[str | int | Combinable, str]
+    email: models.EmailField[str | Combinable, str]
+    is_staff: models.BooleanField[bool | Combinable, bool]
+    is_active: models.BooleanField[bool | Combinable, bool]
+    date_joined: models.DateTimeField[str | dt.datetime | dt.date | Combinable, dt.datetime]
+
+    objects: ClassVar[UserManager[Self]]
+
+    EMAIL_FIELD: str
+    USERNAME_FIELD: str
+
     def get_full_name(self) -> str: ...
     def get_short_name(self) -> str: ...
     def email_user(
-        self, subject: str, message: str, from_email: str | None = ..., **kwargs: Any
+        self, subject: _StrOrPromise, message: _StrOrPromise, from_email: str | None = ..., **kwargs: Any
     ) -> None: ...
-
-    objects: ClassVar[UserManager[Self]]  # type: ignore[assignment]
 
 class User(AbstractUser): ...
 
 class AnonymousUser:
-    id: None = ...
-    pk: None = ...
-    username: str = ...
-    is_staff: bool = ...
-    is_active: bool = ...
-    is_superuser: bool = ...
-    def save(self) -> Never: ...
-    def delete(self) -> Never: ...
-    def set_password(self, raw_password: str) -> Never: ...
-    def check_password(self, raw_password: str) -> Never: ...
+    id: None
+    pk: None
+    username: Literal[""]
+    is_staff: Literal[False]
+    is_active: Literal[False]
+    is_superuser: Literal[False]
+    def __int__(self) -> Never: ...
+    def save(self) -> None: ...
+    def delete(self) -> None: ...
+    def set_password(self, raw_password: str | None) -> None: ...
+    def check_password(self, raw_password: str | None) -> bool: ...
     @property
     def groups(self) -> EmptyManager[Group]: ...
     @property
     def user_permissions(self) -> EmptyManager[Permission]: ...
-    def get_user_permissions(self, obj: _AnyUser | None = ...) -> set[str]: ...
-    def get_group_permissions(self, obj: _AnyUser | None = ...) -> set[str]: ...
-    def get_all_permissions(self, obj: _AnyUser | None = ...) -> set[str]: ...
-    def has_perm(self, perm: str, obj: _AnyUser | None = ...) -> bool: ...
-    def has_perms(
-        self, perm_list: Iterable[str], obj: _AnyUser | None = ...
-    ) -> bool: ...
+    def get_user_permissions(self, obj: Model | None = ...) -> set[str]: ...
+    async def aget_user_permissions(self, obj: Model | None = ...) -> set[str]: ...
+    def get_group_permissions(self, obj: Model | None = ...) -> set[Any]: ...
+    async def aget_group_permissions(self, obj: Model | None = ...) -> set[Any]: ...
+    def get_all_permissions(self, obj: Model | None = ...) -> set[str]: ...
+    async def aget_all_permissions(self, obj: Model | None = ...) -> set[str]: ...
+    def has_perm(self, perm: str, obj: Model | None = ...) -> bool: ...
+    async def ahas_perm(self, perm: str, obj: Model | None = ...) -> bool: ...
+    def has_perms(self, perm_list: Iterable[str], obj: Model | None = ...) -> bool: ...
+    async def ahas_perms(self, perm_list: Iterable[str], obj: Model | None = ...) -> bool: ...
     def has_module_perms(self, module: str) -> bool: ...
+    async def ahas_module_perms(self, module: str) -> bool: ...
     @property
     def is_anonymous(self) -> Literal[True]: ...
     @property

@@ -1,18 +1,19 @@
 # Django Compatibility Map
 
-Static declaration baseline: [`django-stubs` 6.1.1](https://github.com/typeddjango/django-stubs/tree/c7816bcf4cb8ec8706acb5b671ca62131b345ef7) at `c7816bcf4cb8ec8706acb5b671ca62131b345ef7`.
+MyPy comparison baseline: [`django-stubs` 6.1.2](https://github.com/typeddjango/django-stubs/tree/fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2) at `fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2`.
 
-`django-ty` vendors the pinned declaration tree inside its wheel. It neither installs nor executes the upstream mypy plugin.
+The wheel packages `django-types==0.24.0` declarations with reviewed modern Django module restorations and adapters. Exact input and output hashes and every adapter are recorded in [`native-types-vendor.json`](../compatibility/native-types-vendor.json). It neither installs nor executes the upstream mypy plugin.
 
-Reviewed adaptations inline TemplatesSetting and add a mutable request helper used only by the exact HttpRequest constructor hook. Custom subclasses retain their identity; framework request types stay immutable. Typing imports use typing_extensions, and enum declarations have Python 3.10 fallbacks. The same transformations are applied during upstream fingerprint verification, and scripts/check_querydict_runtime.py compares nine assignment cases with the installed Django runtime.
+Reviewed adapters preserve current authentication, storage, request and field declarations. Custom request subclasses retain their identity; framework request types stay immutable. The reproducible provider check verifies the complete tree before regeneration, and scripts/check_querydict_runtime.py compares nine assignment cases with the installed Django runtime.
 
 ## Measured Surface
 
-- Vendored static declaration inventory: 712 `.pyi` modules and 16879 public symbols are packaged in the wheel.
-- Vendored static-tree SHA-256: `fc4a572a925776c7b2e45364dd22c44a91089c0ed82ad291ca8c45a228f3523f`.
-- Documented feature contract coverage: **100.0%** across 38 reviewed capabilities (38 supported, 0 partial, 0 unsupported).
-- Assertion conformance: **100.0%** (166 of 166 documented expectations matched).
-- Candidate host: `django-ty` 0.7.0 on `ty-extended` 0.89.0 at `0175686de10dfba302656de83744cb84a4ff9147`.
+- Vendored static declaration inventory: 730 `.pyi` modules and 16664 public symbols are packaged in the wheel.
+- Vendored static-tree SHA-256: `0da8604a06078b639ed419e6681f2dd36d22b134baefb96328f3ae9ab6acc560`.
+- Inventory counts include imported typing names and explicit inherited declarations; they are provenance controls, not a percentage of all Django APIs. Semantic coverage below measures the reviewed documentation contracts.
+- Documented feature contract coverage: **100.0%** across 39 reviewed capabilities (39 supported, 0 partial, 0 unsupported).
+- Assertion conformance: **100.0%** (172 of 172 documented expectations matched).
+- Candidate host: `django-ty` 0.8.0 on `ty-extended` 0.90.0 at `503f4228e69946d4c652e8a5485916a850b7bd16`.
 - Target: **95%** documented contract coverage. The static score is deliberately separate and does not hide semantic gaps.
 
 Auxiliary `django-stubs-ext` utilities such as `WithAnnotations` are outside this Django-behavior inventory. The candidate wheel must not install or package `django-stubs`, `django-stubs-ext`, or mypy; generic `Annotated` transport remains a library-neutral ty-extended plugin capability.
@@ -35,7 +36,7 @@ Feature-balanced contract coverage gives every capability equal weight. Assertio
 | Managers | 4 | 100.0% |
 | Models and fields | 8 | 100.0% |
 | Query lookups | 4 | 100.0% |
-| Querysets and managers | 9 | 100.0% |
+| Querysets and managers | 10 | 100.0% |
 | Relations | 5 | 100.0% |
 | Settings and metadata | 2 | 100.0% |
 
@@ -74,13 +75,14 @@ Feature-balanced contract coverage gives every capability equal weight. Assertio
 | Query lookups | `lookups.creation-defaults` | 17/17 | 100.0% | 47.1% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#get-or-create) |
 | Query lookups | `lookups.selected-field-validation` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values) |
 | Settings and metadata | `settings.project-settings-types` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/topics/settings/) |
-| Settings and metadata | `metadata.get-field` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/meta/) |
+| Settings and metadata | `metadata.get-field` | 2/2 | 100.0% | 50.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/meta/) |
 | Django extras | `forms.model-forms` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/topics/forms/modelforms/) |
 | Django extras | `auth.user-model` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/topics/auth/customizing/#referencing-the-user-model) |
 | Django extras | `models.save-update-fields` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/instances/#specifying-which-fields-to-save) |
 | Django extras | `http.querydict-mutability` | 6/6 | 100.0% | 66.7% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/request-response/#querydict-objects) |
 | Django extras | `typing.lazy-string` | 2/2 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/topics/i18n/translation/#lazy-translation) |
 | Django extras | `apps.model-registry` | 4/4 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model) |
+| Querysets and managers | `querysets.lazy-rows` | 6/6 | 100.0% | 100.0% | [Django documentation](https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values) |
 
 ## Reproduce
 
@@ -89,10 +91,10 @@ bash scripts/differential-conformance.sh --check
 uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --check
 ```
 
-To additionally verify the vendored files against the pinned source checkout:
+To additionally reproduce the packaged declaration tree from the pinned distribution inputs:
 
 ```sh
-uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --upstream-root /path/to/django-stubs-6.1.1 --check
+python scripts/vendor_native_django.py --django-types-root /path/to/django-types-0.24.0/django-stubs --legacy-root /path/to/django-ty-0.7.0/django_ty/stubs/django
 ```
 
 The differential runner builds both environments, validates every declared official-documentation outcome and runtime proof, rejects diagnostics outside assertion markers, and compares accept/reject behavior line by line. The documentation check verifies the vendored static tree, source inventory, checked result, and generated report.

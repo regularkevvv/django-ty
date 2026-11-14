@@ -1,30 +1,70 @@
 from collections.abc import Callable, Sequence
-from typing import Any, TypeVar
+from typing import Any, overload
 
-from django.contrib.admin import ModelAdmin
-from django.db.models import Combinable, QuerySet
+from django.contrib.admin import ActionLocation, ModelAdmin
+from django.contrib.admin.sites import AdminSite
 from django.db.models.base import Model
-from django.db.models.expressions import BaseExpression
-from django.http import HttpRequest, HttpResponse
+from django.db.models.expressions import BaseExpression, Combinable
+from django.utils.functional import _StrOrPromise
+from typing_extensions import TypeVar
 
-_M = TypeVar("_M", bound=Model)
-_T = TypeVar("_T", bound=object)
+_ModelAdmin = TypeVar("_ModelAdmin", bound=ModelAdmin[Any])
+_F = TypeVar("_F", bound=Callable[..., Any])
 
+@overload
 def action(
-    function: (
-        Callable[[ModelAdmin[_M], HttpRequest, QuerySet[_M]], HttpResponse | None]
-        | None
-    ) = ...,
+    function: _F,
     *,
     permissions: Sequence[str] | None = ...,
-    description: str | None = ...,
-) -> Callable[[_T], _T]: ...
+    description: _StrOrPromise | None = ...,
+    description_plural: _StrOrPromise | None = ...,
+    location: ActionLocation = ...,
+) -> _F: ...
+@overload
+def action(
+    function: None = None,
+    *,
+    permissions: Sequence[str] | None = ...,
+    description: _StrOrPromise | None = ...,
+    description_plural: _StrOrPromise | None = ...,
+    location: ActionLocation = ...,
+) -> Callable[[_F], _F]: ...
+@overload
 def display(
-    function: Callable[[_M], Any] | None = ...,
+    function: _F,
     *,
     boolean: bool | None = ...,
     ordering: str | Combinable | BaseExpression | None = ...,
-    description: str | None = ...,
+    description: _StrOrPromise | None = ...,
+    empty_value: None = ...,
+) -> _F: ...
+@overload
+def display(
+    function: _F,
+    *,
+    boolean: None = ...,
+    ordering: str | Combinable | BaseExpression | None = ...,
+    description: _StrOrPromise | None = ...,
     empty_value: str | None = ...,
-) -> Callable[[_T], _T]: ...
-def register(*models: type[Model], site: Any | None = ...) -> Callable[[_T], _T]: ...
+) -> _F: ...
+@overload
+def display(
+    function: None = None,
+    *,
+    boolean: bool | None = ...,
+    ordering: str | Combinable | BaseExpression | None = ...,
+    description: _StrOrPromise | None = ...,
+    empty_value: None = ...,
+) -> Callable[[_F], _F]: ...
+@overload
+def display(
+    function: None = None,
+    *,
+    boolean: None = ...,
+    ordering: str | Combinable | BaseExpression | None = ...,
+    description: _StrOrPromise | None = ...,
+    empty_value: str | None = ...,
+) -> Callable[[_F], _F]: ...
+def register(
+    *models: type[Model], site: AdminSite | None = ...
+) -> Callable[[type[_ModelAdmin]], type[_ModelAdmin]]: ...

@@ -1,4 +1,4 @@
-from typing import assert_type
+from typing_extensions import assert_type
 from conformance_models.models import Book, BookProxy
 
 assert_type(Book.objects.values("title").get(id=1)["title"], str)  # conformance: querysets.lazy-rows/dict-field expect=pass

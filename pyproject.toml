@@ -1,14 +1,15 @@
 [project]
 name = "django-ty"
-version = "0.7.0"
+version = "0.8.0"
 requires-python = ">=3.10"
 dependencies = [
     "Django>=5.0,<6.2",
-    "ty-extended>=0.89.0,<0.90.0",
+    "ty-extended>=0.90.0,<1.0",
+    "ty>=0.0.101,<0.1",
     "types-PyYAML>=6.0.12",
     "typing-extensions>=4.11.0",
 ]
-description = "Django semantic plugin for the ty-extended Monty companion."
+description = "Django ORM support for ty-extended."
 readme = "README.md"
 authors = [{ name = "Kevin Castro", email = "hola@kev.pe" }]
 license = "MIT"

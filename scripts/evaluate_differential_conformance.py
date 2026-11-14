@@ -28,20 +28,20 @@ except ModuleNotFoundError:
 
 try:
     from .django_official_contracts import (
-        load_contracts,
         documentation_url,
+        load_contracts,
         reviewed_difference,
     )
 except ImportError:
     from django_official_contracts import (
-        load_contracts,
         documentation_url,
+        load_contracts,
         reviewed_difference,
     )
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = ROOT / "conformance"
-MAP_PATH = ROOT / "compatibility" / "django-stubs-6.1.1.toml"
+MAP_PATH = ROOT / "compatibility" / "conformance.toml"
 RESULT_PATH = ROOT / "compatibility" / "differential-conformance.json"
 CHECK_PATHS = ("conformance_project", "conformance_models", "cases")
 MARKER_RE = re.compile(
@@ -440,7 +440,9 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     ty_command = [
         str(args.ty_bin),
         "check",
-        *checker_options(args.ty_python, settings_module="conformance_project.settings"),
+        *checker_options(
+            args.ty_python, settings_module="conformance_project.settings"
+        ),
         *CHECK_PATHS,
         "--project",
         ".",

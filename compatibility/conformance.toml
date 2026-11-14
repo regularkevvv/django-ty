@@ -1,13 +1,9 @@
 [baseline]
 upstream_name = "django-stubs"
-version = "6.1.1"
-commit = "c7816bcf4cb8ec8706acb5b671ca62131b345ef7"
+version = "6.1.2"
+commit = "fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2"
 repository = "https://github.com/typeddjango/django-stubs"
 upstream_stub_root = "django-stubs"
-vendored_stub_root = "python/django_ty/stubs/django"
-expected_stub_files = 712
-expected_public_symbols = 16879
-expected_static_tree_sha256 = "fc4a572a925776c7b2e45364dd22c44a91089c0ed82ad291ca8c45a228f3523f"
 expected_transformers = [
     "apps",
     "auth",
@@ -29,18 +25,25 @@ expected_transformers = [
 ]
 
 [static_api]
-description = "The complete pinned static API is vendored inside django-ty."
+description = "Pinned django-types declarations with reviewed Django API restorations and adapters."
+provider = "django-types"
+version = "0.24.0"
+vendored_stub_root = "python/django_ty/stubs/django"
+provenance = "compatibility/native-types-vendor.json"
+expected_stub_files = 730
+expected_public_symbols = 16664
+expected_static_tree_sha256 = "0da8604a06078b639ed419e6681f2dd36d22b134baefb96328f3ae9ab6acc560"
 
 [scoring]
 semantic_target_percent = 95
 
 [conformance]
 python = "3.13"
-django = "6.1.1"
-mypy = "2.3.1"
-ty_extended = "0.89.0"
-ty_extended_commit = "0175686de10dfba302656de83744cb84a4ff9147"
-django_ty = "0.7.0"
+django = "6.1.3"
+mypy = "2.4.1"
+ty_extended = "0.90.0"
+ty_extended_commit = "503f4228e69946d4c652e8a5485916a850b7bd16"
+django_ty = "0.8.0"
 minimum_cases_per_feature = 2
 
 [[feature]]
@@ -173,13 +176,13 @@ upstream = ["mypy_django_plugin/transformers/init_create.py:typecheck_model_acre
 id = "querysets.values"
 area = "Querysets and managers"
 surface = "dynamic"
-upstream = ["mypy_django_plugin/transformers/querysets.py:extract_proper_type_queryset_values"]
+upstream = ["mypy_django_plugin/transformers/querysets.py"]
 
 [[feature]]
 id = "querysets.values-list"
 area = "Querysets and managers"
 surface = "dynamic"
-upstream = ["mypy_django_plugin/transformers/querysets.py:extract_proper_type_queryset_values_list"]
+upstream = ["mypy_django_plugin/transformers/querysets.py_list"]
 
 [[feature]]
 id = "querysets.annotate"
@@ -276,3 +279,9 @@ id = "apps.model-registry"
 area = "Django extras"
 surface = "dynamic"
 upstream = ["mypy_django_plugin/transformers/apps.py:resolve_model_for_get_model"]
+
+[[feature]]
+id = "querysets.lazy-rows"
+area = "Querysets and managers"
+surface = "dynamic"
+upstream = ["mypy_django_plugin/transformers/querysets.py"]

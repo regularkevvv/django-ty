@@ -1,6 +1,6 @@
-from typing import Any
-
-from django.db.migrations.serializer import BaseSerializer as BaseSerializer
+from django.db.migrations.serializer import BaseSerializer
+from typing_extensions import override
 
 class RangeSerializer(BaseSerializer):
-    def serialize(self) -> Any: ...
+    @override
+    def serialize(self) -> tuple[str, set[str]]: ...

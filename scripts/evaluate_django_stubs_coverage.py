@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify django-ty's vendored Django static API and semantic coverage map."""
+"""Verify declaration provenance and the separate semantic comparison map."""
 
 from __future__ import annotations
 
@@ -20,14 +20,18 @@ except ModuleNotFoundError:
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MAP_PATH = ROOT / "compatibility" / "django-stubs-6.1.1.toml"
+MAP_PATH = ROOT / "compatibility" / "conformance.toml"
 DOCUMENT_PATH = ROOT / "docs" / "DJANGO-STUBS-COVERAGE.md"
 RESULT_PATH = ROOT / "compatibility" / "differential-conformance.json"
 TYPE_ALIAS_TYPES = (getattr(ast, "TypeAlias"),) if hasattr(ast, "TypeAlias") else ()
 try:
     from .normalize_static_api import normalize_stub
+    from .vendor_native_django import files
+    from .vendor_native_django import fingerprint as raw_fingerprint
 except ImportError:
     from normalize_static_api import normalize_stub
+    from vendor_native_django import files
+    from vendor_native_django import fingerprint as raw_fingerprint
 
 
 def load_map() -> dict[str, Any]:
@@ -198,11 +202,11 @@ def check_result(
     if contract_matched != total or total == 0:
         errors.append("official Django contracts are not fully satisfied")
     try:
-        from .django_official_contracts import load_contracts, documentation_url
-        from .evaluate_differential_conformance import corpus_digest, PROJECT_ROOT
+        from .django_official_contracts import documentation_url, load_contracts
+        from .evaluate_differential_conformance import PROJECT_ROOT, corpus_digest
     except ImportError:
-        from django_official_contracts import load_contracts, documentation_url
-        from evaluate_differential_conformance import corpus_digest, PROJECT_ROOT
+        from django_official_contracts import documentation_url, load_contracts
+        from evaluate_differential_conformance import PROJECT_ROOT, corpus_digest
     contracts = load_contracts()
     if result.get("authority") != contracts["authority"]:
         errors.append("result does not use the current official Django authority")
@@ -244,6 +248,7 @@ def check_result(
 
 def document(
     baseline: dict[str, Any],
+    static_api: dict[str, Any],
     stub_files: int,
     public_symbols: int,
     fingerprint: str,
@@ -262,16 +267,17 @@ def document(
     lines = [
         "# Django Compatibility Map",
         "",
-        f"Static declaration baseline: [`{baseline['upstream_name']}` {baseline['version']}]({baseline['repository']}/tree/{baseline['commit']}) at `{baseline['commit']}`.",
+        f"MyPy comparison baseline: [`{baseline['upstream_name']}` {baseline['version']}]({baseline['repository']}/tree/{baseline['commit']}) at `{baseline['commit']}`.",
         "",
-        "`django-ty` vendors the pinned declaration tree inside its wheel. It neither installs nor executes the upstream mypy plugin.",
+        f"The wheel packages `{static_api['provider']}=={static_api['version']}` declarations with reviewed modern Django module restorations and adapters. Exact input and output hashes and every adapter are recorded in [`native-types-vendor.json`](../compatibility/native-types-vendor.json). It neither installs nor executes the upstream mypy plugin.",
         "",
-        "Reviewed adaptations inline TemplatesSetting and add a mutable request helper used only by the exact HttpRequest constructor hook. Custom subclasses retain their identity; framework request types stay immutable. Typing imports use typing_extensions, and enum declarations have Python 3.10 fallbacks. The same transformations are applied during upstream fingerprint verification, and scripts/check_querydict_runtime.py compares nine assignment cases with the installed Django runtime.",
+        "Reviewed adapters preserve current authentication, storage, request and field declarations. Custom request subclasses retain their identity; framework request types stay immutable. The reproducible provider check verifies the complete tree before regeneration, and scripts/check_querydict_runtime.py compares nine assignment cases with the installed Django runtime.",
         "",
         "## Measured Surface",
         "",
         f"- Vendored static declaration inventory: {stub_files} `.pyi` modules and {public_symbols} public symbols are packaged in the wheel.",
         f"- Vendored static-tree SHA-256: `{fingerprint}`.",
+        "- Inventory counts include imported typing names and explicit inherited declarations; they are provenance controls, not a percentage of all Django APIs. Semantic coverage below measures the reviewed documentation contracts.",
         f"- Documented feature contract coverage: **{scores['contract_feature_balanced_percent']:.1f}%** across {result['corpus']['features']} reviewed capabilities ({counts['supported']} supported, {counts['partial']} partial, {counts['unsupported']} unsupported).",
         f"- Assertion conformance: **{scores['contract_assertion_percent']:.1f}%** ({scores['contract_matched_assertions']} of {scores['total_assertions']} documented expectations matched).",
         f"- Candidate host: `django-ty` {result['candidate']['django_ty']} on `ty-extended` {result['candidate']['ty_extended']} at `{result['candidate']['ty_extended_commit']}`.",
@@ -322,10 +328,10 @@ def document(
             "uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --check",
             "```",
             "",
-            "To additionally verify the vendored files against the pinned source checkout:",
+            "To additionally reproduce the packaged declaration tree from the pinned distribution inputs:",
             "",
             "```sh",
-            "uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --upstream-root /path/to/django-stubs-6.1.1 --check",
+            "python scripts/vendor_native_django.py --django-types-root /path/to/django-types-0.24.0/django-stubs --legacy-root /path/to/django-ty-0.7.0/django_ty/stubs/django",
             "```",
             "",
             "The differential runner builds both environments, validates every declared official-documentation outcome and runtime proof, rejects diagnostics outside assertion markers, and compares accept/reject behavior line by line. The documentation check verifies the vendored static tree, source inventory, checked result, and generated report.",
@@ -362,9 +368,10 @@ def main() -> int:
 
     compatibility_map = load_map()
     baseline = compatibility_map["baseline"]
+    static_api = compatibility_map["static_api"]
     conformance = compatibility_map["conformance"]
     features = compatibility_map["feature"]
-    stub_root = ROOT / baseline["vendored_stub_root"]
+    stub_root = ROOT / static_api["vendored_stub_root"]
     stub_files, public_symbols = inventory(stub_root)
     fingerprint = static_tree_fingerprint(stub_root)
     if args.print_fingerprint:
@@ -399,24 +406,27 @@ def main() -> int:
         errors.append("django_stubs_ext must not be vendored")
     if (ROOT / "python" / "django_ty" / "stubs" / "mypy_django_plugin").exists():
         errors.append("the upstream mypy plugin must not be vendored")
-    if stub_files != baseline["expected_stub_files"]:
+    if stub_files != static_api["expected_stub_files"]:
         errors.append(
-            f"stub file inventory {stub_files} does not match {baseline['expected_stub_files']}"
+            f"stub file inventory {stub_files} does not match {static_api['expected_stub_files']}"
         )
-    if public_symbols != baseline["expected_public_symbols"]:
+    if public_symbols != static_api["expected_public_symbols"]:
         errors.append(
-            f"public symbol inventory {public_symbols} does not match {baseline['expected_public_symbols']}"
+            f"public symbol inventory {public_symbols} does not match {static_api['expected_public_symbols']}"
         )
-    expected_fingerprint = baseline.get("expected_static_tree_sha256")
+    expected_fingerprint = static_api.get("expected_static_tree_sha256")
     if not expected_fingerprint:
-        errors.append("baseline is missing expected_static_tree_sha256")
+        errors.append("static_api is missing expected_static_tree_sha256")
     elif fingerprint != expected_fingerprint:
         errors.append("vendored static-tree SHA-256 does not match the pinned baseline")
+    provenance = json.loads((ROOT / static_api["provenance"]).read_text())
+    if raw_fingerprint(files(stub_root)) != provenance["output_tree_sha256"]:
+        errors.append("static tree differs from the reviewed provider provenance")
 
     upstream_root: Path | None = None
     if args.upstream_root:
         try:
-            upstream_stub_root, version, commit = resolve_upstream(
+            _upstream_stub_root, version, commit = resolve_upstream(
                 args.upstream_root, baseline
             )
         except ValueError as error:
@@ -431,10 +441,6 @@ def main() -> int:
                 errors.append(
                     f"source commit {commit} does not match pinned {baseline['commit']}"
                 )
-            if static_tree_fingerprint(upstream_stub_root) != fingerprint:
-                errors.append(
-                    "vendored static tree does not match the pinned source checkout"
-                )
 
     errors.extend(check_transformer_coverage(baseline, features, upstream_root))
     semantic_percent = result.get("scores", {}).get(
@@ -444,6 +450,7 @@ def main() -> int:
     if result:
         output = document(
             baseline,
+            static_api,
             stub_files,
             public_symbols,
             fingerprint,

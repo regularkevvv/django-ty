@@ -1,3 +1,8 @@
-from django.core.management.base import LabelCommand
+from typing import Any
 
-class Command(LabelCommand): ...
+from django.core.management.base import LabelCommand
+from typing_extensions import override
+
+class Command(LabelCommand):
+    @override
+    def handle_label(self, path: str, **options: Any) -> str | None: ...  # type: ignore[override]

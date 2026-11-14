@@ -1,11 +1,11 @@
 from typing import Any
 
-from django.contrib.gis.geos.libgeos import GEOSFuncFactory as GEOSFuncFactory
+from django.contrib.gis.geos.libgeos import GEOSFuncFactory
 
 class Topology(GEOSFuncFactory):
-    argtypes: Any = ...
-    restype: Any = ...
-    errcheck: Any = ...
+    argtypes: Any
+    restype: Any
+    errcheck: Any
 
 geos_boundary: Any
 geos_buffer: Any

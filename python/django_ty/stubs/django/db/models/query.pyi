@@ -298,3 +298,22 @@ def get_prefetcher(
 
 class InstanceCheckMeta(type): ...
 class EmptyQuerySet(metaclass=InstanceCheckMeta): ...
+
+# Modern declaration dependencies retained alongside native ORM generics.
+_OrderByFieldName: TypeAlias = str | Combinable
+
+from typing import TypeAlias
+
+@type_check_only
+class _SupportsContains(Generic[_ContainsT]):
+    def __contains__(self, item: _ContainsT, /) -> bool: ...
+
+from typing import type_check_only
+
+_ContainsT = TypeVar("_ContainsT")
+
+async def aprefetch_related_objects(
+    model_instances: Sequence[_Model], *related_lookups: str | Prefetch[Any]
+) -> None: ...
+
+_Model = TypeVar("_Model", bound=Model, covariant=True)

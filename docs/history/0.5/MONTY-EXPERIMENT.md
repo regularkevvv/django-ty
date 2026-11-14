@@ -1,4 +1,4 @@
-> Historical experiment for django-ty 0.5.0 and the former checker distribution. Current releases use the [Monty companion](../../MONTY.md). Reproduction of these old commands requires commit `9996e1b3e8a0656c988fd2b8deedb726b12fe575`.
+> Historical experiment for django-ty 0.5.0 and the former checker distribution. Current releases use the [ty-extended](../../MONTY.md). Reproduction of these old commands requires commit `9996e1b3e8a0656c988fd2b8deedb726b12fe575`.
 
 # Python/Monty alternative
 

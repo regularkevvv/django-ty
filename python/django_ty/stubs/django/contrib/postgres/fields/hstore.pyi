@@ -1,81 +1,32 @@
-from collections.abc import Callable, Iterable
-from typing import Any, Generic, Literal, TypeAlias, TypeVar, overload
+from typing import Any, ClassVar
 
-from django.db.models import Field, Transform
+from django.contrib.postgres.fields.array import ArrayField
+from django.contrib.postgres.utils import CheckPostgresInstalledMixin
+from django.db.backends.base.base import BaseDatabaseWrapper
+from django.db.models import Field, TextField, Transform
+from django.db.models.fields.mixins import CheckFieldDefaultMixin
+from django.db.models.sql.compiler import SQLCompiler, _AsSqlType
+from typing_extensions import override
 
-from .mixins import CheckFieldDefaultMixin
-
-_Choice: TypeAlias = tuple[Any, Any]
-_ChoiceNamedGroup: TypeAlias = tuple[str, Iterable[_Choice]]
-_FieldChoices: TypeAlias = Iterable[_Choice | _ChoiceNamedGroup]
-_ValidatorCallable: TypeAlias = Callable[..., None]
-_ErrorMessagesToOverride: TypeAlias = dict[str, Any]
-
-_T = TypeVar("_T", bound=dict[str, str | None] | None)
-
-class HStoreField(Generic[_T], CheckFieldDefaultMixin, Field[Any, Any]):
-    @overload
-    def __init__(
-        self: HStoreField[dict[str, str | None]],
-        verbose_name: str | bytes | None = ...,
-        *,
-        name: str | None = ...,
-        primary_key: bool = ...,
-        max_length: int | None = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: Literal[False] = False,
-        db_index: bool = ...,
-        default: Any = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: str | None = ...,
-        unique_for_month: str | None = ...,
-        unique_for_year: str | None = ...,
-        choices: _FieldChoices | None = ...,
-        help_text: str = ...,
-        db_column: str | None = ...,
-        db_tablespace: str | None = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-    ) -> None: ...
-    @overload
-    def __init__(
-        self: HStoreField[dict[str, str | None] | None],
-        verbose_name: str | bytes | None = ...,
-        *,
-        name: str | None = ...,
-        primary_key: bool = ...,
-        max_length: int | None = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: Literal[True],
-        db_index: bool = ...,
-        default: Any = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: str | None = ...,
-        unique_for_month: str | None = ...,
-        unique_for_year: str | None = ...,
-        choices: _FieldChoices | None = ...,
-        help_text: str = ...,
-        db_column: str | None = ...,
-        db_tablespace: str | None = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-    ) -> None: ...
-    def get_transform(self, name: Any) -> Any: ...
-    def __get__(self, instance: Any, owner: Any) -> _T: ...  # type: ignore[override]
-    def __set__(self, instance: Any, value: _T) -> None: ...
+class HStoreField(CheckPostgresInstalledMixin, CheckFieldDefaultMixin, Field[Any, Any]):
+    @override
+    def get_transform(self, name: str) -> Any: ...
 
 class KeyTransform(Transform):
+    output_field: ClassVar[TextField[Any, Any]]
+
     def __init__(self, key_name: str, *args: Any, **kwargs: Any) -> None: ...
+    @override
+    def as_sql(self, compiler: SQLCompiler, connection: BaseDatabaseWrapper) -> _AsSqlType: ...  # type: ignore[override]
 
 class KeyTransformFactory:
     def __init__(self, key_name: str) -> None: ...
     def __call__(self, *args: Any, **kwargs: Any) -> KeyTransform: ...
 
-class KeysTransform(Transform): ...
-class ValuesTransform(Transform): ...
+class KeysTransform(Transform):
+    output_field: ClassVar[ArrayField[Any, Any]]
+
+class ValuesTransform(Transform):
+    output_field: ClassVar[ArrayField[Any, Any]]
+
+__all__ = ["HStoreField"]

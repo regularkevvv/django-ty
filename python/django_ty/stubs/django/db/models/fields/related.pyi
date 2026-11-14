@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from collections.abc import Callable, Iterable, Sequence
 from typing import Any, Generic, Literal, Protocol, TypeAlias, TypeVar, overload
 from uuid import UUID
@@ -35,7 +36,7 @@ class _DeleteProtocol(Protocol):
         self,
         collector: Collector,
         field: Field[Any, Any],
-        sub_objs: Sequence[Model],
+        sub_objs: QuerySet[Model],
         using: str,
     ) -> None: ...
 

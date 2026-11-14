@@ -1,22 +1,18 @@
-import os
-from typing import Any, TypeAlias
+from pathlib import Path
+from typing import Any
 
-from django.core.management.base import BaseCommand as BaseCommand
-from django.core.management.base import CommandError as CommandError
-from django.core.management.base import CommandParser as CommandParser
-from django.core.management.utils import find_command as find_command
-from django.core.management.utils import popen_wrapper as popen_wrapper
+from _typeshed import StrPath
+from django.core.management.base import BaseCommand
+from typing_extensions import override
 
-_PathType: TypeAlias = str | bytes | os.PathLike[Any]
-
-def has_bom(fn: _PathType) -> bool: ...
-def is_writable(path: _PathType) -> bool: ...
+def has_bom(fn: Path) -> bool: ...
+def is_dir_writable(path: StrPath) -> bool: ...
 
 class Command(BaseCommand):
-    program: str = ...
-    program_options: list[str] = ...
-    verbosity: int = ...
-    has_errors: bool = ...
-    def compile_messages(
-        self, locations: list[tuple[_PathType, _PathType]]
-    ) -> None: ...
+    program: str
+    program_options: list[str]
+    verbosity: int
+    has_errors: bool
+    @override
+    def handle(self, **options: Any) -> None: ...
+    def compile_messages(self, locations: list[tuple[StrPath, StrPath]]) -> None: ...

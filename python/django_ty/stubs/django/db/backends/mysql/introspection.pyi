@@ -1,30 +1,32 @@
 from typing import Any, NamedTuple
 
-from django.db.backends.base.introspection import (
-    BaseDatabaseIntrospection as BaseDatabaseIntrospection,
-)
+from django.db.backends.base.introspection import BaseDatabaseIntrospection
+from django.db.backends.mysql.base import DatabaseWrapper
+from django.db.backends.utils import CursorWrapper
+from typing_extensions import override
 
 FieldInfo: Any
 
 class InfoLine(NamedTuple):
-    col_name: Any
-    data_type: Any
-    max_len: Any
-    num_prec: Any
-    num_scale: Any
-    extra: Any
-    column_default: Any
-    is_unsigned: Any
+    col_name: str
+    data_type: str
+    max_len: int | None
+    num_prec: int | None
+    num_scale: int | None
+    extra: str
+    column_default: str | None
+    collation: str | None
+    is_unsigned: bool
+    comment: str
+
+class TableInfo(NamedTuple):
+    name: str
+    type: str
+    comment: str
 
 class DatabaseIntrospection(BaseDatabaseIntrospection):
-    data_types_reverse: Any = ...
-    def get_field_type(self, data_type: Any, description: Any) -> Any: ...
-    def get_table_list(self, cursor: Any) -> Any: ...
-    def get_table_description(self, cursor: Any, table_name: Any) -> Any: ...
-    def get_sequences(
-        self, cursor: Any, table_name: Any, table_fields: Any = ...
-    ) -> Any: ...
-    def get_relations(self, cursor: Any, table_name: Any) -> Any: ...
-    def get_key_columns(self, cursor: Any, table_name: Any) -> Any: ...
-    def get_storage_engine(self, cursor: Any, table_name: Any) -> Any: ...
-    def get_constraints(self, cursor: Any, table_name: Any) -> Any: ...
+    connection: DatabaseWrapper
+    data_types_reverse: Any
+    def get_storage_engine(self, cursor: Any, table_name: str) -> str: ...
+    @override
+    def get_table_description(self, cursor: CursorWrapper, table_name: str) -> list[FieldInfo]: ...

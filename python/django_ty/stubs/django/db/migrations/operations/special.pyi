@@ -1,46 +1,61 @@
-from collections.abc import Callable, Sequence
-from typing import Any
+from collections.abc import Mapping, Sequence
+from typing import Any, Literal, Protocol, TypeAlias, type_check_only
 
 from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 from django.db.migrations.state import StateApps
+from django.utils.datastructures import _ListOrTuple
+from typing_extensions import override
 
 from .base import Operation
 
+_SqlOperations: TypeAlias = str | _ListOrTuple[str | tuple[str, dict[str, Any] | _ListOrTuple[Any] | None]]
+
 class SeparateDatabaseAndState(Operation):
-    database_operations: Sequence[Operation] = ...
-    state_operations: Sequence[Operation] = ...
+    database_operations: Sequence[Operation]
+    state_operations: Sequence[Operation]
+
     def __init__(
         self,
-        database_operations: Sequence[Operation] = ...,
-        state_operations: Sequence[Operation] = ...,
+        database_operations: Sequence[Operation] | None = None,
+        state_operations: Sequence[Operation] | None = None,
     ) -> None: ...
 
 class RunSQL(Operation):
-    noop: str = ...
-    sql: Any = ...
-    reverse_sql: Any = ...
-    state_operations: Any = ...
-    hints: Any = ...
+    noop: Literal[""]
+    sql: _SqlOperations
+    reverse_sql: _SqlOperations | None
+    state_operations: Sequence[Operation]
+    hints: Mapping[str, Any]
     def __init__(
         self,
-        sql: Any,
-        reverse_sql: Any | None = ...,
-        state_operations: Any | None = ...,
-        hints: Any | None = ...,
-        elidable: bool = ...,
+        sql: _SqlOperations,
+        reverse_sql: _SqlOperations | None = None,
+        state_operations: Sequence[Operation] | None = None,
+        hints: Mapping[str, Any] | None = None,
+        elidable: bool = False,
     ) -> None: ...
+    @property
+    @override
+    def reversible(self) -> bool: ...  # type: ignore[override]
+
+@type_check_only
+class _CodeCallable(Protocol):
+    def __call__(self, state_apps: StateApps, schema_editor: BaseDatabaseSchemaEditor, /) -> None: ...
 
 class RunPython(Operation):
-    code: Callable[..., Any] = ...
-    reverse_code: Callable[..., Any] | None = ...
-    hints: dict[str, Any] | None = ...
+    code: _CodeCallable
+    reverse_code: _CodeCallable | None
+    hints: Mapping[str, Any]
     def __init__(
         self,
-        code: Callable[..., Any],
-        reverse_code: Callable[..., Any] | None = ...,
-        atomic: bool | None = ...,
-        hints: dict[str, Any] | None = ...,
-        elidable: bool = ...,
+        code: _CodeCallable,
+        reverse_code: _CodeCallable | None = None,
+        atomic: bool | None = None,
+        hints: Mapping[str, Any] | None = None,
+        elidable: bool = False,
     ) -> None: ...
     @staticmethod
     def noop(apps: StateApps, schema_editor: BaseDatabaseSchemaEditor) -> None: ...
+    @property
+    @override
+    def reversible(self) -> bool: ...  # type: ignore[override]

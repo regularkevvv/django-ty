@@ -13,16 +13,16 @@
   ],
   "declared_range": ">=5.0,<6.2",
   "candidate": {
-    "django_ty": "0.7.0",
-    "ty_extended": "0.89.0",
-    "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+    "django_ty": "0.8.0",
+    "ty_extended": "0.90.0",
+    "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
   },
   "corpus": {
-    "sha256": "4a4e1cbeff35eb0c655071d262555ef69313b9f8c4fdd77580aa39d049d7dfc0",
-    "features": 38,
-    "assertions": 166,
-    "documentation_contract_sha256": "fe2da7a3a05be74177ff3c2ed5226e516b545a2417187ac1ddfd16006fc1377b",
-    "runtime_proof_sha256": "d2562bb08ee62f6c82db683eab5fc86159a0d9b06dad019e84db7f3725dacd24"
+    "sha256": "136f7125836d82881686907f671124efb250a6ee11db8cbdd5ecfe70fd8f9791",
+    "features": 39,
+    "assertions": 172,
+    "documentation_contract_sha256": "a2962aea4e9a68b2cec24f15710527546f35b74ddbc8b08a88ecc1c6603dcd28",
+    "runtime_proof_sha256": "c3661559292a6f017e0dae430e4d25fd09fde7cc6dd3d2beb69018376de49330"
   },
   "probes": [
     {
@@ -40,20 +40,20 @@
       },
       "candidate": {
         "python": "3.10",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "5.0.14",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 83.7,
-        "assertion_conformance_percent": 69.3,
-        "matched_assertions": 115,
-        "total_assertions": 166,
+        "feature_balanced_percent": 82.8,
+        "assertion_conformance_percent": 69.8,
+        "matched_assertions": 120,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -636,6 +636,17 @@
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/5.0.14/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {
@@ -773,6 +784,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -1344,9 +1359,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -1415,6 +1430,17 @@
           "status": "unsupported",
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]
@@ -1434,20 +1460,20 @@
       },
       "candidate": {
         "python": "3.11",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "5.0.14",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 83.7,
-        "assertion_conformance_percent": 69.3,
-        "matched_assertions": 115,
-        "total_assertions": 166,
+        "feature_balanced_percent": 82.8,
+        "assertion_conformance_percent": 69.8,
+        "matched_assertions": 120,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -2030,6 +2056,17 @@
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/5.0.14/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {
@@ -2167,6 +2204,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -2738,9 +2779,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -2809,6 +2850,17 @@
           "status": "unsupported",
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]
@@ -2828,20 +2880,20 @@
       },
       "candidate": {
         "python": "3.12",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "5.0.14",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 83.7,
-        "assertion_conformance_percent": 69.3,
-        "matched_assertions": 115,
-        "total_assertions": 166,
+        "feature_balanced_percent": 82.8,
+        "assertion_conformance_percent": 69.8,
+        "matched_assertions": 120,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -3424,6 +3476,17 @@
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/5.0.14/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {
@@ -3561,6 +3624,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -4132,9 +4199,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -4204,6 +4271,17 @@
           "documentation": "https://docs.djangoproject.com/en/5.0/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.0/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
@@ -4222,20 +4300,20 @@
       },
       "candidate": {
         "python": "3.10",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "5.1.15",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 85.4,
-        "assertion_conformance_percent": 70.5,
-        "matched_assertions": 117,
-        "total_assertions": 166,
+        "feature_balanced_percent": 84.5,
+        "assertion_conformance_percent": 70.9,
+        "matched_assertions": 122,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -4796,6 +4874,17 @@
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/5.1.15/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -4923,6 +5012,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -5494,9 +5587,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -5565,6 +5658,17 @@
           "status": "unsupported",
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]
@@ -5584,20 +5688,20 @@
       },
       "candidate": {
         "python": "3.11",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "5.1.15",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 85.4,
-        "assertion_conformance_percent": 70.5,
-        "matched_assertions": 117,
-        "total_assertions": 166,
+        "feature_balanced_percent": 84.5,
+        "assertion_conformance_percent": 70.9,
+        "matched_assertions": 122,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -6158,6 +6262,17 @@
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/5.1.15/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -6285,6 +6400,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -6856,9 +6975,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -6927,6 +7046,17 @@
           "status": "unsupported",
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]
@@ -6946,20 +7076,20 @@
       },
       "candidate": {
         "python": "3.12",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "5.1.15",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 85.4,
-        "assertion_conformance_percent": 70.5,
-        "matched_assertions": 117,
-        "total_assertions": 166,
+        "feature_balanced_percent": 84.5,
+        "assertion_conformance_percent": 70.9,
+        "matched_assertions": 122,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -7520,6 +7650,17 @@
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/5.1.15/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -7647,6 +7788,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -8218,9 +8363,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -8289,6 +8434,17 @@
           "status": "unsupported",
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]
@@ -8308,20 +8464,20 @@
       },
       "candidate": {
         "python": "3.13",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "5.1.15",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 85.4,
-        "assertion_conformance_percent": 70.5,
-        "matched_assertions": 117,
-        "total_assertions": 166,
+        "feature_balanced_percent": 84.5,
+        "assertion_conformance_percent": 70.9,
+        "matched_assertions": 122,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -8882,6 +9038,17 @@
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/5.1.15/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -9009,6 +9176,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -9580,9 +9751,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -9652,38 +9823,49 @@
           "documentation": "https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.1/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
     {
-      "django": "5.2.17",
+      "django": "5.2.19",
       "declared": true,
       "note": "Inside the declared range (5.2 LTS).",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.0.9",
         "django_stubs_commit": "942bca5e63f897a157f5d8ee649ca90e9a69003b",
-        "django": "5.2.17",
+        "django": "5.2.19",
         "python": "3.10",
         "django_support": "partial",
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
         "python": "3.10",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
-        "django": "5.2.17",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
+        "django": "5.2.19",
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -9696,7 +9878,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-get",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "http.querydict-mutability",
@@ -9708,7 +9890,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-post",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "lookups.field-traversal",
@@ -9753,7 +9935,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#in",
           "runtime_proof": "string-integer-invalid",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/fields/__init__.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/fields/__init__.py"
         },
         {
           "feature": "lookups.creation-defaults",
@@ -9842,7 +10024,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9854,7 +10036,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9866,7 +10048,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-conditional-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9878,7 +10060,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9890,7 +10072,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9902,7 +10084,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-unknown-call",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9914,7 +10096,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9926,7 +10108,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9938,7 +10120,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9950,7 +10132,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-nullable",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9962,7 +10144,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-precedence",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9974,7 +10156,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-explicit-auto-unsaved",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9986,7 +10168,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -9998,7 +10180,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-loader",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -10010,7 +10192,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-create-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -10022,7 +10204,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-id-write",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -10034,7 +10216,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-init",
           "runtime_proof": "state-signal-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -10046,7 +10228,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-save",
           "runtime_proof": "state-signal-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -10168,7 +10350,18 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -10296,6 +10489,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -10519,7 +10716,7 @@
             "passed": true
           }
         },
-        "django": "5.2.17"
+        "django": "5.2.19"
       },
       "features": [
         {
@@ -10867,9 +11064,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -10939,38 +11136,49 @@
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
     {
-      "django": "5.2.17",
+      "django": "5.2.19",
       "declared": true,
       "note": "Inside the declared range (5.2 LTS).",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.0.9",
         "django_stubs_commit": "942bca5e63f897a157f5d8ee649ca90e9a69003b",
-        "django": "5.2.17",
+        "django": "5.2.19",
         "python": "3.11",
         "django_support": "partial",
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
         "python": "3.11",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
-        "django": "5.2.17",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
+        "django": "5.2.19",
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -10983,7 +11191,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-get",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "http.querydict-mutability",
@@ -10995,7 +11203,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-post",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "lookups.field-traversal",
@@ -11040,7 +11248,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#in",
           "runtime_proof": "string-integer-invalid",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/fields/__init__.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/fields/__init__.py"
         },
         {
           "feature": "lookups.creation-defaults",
@@ -11129,7 +11337,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11141,7 +11349,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11153,7 +11361,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-conditional-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11165,7 +11373,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11177,7 +11385,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11189,7 +11397,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-unknown-call",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11201,7 +11409,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11213,7 +11421,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11225,7 +11433,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11237,7 +11445,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-nullable",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11249,7 +11457,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-precedence",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11261,7 +11469,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-explicit-auto-unsaved",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11273,7 +11481,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11285,7 +11493,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-loader",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11297,7 +11505,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-create-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11309,7 +11517,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-id-write",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11321,7 +11529,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-init",
           "runtime_proof": "state-signal-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11333,7 +11541,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-save",
           "runtime_proof": "state-signal-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -11455,7 +11663,18 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -11583,6 +11802,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -11806,7 +12029,7 @@
             "passed": true
           }
         },
-        "django": "5.2.17"
+        "django": "5.2.19"
       },
       "features": [
         {
@@ -12154,9 +12377,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -12226,38 +12449,49 @@
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
     {
-      "django": "5.2.17",
+      "django": "5.2.19",
       "declared": true,
       "note": "Inside the declared range (5.2 LTS).",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.0.9",
         "django_stubs_commit": "942bca5e63f897a157f5d8ee649ca90e9a69003b",
-        "django": "5.2.17",
+        "django": "5.2.19",
         "python": "3.12",
         "django_support": "partial",
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
         "python": "3.12",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
-        "django": "5.2.17",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
+        "django": "5.2.19",
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -12270,7 +12504,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-get",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "http.querydict-mutability",
@@ -12282,7 +12516,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-post",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "lookups.field-traversal",
@@ -12327,7 +12561,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#in",
           "runtime_proof": "string-integer-invalid",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/fields/__init__.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/fields/__init__.py"
         },
         {
           "feature": "lookups.creation-defaults",
@@ -12416,7 +12650,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12428,7 +12662,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12440,7 +12674,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-conditional-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12452,7 +12686,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12464,7 +12698,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12476,7 +12710,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-unknown-call",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12488,7 +12722,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12500,7 +12734,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12512,7 +12746,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12524,7 +12758,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-nullable",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12536,7 +12770,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-precedence",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12548,7 +12782,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-explicit-auto-unsaved",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12560,7 +12794,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12572,7 +12806,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-loader",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12584,7 +12818,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-create-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12596,7 +12830,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-id-write",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12608,7 +12842,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-init",
           "runtime_proof": "state-signal-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12620,7 +12854,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-save",
           "runtime_proof": "state-signal-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -12742,7 +12976,18 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -12870,6 +13115,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -13093,7 +13342,7 @@
             "passed": true
           }
         },
-        "django": "5.2.17"
+        "django": "5.2.19"
       },
       "features": [
         {
@@ -13441,9 +13690,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -13513,38 +13762,49 @@
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
     {
-      "django": "5.2.17",
+      "django": "5.2.19",
       "declared": true,
       "note": "Inside the declared range (5.2 LTS).",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.0.9",
         "django_stubs_commit": "942bca5e63f897a157f5d8ee649ca90e9a69003b",
-        "django": "5.2.17",
+        "django": "5.2.19",
         "python": "3.13",
         "django_support": "partial",
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
         "python": "3.13",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
-        "django": "5.2.17",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
+        "django": "5.2.19",
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -13557,7 +13817,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-get",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "http.querydict-mutability",
@@ -13569,7 +13829,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-post",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "lookups.field-traversal",
@@ -13614,7 +13874,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#in",
           "runtime_proof": "string-integer-invalid",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/fields/__init__.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/fields/__init__.py"
         },
         {
           "feature": "lookups.creation-defaults",
@@ -13703,7 +13963,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13715,7 +13975,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13727,7 +13987,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-conditional-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13739,7 +13999,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13751,7 +14011,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13763,7 +14023,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-unknown-call",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13775,7 +14035,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13787,7 +14047,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13799,7 +14059,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13811,7 +14071,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-nullable",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13823,7 +14083,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-precedence",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13835,7 +14095,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-explicit-auto-unsaved",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13847,7 +14107,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13859,7 +14119,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-loader",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13871,7 +14131,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-create-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13883,7 +14143,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-id-write",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13895,7 +14155,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-init",
           "runtime_proof": "state-signal-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -13907,7 +14167,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-save",
           "runtime_proof": "state-signal-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -14029,7 +14289,18 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -14157,6 +14428,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -14380,7 +14655,7 @@
             "passed": true
           }
         },
-        "django": "5.2.17"
+        "django": "5.2.19"
       },
       "features": [
         {
@@ -14728,9 +15003,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -14800,38 +15075,49 @@
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
     {
-      "django": "5.2.17",
+      "django": "5.2.19",
       "declared": true,
       "note": "Inside the declared range (5.2 LTS).",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.0.9",
         "django_stubs_commit": "942bca5e63f897a157f5d8ee649ca90e9a69003b",
-        "django": "5.2.17",
+        "django": "5.2.19",
         "python": "3.14",
         "django_support": "partial",
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
         "python": "3.14",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
-        "django": "5.2.17",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
+        "django": "5.2.19",
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -14844,7 +15130,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-get",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "http.querydict-mutability",
@@ -14856,7 +15142,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-post",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/http/request.py"
         },
         {
           "feature": "lookups.field-traversal",
@@ -14901,7 +15187,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#in",
           "runtime_proof": "string-integer-invalid",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/fields/__init__.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/fields/__init__.py"
         },
         {
           "feature": "lookups.creation-defaults",
@@ -14990,7 +15276,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15002,7 +15288,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15014,7 +15300,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-conditional-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15026,7 +15312,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15038,7 +15324,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15050,7 +15336,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-unknown-call",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15062,7 +15348,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15074,7 +15360,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15086,7 +15372,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15098,7 +15384,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-nullable",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15110,7 +15396,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-precedence",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15122,7 +15408,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "state-explicit-auto-unsaved",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15134,7 +15420,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15146,7 +15432,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-custom-loader",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15158,7 +15444,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-create-overridden-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15170,7 +15456,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/",
           "runtime_proof": "state-id-write",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15182,7 +15468,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-init",
           "runtime_proof": "state-signal-init",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15194,7 +15480,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/signals/#post-save",
           "runtime_proof": "state-signal-save",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -15316,7 +15602,18 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
-          "django_source": "https://github.com/django/django/blob/5.2.17/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/5.2.19/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -15444,6 +15741,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -15667,7 +15968,7 @@
             "passed": true
           }
         },
-        "django": "5.2.17"
+        "django": "5.2.19"
       },
       "features": [
         {
@@ -16015,9 +16316,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -16087,38 +16388,49 @@
           "documentation": "https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/5.2/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
     {
-      "django": "6.0.8",
+      "django": "6.0.10",
       "declared": true,
       "note": "Inside the declared range.",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.0.9",
         "django_stubs_commit": "942bca5e63f897a157f5d8ee649ca90e9a69003b",
-        "django": "6.0.8",
+        "django": "6.0.10",
         "python": "3.12",
         "django_support": "full",
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
         "python": "3.12",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
-        "django": "6.0.8",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
+        "django": "6.0.10",
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -16131,7 +16443,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-get",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/http/request.py"
         },
         {
           "feature": "http.querydict-mutability",
@@ -16143,7 +16455,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-post",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/http/request.py"
         },
         {
           "feature": "lookups.field-traversal",
@@ -16188,7 +16500,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#in",
           "runtime_proof": "string-integer-invalid",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/fields/__init__.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/fields/__init__.py"
         },
         {
           "feature": "lookups.creation-defaults",
@@ -16277,7 +16589,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16289,7 +16601,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16301,7 +16613,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-conditional-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16313,7 +16625,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16325,7 +16637,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16337,7 +16649,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-unknown-call",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16349,7 +16661,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-overridden-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16361,7 +16673,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16373,7 +16685,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16385,7 +16697,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-nullable",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16397,7 +16709,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-precedence",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16409,7 +16721,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-explicit-auto-unsaved",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16421,7 +16733,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-custom-init",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16433,7 +16745,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-custom-loader",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16445,7 +16757,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-create-overridden-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16457,7 +16769,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-id-write",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16469,7 +16781,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/signals/#post-init",
           "runtime_proof": "state-signal-init",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16481,7 +16793,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/signals/#post-save",
           "runtime_proof": "state-signal-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -16603,7 +16915,18 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -16731,6 +17054,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -16954,7 +17281,7 @@
             "passed": true
           }
         },
-        "django": "6.0.8"
+        "django": "6.0.10"
       },
       "features": [
         {
@@ -17302,9 +17629,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -17374,38 +17701,49 @@
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
     {
-      "django": "6.0.8",
+      "django": "6.0.10",
       "declared": true,
       "note": "Inside the declared range.",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.0.9",
         "django_stubs_commit": "942bca5e63f897a157f5d8ee649ca90e9a69003b",
-        "django": "6.0.8",
+        "django": "6.0.10",
         "python": "3.13",
         "django_support": "full",
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
         "python": "3.13",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
-        "django": "6.0.8",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
+        "django": "6.0.10",
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -17418,7 +17756,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-get",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/http/request.py"
         },
         {
           "feature": "http.querydict-mutability",
@@ -17430,7 +17768,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-post",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/http/request.py"
         },
         {
           "feature": "lookups.field-traversal",
@@ -17475,7 +17813,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#in",
           "runtime_proof": "string-integer-invalid",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/fields/__init__.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/fields/__init__.py"
         },
         {
           "feature": "lookups.creation-defaults",
@@ -17564,7 +17902,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17576,7 +17914,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17588,7 +17926,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-conditional-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17600,7 +17938,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17612,7 +17950,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17624,7 +17962,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-unknown-call",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17636,7 +17974,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-overridden-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17648,7 +17986,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17660,7 +17998,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17672,7 +18010,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-nullable",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17684,7 +18022,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-precedence",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17696,7 +18034,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-explicit-auto-unsaved",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17708,7 +18046,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-custom-init",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17720,7 +18058,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-custom-loader",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17732,7 +18070,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-create-overridden-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17744,7 +18082,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-id-write",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17756,7 +18094,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/signals/#post-init",
           "runtime_proof": "state-signal-init",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17768,7 +18106,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/signals/#post-save",
           "runtime_proof": "state-signal-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -17890,7 +18228,18 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -18018,6 +18367,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -18241,7 +18594,7 @@
             "passed": true
           }
         },
-        "django": "6.0.8"
+        "django": "6.0.10"
       },
       "features": [
         {
@@ -18589,9 +18942,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -18661,38 +19014,49 @@
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
     {
-      "django": "6.0.8",
+      "django": "6.0.10",
       "declared": true,
       "note": "Inside the declared range.",
       "reference": {
         "checker": "mypy 2.3.1",
         "django_stubs": "6.0.9",
         "django_stubs_commit": "942bca5e63f897a157f5d8ee649ca90e9a69003b",
-        "django": "6.0.8",
+        "django": "6.0.10",
         "python": "3.14",
         "django_support": "full",
         "support_source": "https://github.com/typeddjango/django-stubs/blob/942bca5e63f897a157f5d8ee649ca90e9a69003b/README.md"
       },
       "candidate": {
         "python": "3.14",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
-        "django": "6.0.8",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
+        "django": "6.0.10",
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -18705,7 +19069,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-get",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/http/request.py"
         },
         {
           "feature": "http.querydict-mutability",
@@ -18717,7 +19081,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/request-response/#querydict-objects",
           "runtime_proof": "fresh-request-post",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/http/request.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/http/request.py"
         },
         {
           "feature": "lookups.field-traversal",
@@ -18762,7 +19126,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#in",
           "runtime_proof": "string-integer-invalid",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/fields/__init__.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/fields/__init__.py"
         },
         {
           "feature": "lookups.creation-defaults",
@@ -18851,7 +19215,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18863,7 +19227,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-delete-alias",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18875,7 +19239,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-conditional-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18887,7 +19251,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18899,7 +19263,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-skipped-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18911,7 +19275,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-unknown-call",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18923,7 +19287,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-overridden-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18935,7 +19299,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18947,7 +19311,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-explicit-auto-delete",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18959,7 +19323,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-nullable",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18971,7 +19335,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-constructor-precedence",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18983,7 +19347,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "state-explicit-auto-unsaved",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -18995,7 +19359,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-custom-init",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -19007,7 +19371,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-custom-loader",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -19019,7 +19383,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-create-overridden-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -19031,7 +19395,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/",
           "runtime_proof": "state-id-write",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -19043,7 +19407,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/signals/#post-init",
           "runtime_proof": "state-signal-init",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -19055,7 +19419,7 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/signals/#post-save",
           "runtime_proof": "state-signal-save",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/signals.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/signals.py"
         },
         {
           "feature": "models.default-primary-key",
@@ -19177,7 +19541,18 @@
           "classification": "deliberate-policy-or-limit",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
-          "django_source": "https://github.com/django/django/blob/6.0.8/django/db/models/base.py"
+          "django_source": "https://github.com/django/django/blob/6.0.10/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -19305,6 +19680,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -19528,7 +19907,7 @@
             "passed": true
           }
         },
-        "django": "6.0.8"
+        "django": "6.0.10"
       },
       "features": [
         {
@@ -19876,9 +20255,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -19947,6 +20326,17 @@
           "status": "supported",
           "documentation": "https://docs.djangoproject.com/en/6.0/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.0/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]
@@ -19956,30 +20346,30 @@
       "declared": true,
       "note": "Inside the declared range; pinned conformance baseline.",
       "reference": {
-        "checker": "mypy 2.3.1",
-        "django_stubs": "6.1.1",
-        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "checker": "mypy 2.4.1",
+        "django_stubs": "6.1.2",
+        "django_stubs_commit": "fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2",
         "django": "6.1.1",
         "python": "3.12",
         "django_support": "full",
-        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2/README.md"
       },
       "candidate": {
         "python": "3.12",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "6.1.1",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -20465,6 +20855,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -20592,6 +20993,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -21163,9 +21568,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -21235,6 +21640,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
@@ -21243,30 +21659,30 @@
       "declared": true,
       "note": "Inside the declared range; pinned conformance baseline.",
       "reference": {
-        "checker": "mypy 2.3.1",
-        "django_stubs": "6.1.1",
-        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "checker": "mypy 2.4.1",
+        "django_stubs": "6.1.2",
+        "django_stubs_commit": "fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2",
         "django": "6.1.1",
         "python": "3.13",
         "django_support": "full",
-        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2/README.md"
       },
       "candidate": {
         "python": "3.13",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "6.1.1",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -21752,6 +22168,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -21879,6 +22306,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -22450,9 +22881,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -22522,6 +22953,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
@@ -22530,30 +22972,30 @@
       "declared": true,
       "note": "Inside the declared range; pinned conformance baseline.",
       "reference": {
-        "checker": "mypy 2.3.1",
-        "django_stubs": "6.1.1",
-        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "checker": "mypy 2.4.1",
+        "django_stubs": "6.1.2",
+        "django_stubs_commit": "fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2",
         "django": "6.1.1",
         "python": "3.14",
         "django_support": "full",
-        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2/README.md"
       },
       "candidate": {
         "python": "3.14",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "6.1.1",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -23039,6 +23481,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/6.1.1/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -23166,6 +23619,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -23737,9 +24194,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -23809,6 +24266,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
           "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 6,
+          "contract_percent": 100.0
         }
       ]
     },
@@ -23817,30 +24285,30 @@
       "declared": true,
       "note": "Latest Django patch in the supported 6.1 line.",
       "reference": {
-        "checker": "mypy 2.3.1",
-        "django_stubs": "6.1.1",
-        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "checker": "mypy 2.4.1",
+        "django_stubs": "6.1.2",
+        "django_stubs_commit": "fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2",
         "django": "6.1.3",
         "python": "3.12",
         "django_support": "full",
-        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2/README.md"
       },
       "candidate": {
         "python": "3.12",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "6.1.3",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -24326,6 +24794,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -24453,6 +24932,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -25024,9 +25507,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -25095,6 +25578,17 @@
           "status": "supported",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]
@@ -25104,30 +25598,30 @@
       "declared": true,
       "note": "Latest Django patch in the supported 6.1 line.",
       "reference": {
-        "checker": "mypy 2.3.1",
-        "django_stubs": "6.1.1",
-        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "checker": "mypy 2.4.1",
+        "django_stubs": "6.1.2",
+        "django_stubs_commit": "fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2",
         "django": "6.1.3",
         "python": "3.13",
         "django_support": "full",
-        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2/README.md"
       },
       "candidate": {
         "python": "3.13",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "6.1.3",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -25613,6 +26107,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -25740,6 +26245,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -26311,9 +26820,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -26382,6 +26891,17 @@
           "status": "supported",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]
@@ -26391,30 +26911,30 @@
       "declared": true,
       "note": "Latest Django patch in the supported 6.1 line.",
       "reference": {
-        "checker": "mypy 2.3.1",
-        "django_stubs": "6.1.1",
-        "django_stubs_commit": "c7816bcf4cb8ec8706acb5b671ca62131b345ef7",
+        "checker": "mypy 2.4.1",
+        "django_stubs": "6.1.2",
+        "django_stubs_commit": "fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2",
         "django": "6.1.3",
         "python": "3.14",
         "django_support": "full",
-        "support_source": "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+        "support_source": "https://github.com/typeddjango/django-stubs/blob/fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2/README.md"
       },
       "candidate": {
         "python": "3.14",
-        "checker": "ty-extended 0.89.0",
-        "django_ty": "0.7.0",
+        "checker": "ty-extended 0.90.0",
+        "django_ty": "0.8.0",
         "django": "6.1.3",
-        "ty_extended": "0.89.0",
-        "ty_extended_commit": "0175686de10dfba302656de83744cb84a4ff9147"
+        "ty_extended": "0.90.0",
+        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
       },
       "scores": {
-        "feature_balanced_percent": 93.8,
-        "assertion_conformance_percent": 74.7,
-        "matched_assertions": 124,
-        "total_assertions": 166,
+        "feature_balanced_percent": 92.7,
+        "assertion_conformance_percent": 75.0,
+        "matched_assertions": 129,
+        "total_assertions": 172,
         "contract_feature_balanced_percent": 100.0,
         "contract_assertion_percent": 100.0,
-        "contract_matched_assertions": 166
+        "contract_matched_assertions": 172
       },
       "reference_drift": [
         {
@@ -26900,6 +27420,17 @@
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/instances/#creating-objects",
           "runtime_proof": "unsaved-relation-id",
           "django_source": "https://github.com/django/django/blob/6.1.3/django/db/models/base.py"
+        },
+        {
+          "feature": "metadata.get-field",
+          "case": "known-field",
+          "path": "cases/settings_metadata.py",
+          "line": 13,
+          "expect": "pass",
+          "reference": "reject",
+          "classification": "provider-generic-shape-difference",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/#django.db.models.options.Options.get_field",
+          "runtime_proof": "metadata-known-field"
         }
       ],
       "unowned_diagnostics": {},
@@ -27027,6 +27558,10 @@
           },
           "invalid-existing-defaults": {
             "exception": "TypeError",
+            "passed": true
+          },
+          "metadata-known-field": {
+            "observed": "True",
             "passed": true
           },
           "mixed-literal-callable": {
@@ -27598,9 +28133,9 @@
           "id": "metadata.get-field",
           "area": "Settings and metadata",
           "cases": 2,
-          "matched": 2,
-          "percent": 100.0,
-          "status": "supported",
+          "matched": 1,
+          "percent": 50.0,
+          "status": "partial",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/meta/",
           "contract_matched": 2,
           "contract_percent": 100.0
@@ -27669,6 +28204,17 @@
           "status": "supported",
           "documentation": "https://docs.djangoproject.com/en/6.1/ref/applications/#django.apps.apps.get_model",
           "contract_matched": 4,
+          "contract_percent": 100.0
+        },
+        {
+          "id": "querysets.lazy-rows",
+          "area": "Querysets and managers",
+          "cases": 6,
+          "matched": 6,
+          "percent": 100.0,
+          "status": "supported",
+          "documentation": "https://docs.djangoproject.com/en/6.1/ref/models/querysets/#values",
+          "contract_matched": 6,
           "contract_percent": 100.0
         }
       ]

@@ -1661,3 +1661,31 @@ class DurationField(Generic[_TD], Field[_TD, _TD]):
         validators: Iterable[_ValidatorCallable] = ...,
         error_messages: _ErrorMessagesToOverride | None = ...,
     ) -> DurationField[timedelta | None]: ...
+
+# Modern declaration dependencies retained alongside native ORM generics.
+BLANK_CHOICE_LABEL: _StrOrPromise
+
+from django.utils.functional import _StrOrPromise
+
+class Empty: ...
+
+class CommaSeparatedIntegerField(CharField[_C]): ...
+
+class NullBooleanField(BooleanField[bool | None]):
+    _pyi_private_set_type: bool | Combinable | None  # type: ignore[assignment]
+    _pyi_private_get_type: bool | None  # type: ignore[assignment]
+    _pyi_lookup_exact_type: bool | None  # type: ignore[assignment]
+
+_AllLimitChoicesTo: TypeAlias = _LimitChoicesTo | _LimitChoicesToCallable | _ChoicesCallable  # noqa: PYI047
+
+from django.utils.choices import _ChoicesCallable
+
+_LimitChoicesTo: TypeAlias = Q | dict[str, Any]
+
+from django.db.models.query_utils import Q
+
+_LimitChoicesToCallable: TypeAlias = Callable[[], _LimitChoicesTo]
+
+_ErrorMessagesDict: TypeAlias = dict[str, _StrOrPromise]
+
+_ErrorMessagesMapping: TypeAlias = Mapping[str, _StrOrPromise]

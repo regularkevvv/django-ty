@@ -44,6 +44,7 @@ policy = "Documentation defines expected behavior; installed Django validates re
 "apps.model-registry" = "ref/applications/#django.apps.apps.get_model"
 
 [review]
+"metadata.get-field/known-field" = { proof = "metadata-known-field", expect = "pass", classification = "provider-generic-shape-difference", documentation = "ref/models/meta/#django.db.models.options.Options.get_field" }
 "apps.model-registry/qualified-reference" = { proof = "registry-qualified", expect = "pass", classification = "historical-feature-gap" }
 "apps.model-registry/case-insensitive-reference" = { proof = "registry-case-insensitive", expect = "pass", classification = "historical-feature-gap" }
 "apps.model-registry/keyword-reference" = { proof = "registry-keywords", expect = "pass", classification = "historical-feature-gap" }
@@ -188,3 +189,5 @@ proof = "state-save"
 expect = "pass"
 classification = "deliberate-policy-or-limit"
 documentation = "ref/models/instances/#saving-objects"
+
+# django-types exposes one field read-type parameter; django-stubs has separate set/get parameters.

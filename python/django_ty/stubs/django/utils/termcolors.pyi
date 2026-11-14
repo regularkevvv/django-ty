@@ -1,23 +1,19 @@
 from collections.abc import Callable, Sequence
-from typing import Any
+from typing import Any, Literal
 
-color_names: Any
-foreground: Any
-background: Any
-RESET: str
-opt_dict: Any
+color_names: tuple[str, ...]
+foreground: dict[str, str]
+background: dict[str, str]
+RESET: Literal["0"]
+opt_dict: dict[str, str]
 
-def colorize(
-    text: str | None = ..., opts: Sequence[str] = ..., **kwargs: Any
-) -> str: ...
-def make_style(opts: tuple[Any, ...] = ..., **kwargs: Any) -> Callable[..., Any]: ...
+def colorize(text: str | None = "", opts: Sequence[str] = (), *, fg: str = ..., bg: str = ...) -> str: ...
+def make_style(opts: Sequence[str] = (), *, fg: str = ..., bg: str = ...) -> Callable[[str | None], str]: ...
 
 NOCOLOR_PALETTE: str
 DARK_PALETTE: str
 LIGHT_PALETTE: str
 PALETTES: Any
-DEFAULT_PALETTE: str = ...
+DEFAULT_PALETTE: str
 
-def parse_color_setting(
-    config_string: str,
-) -> dict[str, dict[str, tuple[str] | str]] | None: ...
+def parse_color_setting(config_string: str) -> dict[str, dict[str, tuple[str, ...] | str]] | None: ...

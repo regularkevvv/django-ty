@@ -1,7 +1,11 @@
 import threading
-from collections.abc import Callable, Hashable, MutableMapping
+from collections.abc import Callable, MutableMapping
 from logging import Logger
-from typing import Any, TypeVar
+from typing import Any, TypeAlias
+
+from typing_extensions import TypeVar
+
+_AnyHashable: TypeAlias = Any
 
 NONE_ID: int
 NO_RECEIVERS: Any
@@ -20,10 +24,13 @@ class Signal:
         receiver: Callable[..., Any],
         sender: object | None = None,
         weak: bool = True,
-        dispatch_uid: Hashable | None = None,
+        dispatch_uid: _AnyHashable | None = None,
     ) -> None: ...
     def disconnect(
-        self, receiver: Callable[..., Any] | None = None, sender: object | None = None, dispatch_uid: str | None = None
+        self,
+        receiver: Callable[..., Any] | None = None,
+        sender: object | None = None,
+        dispatch_uid: _AnyHashable | None = None,
     ) -> bool: ...
     def has_listeners(self, sender: Any | None = None) -> bool: ...
     def send(self, sender: Any, **named: Any) -> list[tuple[Callable[..., Any], str | None]]: ...
@@ -39,6 +46,6 @@ def receiver(
     *,
     sender: object | None = ...,
     weak: bool = ...,
-    dispatch_uid: Hashable | None = ...,
+    dispatch_uid: _AnyHashable | None = ...,
     **named: Any,
 ) -> Callable[[_F], _F]: ...

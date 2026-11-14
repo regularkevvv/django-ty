@@ -1,11 +1,16 @@
 from typing import Any
 
-from django.forms.models import BaseModelFormSet
+from django.db.models import Model
+from django.forms.models import BaseModelFormSet, ModelForm
+from typing_extensions import TypeVar, override
 
-class BaseGenericInlineFormSet(BaseModelFormSet):
-    instance: Any = ...
-    rel_name: Any = ...
-    save_as_new: Any = ...
+_M = TypeVar("_M", bound=Model)
+_ModelFormT = TypeVar("_ModelFormT", bound=ModelForm[Any], default=ModelForm[_M])  # ONLY use together with _M
+
+class BaseGenericInlineFormSet(BaseModelFormSet[_M, _ModelFormT]):
+    instance: Any
+    rel_name: Any
+    save_as_new: Any
     def __init__(
         self,
         data: Any | None = ...,
@@ -14,17 +19,20 @@ class BaseGenericInlineFormSet(BaseModelFormSet):
         save_as_new: bool = ...,
         prefix: Any | None = ...,
         queryset: Any | None = ...,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None: ...
-    def initial_form_count(self) -> Any: ...
+    @override
+    def initial_form_count(self) -> int: ...
     @classmethod
-    def get_default_prefix(cls) -> Any: ...
-    def save_new(self, form: Any, commit: bool = ...) -> Any: ...
+    @override
+    def get_default_prefix(cls) -> str: ...
+    @override
+    def save_new(self, form: Any, commit: bool = ...) -> _M: ...
 
 def generic_inlineformset_factory(
-    model: Any,
-    form: Any = ...,
-    formset: Any = ...,
+    model: type[_M],
+    form: type[_ModelFormT] = ...,
+    formset: type[BaseGenericInlineFormSet[Any, Any]] = ...,
     ct_field: str = ...,
     fk_field: str = ...,
     fields: Any | None = ...,
@@ -38,4 +46,6 @@ def generic_inlineformset_factory(
     for_concrete_model: bool = ...,
     min_num: Any | None = ...,
     validate_min: bool = ...,
-) -> Any: ...
+    absolute_max: int | None = ...,
+    can_delete_extra: bool = ...,
+) -> type[BaseGenericInlineFormSet[_M, _ModelFormT]]: ...

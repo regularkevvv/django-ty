@@ -1,80 +1,74 @@
-from collections.abc import Callable, Iterable
-from typing import Any, Generic, Literal, TypeVar, overload
+from collections.abc import Iterable, Sequence
+from typing import Any, ClassVar
 
-from django.db.models.expressions import Combinable
-from django.db.models.fields import Field, _ErrorMessagesToOverride, _ValidatorCallable
+from _typeshed import Unused
+from django.contrib.postgres.utils import CheckPostgresInstalledMixin
+from django.core.checks import CheckMessage
+from django.core.validators import _ValidatorCallable
+from django.db.backends.base.base import BaseDatabaseWrapper
+from django.db.models import Field
+from django.db.models.expressions import Combinable, Expression
+from django.db.models.fields import NOT_PROVIDED, _ErrorMessagesDict, _ErrorMessagesMapping
+from django.db.models.fields.mixins import CheckFieldDefaultMixin
+from django.db.models.lookups import Transform
+from django.db.models.sql.compiler import _AsSqlType
+from django.utils.choices import _Choices
+from django.utils.functional import _StrOrPromise
+from typing_extensions import TypeVar, override
 
-from .mixins import CheckFieldDefaultMixin
+# __set__ value type
+_ST = TypeVar("_ST", contravariant=True)
+# __get__ return type
+_GT = TypeVar("_GT", covariant=True)
 
-_V = TypeVar("_V", bound=Any | None)
+class ArrayField(CheckPostgresInstalledMixin, CheckFieldDefaultMixin, Field[_ST, _GT]):
+    _pyi_private_set_type: Sequence[Any] | Combinable
+    _pyi_private_get_type: list[Any]
 
-class ArrayField(CheckFieldDefaultMixin, Generic[_V], Field[_V | Combinable, _V]):
-    empty_strings_allowed: bool = ...
-    default_error_messages: Any = ...
-    size: int | None = ...
-    default_validators: Any = ...
-    from_db_value: Any = ...
-    base_field: Field[_V, _V] = ...
-    @overload
-    def __new__(
-        cls,
-        base_field: Field[Any, _V],
-        size: int | None = ...,
-        verbose_name: str | None = ...,
+    empty_strings_allowed: bool
+    default_error_messages: ClassVar[_ErrorMessagesDict]
+    base_field: Field[Any, Any]
+    size: int | None
+    default_validators: list[_ValidatorCallable]
+    from_db_value: Any
+    def __init__(
+        self,
+        base_field: Field[Any, Any],
+        size: int | None = None,
         *,
+        verbose_name: _StrOrPromise | None = ...,
         name: str | None = ...,
         primary_key: bool = ...,
         max_length: int | None = ...,
         unique: bool = ...,
         blank: bool = ...,
-        null: Literal[False] = False,
+        null: bool = ...,
         db_index: bool = ...,
-        default: list[_V] | Callable[[], list[_V]] = ...,
+        default: Any = ...,
+        db_default: type[NOT_PROVIDED] | Expression | _ST = ...,
         editable: bool = ...,
         auto_created: bool = ...,
         serialize: bool = ...,
         unique_for_date: str | None = ...,
         unique_for_month: str | None = ...,
         unique_for_year: str | None = ...,
-        choices: Iterable[
-            tuple[list[_V], str] | tuple[str, Iterable[tuple[list[_V], str]]]
-        ] = ...,
-        help_text: str = ...,
+        choices: _Choices | None = ...,
+        help_text: _StrOrPromise = ...,
         db_column: str | None = ...,
+        db_comment: str | None = ...,
         db_tablespace: str | None = ...,
         validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-    ) -> ArrayField[list[_V]]: ...
-    @overload
-    def __new__(
-        cls,
-        base_field: Field[Any, _V],
-        size: int | None = ...,
-        verbose_name: str | None = ...,
-        *,
-        name: str | None = ...,
-        primary_key: bool = ...,
-        max_length: int | None = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: Literal[True],
-        db_index: bool = ...,
-        default: list[_V] | Callable[[], list[_V]] | None = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: str | None = ...,
-        unique_for_month: str | None = ...,
-        unique_for_year: str | None = ...,
-        choices: Iterable[
-            tuple[list[_V], str] | tuple[str, Iterable[tuple[list[_V], str]]]
-        ] = ...,
-        help_text: str = ...,
-        db_column: str | None = ...,
-        db_tablespace: str | None = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-    ) -> ArrayField[list[_V] | None]: ...
+        error_messages: _ErrorMessagesMapping | None = ...,
+    ) -> None: ...
+    @override
+    def check(self, **kwargs: Any) -> list[CheckMessage]: ...
     @property
-    def description(self) -> str: ...  # type: ignore [override]
-    def get_transform(self, name: Any) -> Any: ...
+    @override
+    def description(self) -> str: ...  # type: ignore[override]
+    @override
+    def cast_db_type(self, connection: BaseDatabaseWrapper) -> str: ...
+    def get_placeholder_sql(self, value: Unused, compiler: Unused, connection: BaseDatabaseWrapper) -> _AsSqlType: ...
+    @override
+    def get_transform(self, name: str) -> type[Transform] | None: ...
+
+__all__ = ["ArrayField"]

@@ -1,8 +1,8 @@
 # Third-Party Notices
 
-This experimental native Ty integration vendors django-types 0.24.0 as its
-Django static declaration base, with reviewed Django-ty adapters. Missing newer
-modules are retained from django-stubs 6.1.1, commit
+Django-ty packages the native ORM declarations from django-types 0.24.0 with
+reviewed adapters. Its modern static declaration layer is retained from
+django-stubs 6.1.1, commit
 `c7816bcf4cb8ec8706acb5b671ca62131b345ef7`. The migration inventory is recorded in
 `compatibility/native-types-migration.json`.
 

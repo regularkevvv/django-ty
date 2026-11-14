@@ -1,11 +1,16 @@
 from collections.abc import Sequence
-from email._policybase import Policy
-from email.message import Message
+from email.message import EmailMessage as _StdlibEmailMessage
+from email.message import Message, MIMEPart
 from email.mime.base import MIMEBase
 from email.mime.message import MIMEMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import Any, TypeAlias, overload
+from email.policy import Policy
+from email.utils import make_msgid as make_msgid
+from typing import Any, NamedTuple, TypeAlias, overload
+
+from django.core.mail.backends.base import BaseEmailBackend
+from django.utils.functional import _StrOrPromise
 
 utf8_charset: Any
 utf8_charset_qp: Any
@@ -14,121 +19,106 @@ RFC5322_EMAIL_LINE_LENGTH_LIMIT: int
 
 class BadHeaderError(ValueError): ...
 
-ADDRESS_HEADERS: Any
+ADDRESS_HEADERS: set[str]
 
-def forbid_multi_line_headers(
-    name: str, val: str, encoding: str
-) -> tuple[str, str]: ...
-def split_addr(addr: str, encoding: str) -> tuple[str, str]: ...
+def forbid_multi_line_headers(name: str, val: str, encoding: str) -> tuple[str, str]: ...
 def sanitize_address(addr: tuple[str, str] | str, encoding: str) -> str: ...
 
-class MIMEMixin: ...
+class MIMEMixin:
+    def as_string(self, unixfrom: bool = False, linesep: str = "\n") -> str: ...
+    def as_bytes(self, unixfrom: bool = False, linesep: str = "\n") -> bytes: ...
 
-class SafeMIMEMessage(MIMEMixin, MIMEMessage):
-    defects: list[Any]
-    epilogue: None  # pyright: ignore[reportIncompatibleVariableOverride]
-    policy: Policy
-    preamble: None  # pyright: ignore[reportIncompatibleVariableOverride]
+class SafeMIMEMessage(MIMEMixin, MIMEMessage): ...  # type: ignore[misc]
 
-class SafeMIMEText(MIMEMixin, MIMEText):
-    defects: list[Any]
-    epilogue: None  # pyright: ignore[reportIncompatibleVariableOverride]
-    policy: Policy
-    preamble: None  # pyright: ignore[reportIncompatibleVariableOverride]
-    encoding: str = ...
-    def __init__(
-        self, _text: str, _subtype: str = ..., _charset: str = ...
-    ) -> None: ...
+class SafeMIMEText(MIMEMixin, MIMEText):  # type: ignore[misc]
+    encoding: str
+    def __init__(self, _text: str, _subtype: str = "plain", _charset: str | None = None) -> None: ...
 
-class SafeMIMEMultipart(MIMEMixin, MIMEMultipart):
-    defects: list[Any]
-    epilogue: None  # pyright: ignore[reportIncompatibleVariableOverride]
-    policy: Policy
-    preamble: None  # pyright: ignore[reportIncompatibleVariableOverride]
-    encoding: str = ...
+class SafeMIMEMultipart(MIMEMixin, MIMEMultipart):  # type: ignore[misc]
+    encoding: str
     def __init__(
         self,
-        _subtype: str = ...,
-        boundary: None = ...,
-        _subparts: None = ...,
-        encoding: str = ...,
-        **_params: Any
+        _subtype: str = "mixed",
+        boundary: Any | None = None,
+        _subparts: Any | None = None,
+        encoding: str | None = None,
+        **_params: Any,
     ) -> None: ...
 
 _AttachmentContent: TypeAlias = bytes | EmailMessage | Message | SafeMIMEText | str
 _AttachmentTuple: TypeAlias = (
-    tuple[str, _AttachmentContent]
-    | tuple[str | None, _AttachmentContent, str]
-    | tuple[str, _AttachmentContent, None]
+    tuple[str, _AttachmentContent] | tuple[str | None, _AttachmentContent, str] | tuple[str, _AttachmentContent, None]
 )
 
+class EmailAlternative(NamedTuple):
+    content: _AttachmentContent
+    mimetype: str
+
+class EmailAttachment(NamedTuple):
+    filename: str | None
+    content: _AttachmentContent
+    mimetype: str
+
 class EmailMessage:
-    content_subtype: str = ...
-    mixed_subtype: str = ...
-    encoding: Any = ...
-    to: list[str] = ...
-    cc: list[Any] = ...
-    bcc: list[Any] = ...
-    reply_to: list[Any] = ...
-    from_email: str = ...
-    subject: str = ...
-    body: str = ...
-    attachments: list[Any] = ...
-    extra_headers: dict[Any, Any] = ...
-    connection: Any = ...
+    content_subtype: str
+    encoding: Any
+    to: list[str]
+    cc: list[Any]
+    bcc: list[Any]
+    reply_to: list[Any]
+    from_email: str
+    subject: _StrOrPromise
+    body: _StrOrPromise
+    attachments: list[Any]
+    extra_headers: dict[Any, Any]
+    connection: BaseEmailBackend | None
     def __init__(
         self,
-        subject: str = ...,
-        body: str | None = ...,
-        from_email: str | None = ...,
-        to: Sequence[str] | None = ...,
-        bcc: Sequence[str] | None = ...,
-        connection: Any | None = ...,
-        attachments: Sequence[MIMEBase | _AttachmentTuple] | None = ...,
-        headers: dict[str, str] | None = ...,
-        cc: Sequence[str] | None = ...,
-        reply_to: Sequence[str] | None = ...,
+        subject: _StrOrPromise = "",
+        body: _StrOrPromise | None = "",
+        from_email: str | None = None,
+        to: Sequence[str] | None = None,
+        *,
+        bcc: Sequence[str] | None = None,
+        connection: BaseEmailBackend | None = None,
+        attachments: Sequence[MIMEBase | _AttachmentTuple] | None = None,
+        headers: dict[str, str] | None = None,
+        cc: Sequence[str] | None = None,
+        reply_to: Sequence[str] | None = None,
     ) -> None: ...
-    def get_connection(self, fail_silently: bool = ...) -> Any: ...
-    # TODO: when typeshed gets more types for email.Message, move it to MIMEMessage, now it has too many false-positives
-    def message(self) -> Any: ...
+    def message(self, *, policy: Policy | None = ...) -> _StdlibEmailMessage: ...
     def recipients(self) -> list[str]: ...
-    def send(self, fail_silently: bool = ...) -> int: ...
+    def send(self, fail_silently: bool = False, *, using: str | None = None) -> int: ...
     @overload
-    def attach(self, filename: MIMEText = ...) -> None: ...
+    def attach(self, filename: MIMEBase | None = None, content: None = None, mimetype: None = None) -> None: ...
     @overload
     def attach(
-        self,
-        filename: None = ...,
-        content: _AttachmentContent = ...,
-        mimetype: str = ...,
+        self, filename: None = None, content: _AttachmentContent | None = None, mimetype: str | None = None
     ) -> None: ...
     @overload
     def attach(
-        self,
-        filename: str = ...,
-        content: _AttachmentContent = ...,
-        mimetype: str | None = ...,
+        self, filename: str | None = None, content: _AttachmentContent | None = None, mimetype: str | None = None
     ) -> None: ...
-    def attach_file(self, path: str, mimetype: str | None = ...) -> None: ...
+    @overload
+    def attach(self, filename: MIMEPart) -> None: ...
+    def attach_file(self, path: str, mimetype: str | None = None) -> None: ...
 
 class EmailMultiAlternatives(EmailMessage):
-    alternative_subtype: str = ...
-    alternatives: Sequence[tuple[_AttachmentContent, str]] = ...
+    alternatives: list[tuple[_AttachmentContent, str]]
     def __init__(
         self,
-        subject: str = ...,
-        body: str = ...,
-        from_email: str | None = ...,
-        to: Sequence[str] | None = ...,
-        bcc: Sequence[str] | None = ...,
-        connection: Any | None = ...,
-        attachments: Sequence[MIMEBase | _AttachmentTuple] | None = ...,
-        headers: dict[str, str] | None = ...,
-        alternatives: Sequence[tuple[_AttachmentContent, str]] | None = ...,
-        cc: Sequence[str] | None = ...,
-        reply_to: Sequence[str] | None = ...,
+        subject: _StrOrPromise = "",
+        body: _StrOrPromise | None = "",
+        from_email: str | None = None,
+        to: Sequence[str] | None = None,
+        *,
+        bcc: Sequence[str] | None = None,
+        connection: Any | None = None,
+        attachments: Sequence[MIMEBase | _AttachmentTuple] | None = None,
+        headers: dict[str, str] | None = None,
+        alternatives: list[tuple[_AttachmentContent, str]] | None = None,
+        cc: Sequence[str] | None = None,
+        reply_to: Sequence[str] | None = None,
     ) -> None: ...
-    def attach_alternative(
-        self, content: _AttachmentContent, mimetype: str
-    ) -> None: ...
+    def attach_alternative(self, content: _AttachmentContent, mimetype: str) -> None: ...
+    def body_contains(self, text: str) -> bool: ...

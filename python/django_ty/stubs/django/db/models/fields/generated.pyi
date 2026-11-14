@@ -1,7 +1,8 @@
 from collections.abc import Iterable
 from typing import Any, Literal, TypeVar, overload
 
-from django.db.models import Combinable, Expression, ForeignObjectRel
+from django.db.models.expressions import Combinable, Expression
+from django.db.models.fields.reverse_related import ForeignObjectRel
 from django.db.models.expressions import Col
 from typing_extensions import Never
 

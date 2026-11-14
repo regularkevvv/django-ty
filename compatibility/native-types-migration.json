@@ -86,8 +86,10 @@
     "script": "scripts/vendor_native_django.py",
     "receipt": "compatibility/native-types-vendor.json",
     "static_files": 731,
-    "adapter_files": 8,
-    "status": "Byte-for-byte reproduction and tamper controls passed; API compatibility not established by reproduction."
+    "adapter_files": 10,
+    "status": "Byte-for-byte reproduction and tamper controls passed; API compatibility not established by reproduction.",
+    "modern_static_modules": 533,
+    "output_tree_sha256": "3bfbe66ec7efb036c85add686a95f14e821f9ec59b17c79f274219ded0d0ec24"
   },
   "queryset_annotation_migration": {
     "path": "e2e/django5_fixture/library/models.py",
@@ -95,5 +97,11 @@
     "after": "models.QuerySet[\"Book\"]",
     "reason": "django-types uses one QuerySet parameter; the row remains Book in both declarations. Row-specific results use ValuesQuerySet[Model, Row].",
     "expectations_removed": 0
+  },
+  "modern_static": {
+    "source": "django-ty==0.7.0 pinned modern django-stubs declarations",
+    "modules": 533,
+    "policy": "Use native ORM generics while restoring the modern static API. No semantic corpus expectations removed.",
+    "internal_import_audit": "All Django-local declaration imports resolve."
   }
 }

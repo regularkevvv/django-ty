@@ -1,23 +1,18 @@
-# Companion qualification
+# Installed package qualification
 
-The [candidate receipt](../compatibility/companion-local-qualification.json) records
-21 complete Django/Python pairs, a separate Python 3.15 qualification, the native
-oracle, 152 response comparisons per interpreter, strict SDK type checks, installed
-CLI/LSP controls and the 7,082-file/2,501-model regression. Source preservation,
-negative controls, process-tree memory accounting and cleanup are required.
+Django-ty 0.8 uses native Django inference and a reviewed modern declaration layer. Current qualification keeps these checks separate:
 
-These measurements use the published companion 0.89 and a Django 0.7 candidate wheel. CI builds one universal wheel and tests
-that exact artifact on Linux, macOS and Windows, then repeats the contract matrix
-and bounded scalability workload. Published wheel/source hashes and their signed
-provenance are checked separately after release.
+- Pinned source-wheel reproduction, exact provider hashes, two tamper controls and an audit of every Django-local declaration import.
+- 172 documented assertions,84 independent Django runtime contracts, and nine QueryDict cases. MyPy agreement is reported separately.
+- 52 custom relation-key, constructor and default-row cases in each disk/memory mode, with original source/provider preservation.
+- Eight modern static API assertions and three intentional errors, with widget, validator, attachment and async pagination runtime controls.
+- All 21 supported Django/Python pairs, plus a separate Python 3.15.1 run. The latter uses a MyPy comparator on a separately supported interpreter.
+- Installed discovery, module and empty-PATH entry points, actual editor sessions, hover, unsaved errors and restoration.
+- Complete raw CPython/Monty parity for 156 regression requests. The historical Rust reference retains its own regression tests and generates diverse requests; its eager index format and former declaration provider are not the expected representation for the current plugin. Django runtime contracts supply the independent semantic reference.
+- Ten rotated fresh-process comparisons per checker across all five performance shapes, including exact type assertions, ordinary Python and ORM error controls, source preservation and per-workload cleanup.
 
-Django editor qualification uses workspace diagnostics. The historical legacy and
-companion comparison linked from the receipt shows why: closed model facts are absent in
-open-files-only mode. Workspace mode passes both references. This is a required
-Django configuration, not a claim that every editor default provides project-wide
-plugin facts.
+The local restored-provider distributed-stress workload averages 0.785 seconds, with a 0.762-second median, against native Ty's 0.228-second mean. It meets the accepted mean-and-median policy while preserving every paired ratio. These are local workload measurements, not worst-case bounds for arbitrary applications.
 
-Python 3.15 is checked against Django's official contracts and actual framework
-runtime. Its pinned mypy/django-stubs comparison runs on Python 3.13, which that
-comparator declares supported; it is separate from the 21 version-matched pairs.
-The recorded workloads do not prove behavior for unavailable private applications.
+Hosted CI builds one universal wheel, tests it on Linux, macOS and Windows, repeats the complete contract and version matrices, and runs the bounded 7,082-file/2,501-model regression. Publication and public-wheel/provenance checks remain separate release gates.
+
+Historical 0.7 evidence remains in [its receipt](../compatibility/companion-local-qualification.json) with its original versions and measured scope.

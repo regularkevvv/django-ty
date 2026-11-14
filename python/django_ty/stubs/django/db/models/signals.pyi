@@ -4,24 +4,28 @@ from typing import Any
 from django.apps.registry import Apps
 from django.db.models.base import Model
 from django.dispatch import Signal
+from django.dispatch.dispatcher import _AnyHashable
+from typing_extensions import override
 
 class_prepared: Signal
 
 class ModelSignal(Signal):
-    def connect(  # type: ignore
+    @override
+    def connect(  # type: ignore[override]
         self,
         receiver: Callable[..., Any],
-        sender: type[Model] | str | None = ...,
-        weak: bool = ...,
-        dispatch_uid: str | None = ...,
-        apps: Apps | None = ...,
+        sender: type[Model] | str | None = None,
+        weak: bool = True,
+        dispatch_uid: _AnyHashable | None = None,
+        apps: Apps | None = None,
     ) -> None: ...
-    def disconnect(  # type: ignore
+    @override
+    def disconnect(  # type: ignore[override]
         self,
-        receiver: Callable[..., Any] = ...,
-        sender: type[Model] | str | None = ...,
-        dispatch_uid: str | None = ...,
-        apps: Apps | None = ...,
+        receiver: Callable[..., Any] | None = None,
+        sender: type[Model] | str | None = None,
+        dispatch_uid: _AnyHashable | None = None,
+        apps: Apps | None = None,
     ) -> bool | None: ...
 
 pre_init: ModelSignal

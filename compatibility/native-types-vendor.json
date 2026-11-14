@@ -4,13 +4,17 @@
   "native": {
     "distribution": "django-types",
     "version": "0.24.0",
-    "tree_sha256": "7781ac0fc2f4d7d4c0be731edccdfa2b338cca98c41a34f0ba248907035afc25"
+    "tree_sha256": "7781ac0fc2f4d7d4c0be731edccdfa2b338cca98c41a34f0ba248907035afc25",
+    "wheel_url": "https://files.pythonhosted.org/packages/2f/ab/f5c37ecc08c396df62579246597796697b58253c8b30206870e8d0f644d0/django_types-0.24.0-py3-none-any.whl",
+    "wheel_sha256": "ddb478ca733e0dde5475118dd59ab340156980f9659fd92de2083326ae96100a"
   },
   "legacy": {
     "distribution": "django-ty",
     "version": "0.7.0",
     "commit": "2d59e00825ed2e0018cecf8997e65a3312aa9286",
-    "tree_sha256": "64209cf4d9d6f03ebfd17f16ddb95f40019a549d678d538fbe3c5d19dc228b9e"
+    "tree_sha256": "64209cf4d9d6f03ebfd17f16ddb95f40019a549d678d538fbe3c5d19dc228b9e",
+    "wheel_url": "https://files.pythonhosted.org/packages/d4/12/d4bb58d43d6b7f58a7e1d0e334fee79a2ce630b4ed980764f680e58bac11/django_ty-0.7.0-py3-none-any.whl",
+    "wheel_sha256": "7d3f9850a62090527de9748559541030a4addb185b67ccbbe52e7ccfc1bc3a2e"
   },
   "restore": [
     "middleware/csp.pyi",
@@ -192,21 +196,87 @@
         }
       ]
     },
-    "db/models/expressions.pyi": {
-      "before_sha256": "270b3ba3e966374b3207e9066c52168235dfc14c1f909569547a7f3b1da69db8",
-      "after_sha256": "15e5f74daa561c5e5756c6986d901cd90af1a806551ed77994214e19c5d8ff3b",
+    "db/models/base.pyi": {
+      "before_sha256": "eb59a3b7a4d745acf004cf568f5d4e042d16515f3211dd03c1c1e401ae201b16",
+      "after_sha256": "21055f6eab456187848d70b88a78ffc4cf1e3cc589cfa4b597ca6762a244b347",
       "edits": [
         {
-          "start": 8905,
-          "end": 8905,
+          "start": 3337,
+          "end": 3337,
           "before": "",
-          "after": "\nclass DatabaseDefault(Expression):\n    def __init__(self, expression: Expression, output_field: Field[Any, Any] | None = None) -> None: ...\n"
+          "after": "\n# Modern declaration dependencies retained alongside native ORM generics.\nDEFERRED: Deferred\n\nclass Deferred: ...\n"
+        }
+      ]
+    },
+    "db/models/fields/__init__.pyi": {
+      "before_sha256": "369a114400b7b2c6b821063eba2274e3a1b638531dcd314fba72afd13b825fd2",
+      "after_sha256": "d9d26e9678a9a54351d19bc5748aaee94776c391a7065dc76d35394554a1af47",
+      "edits": [
+        {
+          "start": 59438,
+          "end": 59438,
+          "before": "",
+          "after": "\n# Modern declaration dependencies retained alongside native ORM generics.\nBLANK_CHOICE_LABEL: _StrOrPromise\n\nfrom django.utils.functional import _StrOrPromise\n\nclass Empty: ...\n\nclass CommaSeparatedIntegerField(CharField[_C]): ...\n\nclass NullBooleanField(BooleanField[bool | None]):\n    _pyi_private_set_type: bool | Combinable | None  # type: ignore[assignment]\n    _pyi_private_get_type: bool | None  # type: ignore[assignment]\n    _pyi_lookup_exact_type: bool | None  # type: ignore[assignment]\n\n_AllLimitChoicesTo: TypeAlias = _LimitChoicesTo | _LimitChoicesToCallable | _ChoicesCallable  # noqa: PYI047\n\nfrom django.utils.choices import _ChoicesCallable\n\n_LimitChoicesTo: TypeAlias = Q | dict[str, Any]\n\nfrom django.db.models.query_utils import Q\n\n_LimitChoicesToCallable: TypeAlias = Callable[[], _LimitChoicesTo]\n\n_ErrorMessagesDict: TypeAlias = dict[str, _StrOrPromise]\n\n_ErrorMessagesMapping: TypeAlias = Mapping[str, _StrOrPromise]\n"
+        }
+      ]
+    },
+    "db/models/fields/generated.pyi": {
+      "before_sha256": "710d5234fc55d14b527fed381fc07b7e3839b060de43271cbf1496064cd1736f",
+      "after_sha256": "657dc3b3ee3ddddc22dfb47bfc04fec9a5db33c04af4f46d86a1d8590759670d",
+      "edits": [
+        {
+          "start": 110,
+          "end": 110,
+          "before": "",
+          "after": ".expressions"
+        },
+        {
+          "start": 140,
+          "end": 141,
+          "before": ",",
+          "after": "\nfrom django.db.models.fields.reverse_related import"
+        }
+      ]
+    },
+    "db/models/fields/related.pyi": {
+      "before_sha256": "80ef4188817e4dc80b5a9ad35bc6be62eaafe83b122fd1c3313d0b82116e9754",
+      "after_sha256": "af725014258ce27069278e25c856a74550e1b14a0999fa5d7a2be46e08f63fa3",
+      "edits": [
+        {
+          "start": 0,
+          "end": 0,
+          "before": "",
+          "after": "from django.db.models.query import QuerySet\n"
+        },
+        {
+          "start": 1611,
+          "end": 1611,
+          "before": "",
+          "after": "Query"
+        },
+        {
+          "start": 1613,
+          "end": 1619,
+          "before": "quence",
+          "after": "t"
+        }
+      ]
+    },
+    "db/models/options.pyi": {
+      "before_sha256": "c247b3940633495a4e0403c6d120f09e8c89a923b125914b095a4d0949e9998f",
+      "after_sha256": "b1496623f3cc2e1e98c8e771add4f5e2b01d679bc93d09784f776a0ed79895e0",
+      "edits": [
+        {
+          "start": 5122,
+          "end": 5122,
+          "before": "",
+          "after": "\n# Modern declaration dependencies retained alongside native ORM generics.\n_OptionTogetherT: TypeAlias = _ListOrTuple[_ListOrTuple[str] | str] | set[tuple[str, ...]]  # noqa: PYI047\n\nfrom typing import TypeAlias\n\nfrom django.utils.datastructures import _ListOrTuple\n"
         }
       ]
     },
     "db/models/query.pyi": {
       "before_sha256": "d4fce5659df08e7b4cefa3a102e816f5f2812bfe716c7aea0e8ad13e4e85a579",
-      "after_sha256": "6da4872d7f6f330482fef0cc48aa218bef86cfd59046929b932c8052da199abd",
+      "after_sha256": "51cc5328057228a9c9b878994a07fe35e1e1ddc64b04e1cd94618607123966b9",
       "edits": [
         {
           "start": 581,
@@ -321,1185 +391,550 @@
           "end": 11783,
           "before": "[Any",
           "after": "T"
-        }
-      ]
-    },
-    "forms/models.pyi": {
-      "before_sha256": "1751671dfe911f02beb2ecd9ac9102280c15b512f1326e33c7f85b4cbdc6f02c",
-      "after_sha256": "a32db4cf176450d39bd1b8159fa9b33b28380b4870eaeed142a3477863127b96",
-      "edits": [
-        {
-          "start": 184,
-          "end": 184,
-          "before": "",
-          "after": ", Generic"
-        },
-        {
-          "start": 3426,
-          "end": 3426,
-          "before": "",
-          "after": "_ModelFormT = TypeVar(\"_ModelFormT\", bound=Model)\n\n"
-        },
-        {
-          "start": 3455,
-          "end": 3455,
-          "before": "",
-          "after": ", Generic[_ModelFormT]"
-        }
-      ]
-    },
-    "http/request.pyi": {
-      "before_sha256": "6350c5d2341c55767b0c4ad8bbc11eafa75994e8af31cc1744c808f3cc7c5d23",
-      "after_sha256": "63a037ba67bb2be32c36dd18eed10e344def758cc22531d44d0593d38bac5184",
-      "edits": [
-        {
-          "start": 0,
-          "end": 0,
-          "before": "",
-          "after": "import datetime\n"
-        },
-        {
-          "start": 28,
-          "end": 28,
-          "before": "",
-          "after": "Awaitable, Callable, "
-        },
-        {
-          "start": 38,
-          "end": 38,
-          "before": "",
-          "after": "Iterator, "
-        },
-        {
-          "start": 45,
-          "end": 45,
-          "before": "",
-          "after": ", Sequence"
-        },
-        {
-          "start": 103,
-          "end": 103,
-          "before": "",
-          "after": "Literal, NoReturn, Protocol, "
-        },
-        {
-          "start": 114,
-          "end": 123,
-          "before": "TypeVar, ",
-          "after": ""
-        },
-        {
-          "start": 131,
-          "end": 131,
-          "before": "",
-          "after": ", type_check_only\nfrom typing_extensions import Self"
-        },
-        {
-          "start": 358,
-          "end": 358,
-          "before": "",
-          "after": "http.multipartparser import MultiPartParser\nfrom django."
-        },
-        {
-          "start": 424,
-          "end": 430,
-          "before": "(\n    ",
-          "after": ""
-        },
-        {
-          "start": 453,
-          "end": 457,
-          "before": "\n   ",
-          "after": ""
-        },
-        {
-          "start": 472,
-          "end": 476,
-          "before": "\n   ",
-          "after": ""
-        },
-        {
-          "start": 491,
-          "end": 491,
-          "before": "",
-          "after": "\nfrom django.utils.functional import cached_property\nfrom django.views.debug import ExceptionReporter"
-        },
-        {
-          "start": 492,
-          "end": 494,
-          "before": "\n)",
-          "after": " SafeExceptionReporterFilter"
-        },
-        {
-          "start": 525,
-          "end": 526,
-          "before": "S",
-          "after": "Typ"
-        },
-        {
-          "start": 527,
-          "end": 529,
-          "before": "lf",
-          "after": "Var, override"
-        },
-        {
-          "start": 550,
-          "end": 556,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 589,
-          "end": 589,
-          "before": "",
-          "after": "\n\n@type_check_only\nclass _PostDataProtocol(Protocol):\n    def read(self, num_bytes: int | None"
-        },
-        {
-          "start": 591,
-          "end": 591,
-          "before": "",
-          "after": " ..., /) -> bytes: ...\n    def readline(self, limit: int | None = ..., /) -> bytes: ...\n    def readlines(self) -> list[bytes]: ...\n    def __iter__(self) -> Iterator[bytes]:"
-        },
-        {
-          "start": 681,
-          "end": 681,
-          "before": "",
-          "after": "_"
-        },
-        {
-          "start": 711,
-          "end": 717,
-          "before": " (\n   ",
-          "after": ""
-        },
-        {
-          "start": 755,
-          "end": 759,
-          "before": "\n   ",
-          "after": ""
-        },
-        {
-          "start": 808,
-          "end": 828,
-          "before": "\n)\n\nT = TypeVar(\"T\")",
-          "after": ""
-        },
-        {
-          "start": 898,
-          "end": 904,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 937,
-          "end": 943,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1290,
-          "end": 1291,
-          "before": "T",
-          "after": "Any"
-        },
-        {
-          "start": 1297,
-          "end": 1301,
-          "before": "Mapp",
-          "after": "d"
-        },
-        {
-          "start": 1302,
-          "end": 1304,
-          "before": "ng",
-          "after": "ct"
-        },
-        {
-          "start": 1310,
-          "end": 1311,
-          "before": "T",
-          "after": "Any"
-        },
-        {
-          "start": 1384,
-          "end": 1385,
-          "before": "T",
-          "after": "Any"
-        },
-        {
-          "start": 1391,
-          "end": 1395,
-          "before": "Mapp",
-          "after": "d"
-        },
-        {
-          "start": 1396,
-          "end": 1398,
-          "before": "ng",
-          "after": "ct"
-        },
-        {
-          "start": 1404,
-          "end": 1405,
-          "before": "T",
-          "after": "Any"
-        },
-        {
-          "start": 1406,
-          "end": 1428,
-          "before": ": ...\n\nclass MediaType",
-          "after": ""
-        },
-        {
-          "start": 1463,
-          "end": 1463,
-          "before": "",
-          "after": "_Immutable"
-        },
-        {
-          "start": 1472,
-          "end": 1478,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1489,
-          "end": 1489,
-          "before": "",
-          "after": "_Immutable"
-        },
-        {
-          "start": 1498,
-          "end": 1504,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1532,
-          "end": 1538,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1563,
-          "end": 1569,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1626,
-          "end": 1626,
-          "before": "",
-          "after": "[Any"
-        },
-        {
-          "start": 1627,
-          "end": 1633,
-          "before": " = ...",
-          "after": "]"
-        },
-        {
-          "start": 1647,
-          "end": 1653,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1672,
-          "end": 1678,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1701,
-          "end": 1707,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1748,
-          "end": 1754,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1783,
-          "end": 1789,
-          "before": " = ...",
-          "after": ""
-        },
-        {
-          "start": 1831,
-          "end": 1831,
-          "before": "",
-          "after": "\n"
-        },
-        {
-          "start": 1832,
-          "end": 1833,
-          "before": "=",
-          "after": ""
-        },
-        {
-          "start": 1834,
-          "end": 1834,
-          "before": "",
-          "after": "  _body: bytes\n    _stream: BinaryIO\n    # Attributes set by middleware:\n    # https://docs"
-        },
-        {
-          "start": 1835,
-          "end": 1835,
-          "before": "",
-          "after": "djangoproject"
-        },
-        {
-          "start": 1836,
-          "end": 1836,
-          "before": "",
-          "after": "com/en/stable/ref/request-response/#attributes-set-by-middleware\n    # django"
-        },
-        {
-          "start": 1837,
-          "end": 1837,
-          "before": "",
-          "after": "contrib.sessions.middleware.SessionMiddleware:\n    session: SessionBase\n    # django.contrib.sites.middleware.CurrentSiteMiddleware:\n    site: Site\n    # django.contrib.auth.middleware.AuthenticationMiddleware:\n    user: _AnyUser\n    auser: Callable[[], Awaitable[_AnyUser]]\n    # django.middleware.locale.LocaleMiddleware:\n    LANGUAGE_CODE: str\n    # Attributes set by application code:\n    # https://docs.djangoproject.com/en/stable/ref/request-response/#attributes-set-by-application-code\n    current_app: str\n    urlconf: str | None\n    exception_reporter_filter: SafeExceptionReporterFilter\n    exception_reporter_class: type[ExceptionReporter]"
-        },
-        {
-          "start": 1868,
-          "end": 2063,
-          "before": ": ...\n    @property\n    def accepted_types(self) -> list[MediaType]: ...\n    def get_preferred_type(self, media_types: list[str]) -> str | None: ...\n    def accepts(self, media_type: str) -> bool",
-          "after": ""
-        },
-        {
-          "start": 2194,
-          "end": 2197,
-          "before": "...",
-          "after": "False"
-        },
-        {
-          "start": 2271,
-          "end": 2274,
-          "before": "...",
-          "after": "False"
-        },
-        {
-          "start": 2328,
-          "end": 2336,
-          "before": "\n       ",
-          "after": ""
-        },
-        {
-          "start": 2346,
-          "end": 2354,
-          "before": "\n       ",
-          "after": ""
-        },
-        {
-          "start": 2364,
-          "end": 2365,
-          "before": "T",
-          "after": "Any"
-        },
-        {
-          "start": 2372,
-          "end": 2380,
-          "before": "\n       ",
-          "after": ""
-        },
-        {
-          "start": 2397,
-          "end": 2405,
-          "before": "\n       ",
-          "after": ""
-        },
-        {
-          "start": 2421,
-          "end": 2421,
-          "before": "",
-          "after": "datetime.timedelta | "
-        },
-        {
-          "start": 2431,
-          "end": 2432,
-          "before": ",",
-          "after": ""
-        },
-        {
-          "start": 2448,
-          "end": 2460,
-          "before": "T: ...\n    d",
-          "after": "Non"
-        },
-        {
-          "start": 2461,
-          "end": 2487,
-          "before": "f get_raw_uri(self) -> str",
-          "after": ""
-        },
-        {
-          "start": 2607,
-          "end": 2607,
-          "before": "",
-          "after": " | None"
-        },
-        {
-          "start": 2693,
-          "end": 2693,
-          "before": "",
-          "after": " | None: ...\n    @encoding.setter\n    def encoding(self, val: str) -> None"
-        },
-        {
-          "start": 2746,
-          "end": 2746,
-          "before": "",
-          "after": "_"
-        },
-        {
-          "start": 2773,
-          "end": 2773,
-          "before": "",
-          "after": "@upload_handlers.setter\n    "
-        },
-        {
-          "start": 2777,
-          "end": 2777,
-          "before": "",
-          "after": "upload_handlers(self, upload_handlers: _UploadHandlerL"
-        },
-        {
-          "start": 2779,
-          "end": 2779,
-          "before": "",
-          "after": "t) -> None: ...\n    @property\n    def multipart"
-        },
-        {
-          "start": 2780,
-          "end": 2780,
-          "before": "",
-          "after": "p"
-        },
-        {
-          "start": 2781,
-          "end": 2782,
-          "before": "j",
-          "after": "rser_cl"
-        },
-        {
-          "start": 2783,
-          "end": 2784,
-          "before": "x",
-          "after": "ss"
-        },
-        {
-          "start": 2794,
-          "end": 2794,
-          "before": "",
-          "after": "MultiPartParser: ...\n    @multipart_parser_class.setter\n    def multipart_parser_class(self, multipart_parser_class: MultiPartParser) -> None: ...\n    @cached_property\n    def accepted_types(self) -> list[MediaType]: ...\n    @cached_property\n    def accepted_types_"
-        },
-        {
-          "start": 2795,
-          "end": 2795,
-          "before": "",
-          "after": "y_precedence(self) -> list[MediaType]: ...\n    def accepted_type(self, media_type: str) -> MediaType | N"
-        },
-        {
-          "start": 2796,
-          "end": 2796,
-          "before": "",
-          "after": "ne: ...\n    def get_preferred_type(self, media_types: Sequence[str]) -> str | N"
-        },
-        {
-          "start": 2797,
-          "end": 2798,
-          "before": "l",
-          "after": "ne"
-        },
-        {
-          "start": 2881,
-          "end": 2884,
-          "before": "Bin",
-          "after": "_PostD"
-        },
-        {
-          "start": 2885,
-          "end": 2885,
-          "before": "",
-          "after": "taP"
-        },
-        {
-          "start": 2886,
-          "end": 2889,
-          "before": "yIO",
-          "after": "otocol"
-        },
-        {
-          "start": 2961,
-          "end": 2961,
-          "before": "",
-          "after": "[Any]"
-        },
-        {
-          "start": 2974,
-          "end": 2974,
-          "before": "",
-          "after": "cached_"
-        },
-        {
-          "start": 3128,
-          "end": 3128,
-          "before": "",
-          "after": "accepts(self, media_type: str) -> bool: ...\n    def "
-        },
-        {
-          "start": 3157,
-          "end": 3157,
-          "before": "",
-          "after": "# File-like and iterator interface, a minimal subset of BytesIO.\n    "
-        },
-        {
-          "start": 3172,
-          "end": 3177,
-          "before": "*args",
-          "after": "n"
-        },
-        {
-          "start": 3179,
-          "end": 3180,
-          "before": "A",
-          "after": "i"
-        },
-        {
-          "start": 3181,
-          "end": 3182,
-          "before": "y",
-          "after": "t | None = -1"
-        },
-        {
-          "start": 3184,
-          "end": 3197,
-          "before": "**kwargs: Any",
-          "after": "/"
-        },
-        {
-          "start": 3236,
-          "end": 3241,
-          "before": "*args",
-          "after": "limit"
-        },
-        {
-          "start": 3243,
-          "end": 3244,
-          "before": "A",
-          "after": "i"
-        },
-        {
-          "start": 3245,
-          "end": 3246,
-          "before": "y",
-          "after": "t | None = -1"
-        },
-        {
-          "start": 3248,
-          "end": 3261,
-          "before": "**kwargs: Any",
-          "after": "/"
-        },
-        {
-          "start": 3308,
-          "end": 3311,
-          "before": "ble",
-          "after": "tor"
-        },
-        {
-          "start": 3369,
-          "end": 3369,
-          "before": "",
-          "after": "@type_check_only\nclass"
-        },
-        {
-          "start": 3370,
-          "end": 3376,
-          "before": "   # A",
-          "after": "_MutableH"
-        },
-        {
-          "start": 3378,
-          "end": 3381,
-          "before": "rib",
-          "after": "pReq"
-        },
-        {
-          "start": 3382,
-          "end": 3383,
-          "before": "t",
-          "after": ""
-        },
-        {
-          "start": 3385,
-          "end": 3389,
-          "before": " add",
-          "after": "t(HttpR"
-        },
-        {
-          "start": 3390,
-          "end": 3397,
-          "before": "d by op",
-          "after": "ques"
-        },
-        {
-          "start": 3398,
-          "end": 3452,
-          "before": "ional parts of Django\n    # django.contrib.admin views",
-          "after": ")"
-        },
-        {
-          "start": 3458,
-          "end": 3469,
-          "before": "current_app",
-          "after": "GET"
-        },
-        {
-          "start": 3470,
-          "end": 3722,
-          "before": " str\n    # django.contrib.auth.middleware.AuthenticationMiddleware:\n    user: _AnyUser\n    # django.contrib.sites.middleware.CurrentSiteMiddleware\n    site: Site\n    # django.contrib.sessions.middleware.SessionMiddleware\n    session: SessionBase\n\nclass",
-          "after": ""
-        },
-        {
-          "start": 3732,
-          "end": 3736,
-          "before": "(Mul",
-          "after": "  # "
-        },
-        {
-          "start": 3737,
-          "end": 3737,
-          "before": "",
-          "after": "ype: "
-        },
-        {
-          "start": 3738,
-          "end": 3739,
-          "before": "V",
-          "after": "gnore["
-        },
-        {
-          "start": 3740,
-          "end": 3742,
-          "before": "lu",
-          "after": "ssignm"
-        },
-        {
-          "start": 3743,
-          "end": 3746,
-          "before": "Dic",
-          "after": "n"
-        },
-        {
-          "start": 3747,
-          "end": 3756,
-          "before": "[str, str",
-          "after": ""
-        },
-        {
-          "start": 3757,
-          "end": 3759,
-          "before": "):",
-          "after": ""
-        },
-        {
-          "start": 3764,
-          "end": 3764,
-          "before": "",
-          "after": "POST: QueryDict  # type: ignore[assignm"
-        },
-        {
-          "start": 3766,
-          "end": 3775,
-          "before": "coding: s",
-          "after": ""
-        },
-        {
-          "start": 3776,
-          "end": 3777,
-          "before": "r",
-          "after": "]\n\n_Z"
-        },
-        {
-          "start": 3780,
-          "end": 3780,
-          "before": "",
-          "after": "TypeVar(\"_Z\")\n\n# mypy uses mro to pick between `__init__` and `__new__` for return types and will prefers `__init__` over `__new__`\n# in case of a tie"
-        },
-        {
-          "start": 3781,
-          "end": 3784,
-          "before": "..\n",
-          "after": ""
-        },
-        {
-          "start": 3785,
-          "end": 3785,
-          "before": "",
-          "after": "So"
-        },
-        {
-          "start": 3786,
-          "end": 3786,
-          "before": "",
-          "after": "to"
-        },
-        {
-          "start": 3787,
-          "end": 3787,
-          "before": "",
-          "after": "be"
-        },
-        {
-          "start": 3788,
-          "end": 3792,
-          "before": "_mut",
-          "after": ""
-        },
-        {
-          "start": 3796,
-          "end": 3796,
-          "before": "",
-          "after": " to specialize type via `__new__` (which is required for pyright to work),\n# we need to use an intermediary class for the `__init__` method.\n# See https"
-        },
-        {
-          "start": 3797,
-          "end": 3797,
-          "before": "",
-          "after": "//github.com/python/mypy/issues/17251\n#"
-        },
-        {
-          "start": 3798,
-          "end": 3798,
-          "before": "",
-          "after": "https://githu"
-        },
-        {
-          "start": 3799,
-          "end": 3799,
-          "before": "",
-          "after": ".c"
-        },
-        {
-          "start": 3800,
-          "end": 3800,
-          "before": "",
-          "after": "m/pyth"
-        },
-        {
-          "start": 3801,
-          "end": 3801,
-          "before": "",
-          "after": "n/mypy/b"
-        },
-        {
-          "start": 3802,
-          "end": 3802,
-          "before": "",
-          "after": "ob/c724a6a806655f94d0c705a7121e3d671eced96d/mypy/typeops.py#L148-L149\n@type_check_only\nclass"
-        },
-        {
-          "start": 3803,
-          "end": 3808,
-          "before": "= ...",
-          "after": "_QueryDictMixin:"
-        },
-        {
-          "start": 3973,
-          "end": 3973,
-          "before": "",
-          "after": "\nclass"
-        },
-        {
-          "start": 3974,
-          "end": 3978,
-          "before": "   d",
-          "after": "Qu"
-        },
-        {
-          "start": 3979,
-          "end": 3985,
-          "before": "f setl",
-          "after": "ryD"
-        },
-        {
-          "start": 3986,
-          "end": 3987,
-          "before": "s",
-          "after": "c"
-        },
-        {
-          "start": 3989,
-          "end": 3990,
-          "before": "s",
-          "after": "_Qu"
-        },
-        {
-          "start": 3991,
-          "end": 3993,
-          "before": "lf",
-          "after": "ryDictMixin"
-        },
-        {
-          "start": 3995,
-          "end": 3996,
-          "before": "k",
-          "after": "MultiValu"
-        },
-        {
-          "start": 3997,
-          "end": 4000,
-          "before": "y: ",
-          "after": "Dict["
-        },
-        {
-          "start": 4005,
-          "end": 4017,
-          "before": "list_: list[",
-          "after": ""
-        },
-        {
-          "start": 4022,
-          "end": 4022,
-          "before": "",
-          "after": ":\n"
-        },
-        {
-          "start": 4023,
-          "end": 4025,
-          "before": "->",
-          "after": ""
-        },
-        {
-          "start": 4026,
-          "end": 4027,
-          "before": "N",
-          "after": "  _mutable: bool\n    # We can make it mutable only by specifying `mutable=True`.\n    # It can be d"
-        },
-        {
-          "start": 4030,
-          "end": 4031,
-          "before": ":",
-          "after": ""
-        },
-        {
-          "start": 4032,
-          "end": 4032,
-          "before": "",
-          "after": "a) with kwarg and b) with pos. arg. `overload` has\n    # some problems with args/kwargs + Literal, so two signatures are required.\n    # ('querystring', True, ["
-        },
-        {
-          "start": 4035,
-          "end": 4035,
-          "before": "",
-          "after": "])\n    @overload"
-        },
-        {
-          "start": 4044,
-          "end": 4045,
-          "before": "s",
-          "after": "__n"
-        },
-        {
-          "start": 4046,
-          "end": 4058,
-          "before": "tlistdefault",
-          "after": "w__"
-        },
-        {
-          "start": 4068,
-          "end": 4068,
-          "before": "",
-          "after": "cl"
-        },
-        {
-          "start": 4069,
-          "end": 4069,
-          "before": "",
-          "after": ",\n        qu"
-        },
-        {
-          "start": 4070,
-          "end": 4076,
-          "before": "lf, ke",
-          "after": "r"
-        },
-        {
-          "start": 4077,
-          "end": 4077,
-          "before": "",
-          "after": "_string"
-        },
-        {
-          "start": 4082,
-          "end": 4083,
-          "before": ",",
-          "after": ""
-        },
-        {
-          "start": 4084,
-          "end": 4085,
-          "before": "d",
-          "after": "| byt"
-        },
-        {
-          "start": 4086,
-          "end": 4094,
-          "before": "fault_li",
-          "after": ""
-        },
-        {
-          "start": 4095,
-          "end": 4107,
-          "before": "t: list[str]",
-          "after": ""
-        },
-        {
-          "start": 4114,
-          "end": 4120,
-          "before": " = ...",
-          "after": ","
-        },
-        {
-          "start": 4125,
-          "end": 4126,
-          "before": ")",
-          "after": ""
-        },
-        {
-          "start": 4127,
-          "end": 4129,
-          "before": "->",
-          "after": ""
-        },
-        {
-          "start": 4130,
-          "end": 4130,
-          "before": "",
-          "after": "  mutab"
-        },
-        {
-          "start": 4131,
-          "end": 4139,
-          "before": "ist[str]",
-          "after": "e"
-        },
-        {
-          "start": 4141,
-          "end": 4144,
-          "before": "...",
-          "after": "Literal[True],"
-        },
-        {
-          "start": 4149,
-          "end": 4205,
-          "before": "def appendlist(self, key: str, value: str) -> None: ...\n",
-          "after": ""
-        },
-        {
-          "start": 4209,
-          "end": 4216,
-          "before": "def url",
-          "after": ""
-        },
-        {
-          "start": 4221,
-          "end": 4233,
-          "before": "e(self, safe",
-          "after": "ing"
-        },
-        {
-          "start": 4251,
-          "end": 4251,
-          "before": "",
-          "after": ",\n    "
-        },
-        {
-          "start": 4256,
-          "end": 4256,
-          "before": "",
-          "after": "QueryDict: ...\n    # ([query"
-        },
-        {
-          "start": 4259,
-          "end": 4259,
-          "before": "",
-          "after": "ing='string',] mutable=True, [...])\n    @overload\n    def __new__(\n        cls,\n        *,\n        query_string: str | bytes | None = ...,\n        mutable: Literal[True],\n        encoding: str | None = ...,\n    ) -> QueryDict: ...\n    # Otherwise it's immutable\n    @overload\n    def __new__(\n        cls,\n        query_string: str | bytes | None = ...,\n        mutable: Literal[False] = ...,\n        encoding: str | None = ...,\n    ) -> _ImmutableQueryDict"
-        },
-        {
-          "start": 4286,
-          "end": 4286,
-          "before": "",
-          "after": "@override\n    "
-        },
-        {
-          "start": 4299,
-          "end": 4299,
-          "before": "",
-          "after": "  # type: ignore[override]"
-        },
-        {
-          "start": 4369,
-          "end": 4371,
-          "before": "An",
-          "after": "str | b"
-        },
-        {
-          "start": 4372,
-          "end": 4372,
-          "before": "",
-          "after": "tes"
-        },
-        {
-          "start": 4464,
-          "end": 4464,
-          "before": "",
-          "after": "    @property"
-        },
-        {
-          "start": 4465,
-          "end": 4465,
-          "before": "",
-          "after": "    def encoding(self) -> str: ...\n    @encoding.setter\n    def encoding(self, value: str) -> None: ...\n    @override\n    def __setitem__(self, key: str | bytes, value: str | bytes) -> None: ...\n    @override\n    def __delitem__(self, key: str | bytes) -> None: ...\n    @override\n    def setlist(self, key: str | bytes, list_: Iterable[str | bytes]) -> None: ...\n    @override\n    def setlistdefault(self, key: str | bytes, default_list: list[str] | None = ...) -> list[str]: ...\n    @override\n    def appendlist(self, key: str | bytes, value: str | bytes) -> None: ...\n    # Fake signature (because *args is used in source, but it fails with more that 1 argument)\n    @overload  # type:ignore[override]\n    def pop(self, key: str | bytes, /) -> list[str]: ...\n    "
-        },
-        {
-          "start": 4475,
-          "end": 4475,
-          "before": "",
-          "after": "    @override\n    "
-        },
-        {
-          "start": 4479,
-          "end": 4486,
-          "before": "bytes_t",
-          "after": "p"
-        },
-        {
-          "start": 4487,
-          "end": 4492,
-          "before": "_text",
-          "after": "p"
-        },
-        {
-          "start": 4494,
-          "end": 4494,
-          "before": "",
-          "after": "elf, key"
-        },
-        {
-          "start": 4495,
-          "end": 4495,
-          "before": "",
-          "after": " str |"
-        },
-        {
-          "start": 4503,
-          "end": 4503,
-          "before": "",
-          "after": "default: str | _Z = ..., /) -> list[str] | _Z: ...\n    @override\n    def popitem(self) -> tuple[str, list[str]]: ...  # type:ignore[override]\n    @override\n    def clear(self) -> None: ...\n    @override\n    def setdefault(self, key: str | bytes, default: str | bytes | None = ...) -> str: ...\n    @override\n    def copy(self) -> QueryDict: ...\n    def url"
-        },
-        {
-          "start": 4508,
-          "end": 4508,
-          "before": "",
-          "after": "e(self, safe: str | None = ...) -> str: ...\n\n@type_check_only\nclass _ImmutableQueryDict(QueryDict):\n    _mutable: Literal[False]\n    @override\n    def __setitem__(self, key: str | bytes, value: str | bytes) -> NoReturn: ...\n    @override\n    def __delitem__(self, key: str | bytes) -> NoReturn: ...\n    @override\n    def setlist(self, key: str | bytes, list_: Iterable[str | bytes]) -> NoReturn: ...\n    @override\n    def setlistdefault(self, key: str | bytes, default_list: list[str] | None = ...) -> NoReturn: ...\n    @override\n    def appendlist(self, key: str | bytes, value: str | bytes) -> NoReturn: ...\n    # Fake signature (because *args is used "
-        },
-        {
-          "start": 4510,
-          "end": 4510,
-          "before": "",
-          "after": " source, but it fails with more that 1 ar"
-        },
-        {
-          "start": 4511,
-          "end": 4511,
-          "before": "",
-          "after": "ument)\n    @overload\n    @override\n    def pop(self, key: str | bytes, /) -> NoReturn: ...\n    @overload\n    @override\n    def pop(self, key: str | bytes, default: str | _Z = ..., /) -> NoReturn: ...\n    @override\n    def popitem(self) -> NoReturn: ...\n    @override\n    def clear(self) -> NoReturn: ...\n    @override\n    def setdefault(self, key: str | bytes, default: str | bytes | None = ...) -> NoReturn: ...\n    @override\n    def copy(self) -> QueryDict: ...  # type: ignore[override]\n    @override\n    def urlencode(self, safe: str | None = ...) -> str: ...\n    # Fakes for convenience (for `request.GET` and `request.POST`). If dict\n    # was created by Django, there is no chance to hit `List[object]` (empty list)\n    # edge case.\n    @override\n    def __getitem__(self, key"
-        },
-        {
-          "start": 4530,
-          "end": 4530,
-          "before": "",
-          "after": "    "
-        },
-        {
-          "start": 4535,
-          "end": 4538,
-          "before": "loa",
-          "after": "ri"
-        },
-        {
-          "start": 4539,
-          "end": 4539,
-          "before": "",
-          "after": "e"
-        },
-        {
-          "start": 4540,
-          "end": 4540,
-          "before": "",
-          "after": "    "
-        },
-        {
-          "start": 4543,
-          "end": 4543,
-          "before": "",
-          "after": " dict(self) -> dict[str, str]: ...  # type: ignore[override]\n\nclass MediaType:\n    main_type: str\n    sub_type: str\n    params: dict[str,"
-        },
-        {
-          "start": 4549,
-          "end": 4549,
-          "before": "",
-          "after": "]\n    def __init__(self, media"
-        },
-        {
-          "start": 4551,
-          "end": 4552,
-          "before": "o",
-          "after": "ype"
-        },
-        {
-          "start": 4553,
-          "end": 4563,
-          "before": "text(s: st",
-          "after": ""
-        },
-        {
-          "start": 4564,
-          "end": 4571,
-          "before": ", encod",
-          "after": "aw_l"
-        },
-        {
-          "start": 4573,
-          "end": 4574,
-          "before": "g",
-          "after": "e"
-        },
-        {
-          "start": 4584,
-          "end": 4587,
-          "before": "str",
-          "after": "None"
-        },
-        {
-          "start": 4592,
-          "end": 4592,
-          "before": "",
-          "after": "\n    def match(self, other: str) -> bool: ...\n    @cached_property\n    def quality(self) -> float: ...\n    @property\n    def specificity(self) -> int: ...\n    @cached_property\n    def range_params(self) -> dict[str, bytes]: ...\n"
         },
         {
-          "start": 4652,
-          "end": 4652,
+          "start": 12127,
+          "end": 12127,
           "before": "",
-          "after": ": ...\n@overload\ndef bytes_to_text(s: bytes | str, encoding: str) -> str"
+          "after": "\n# Modern declaration dependencies retained alongside native ORM generics.\n_OrderByFieldName: TypeAlias = str | Combinable\n\nfrom typing import TypeAlias\n\n@type_check_only\nclass _SupportsContains(Generic[_ContainsT]):\n    def __contains__(self, item: _ContainsT, /) -> bool: ...\n\nfrom typing import type_check_only\n\n_ContainsT = TypeVar(\"_ContainsT\")\n\nasync def aprefetch_related_objects(\n    model_instances: Sequence[_Model], *related_lookups: str | Prefetch[Any]\n) -> None: ...\n\n_Model = TypeVar(\"_Model\", bound=Model, covariant=True)\n"
         }
       ]
     }
   },
-  "output_tree_sha256": "54d401a46ba9cc2cc477b7fc42fd8964bc5bd6b44753e53e135ee187635ad19b"
+  "output_tree_sha256": "3bfbe66ec7efb036c85add686a95f14e821f9ec59b17c79f274219ded0d0ec24",
+  "modern_static": [
+    "__init__.pyi",
+    "apps/__init__.pyi",
+    "apps/config.pyi",
+    "apps/registry.pyi",
+    "conf/__init__.pyi",
+    "conf/global_settings.pyi",
+    "conf/locale/__init__.pyi",
+    "conf/urls/__init__.pyi",
+    "conf/urls/i18n.pyi",
+    "conf/urls/static.pyi",
+    "contrib/admin/__init__.pyi",
+    "contrib/admin/apps.pyi",
+    "contrib/admin/checks.pyi",
+    "contrib/admin/decorators.pyi",
+    "contrib/admin/exceptions.pyi",
+    "contrib/admin/filters.pyi",
+    "contrib/admin/forms.pyi",
+    "contrib/admin/helpers.pyi",
+    "contrib/admin/models.pyi",
+    "contrib/admin/options.pyi",
+    "contrib/admin/sites.pyi",
+    "contrib/admin/templatetags/admin_list.pyi",
+    "contrib/admin/templatetags/admin_modify.pyi",
+    "contrib/admin/templatetags/admin_urls.pyi",
+    "contrib/admin/templatetags/base.pyi",
+    "contrib/admin/templatetags/log.pyi",
+    "contrib/admin/tests.pyi",
+    "contrib/admin/utils.pyi",
+    "contrib/admin/views/autocomplete.pyi",
+    "contrib/admin/views/decorators.pyi",
+    "contrib/admin/views/main.pyi",
+    "contrib/admin/widgets.pyi",
+    "contrib/admindocs/apps.pyi",
+    "contrib/admindocs/middleware.pyi",
+    "contrib/admindocs/urls.pyi",
+    "contrib/admindocs/utils.pyi",
+    "contrib/admindocs/views.pyi",
+    "contrib/auth/admin.pyi",
+    "contrib/auth/backends.pyi",
+    "contrib/auth/checks.pyi",
+    "contrib/auth/context_processors.pyi",
+    "contrib/auth/decorators.pyi",
+    "contrib/auth/forms.pyi",
+    "contrib/auth/handlers/modwsgi.pyi",
+    "contrib/auth/hashers.pyi",
+    "contrib/auth/management/__init__.pyi",
+    "contrib/auth/management/commands/createsuperuser.pyi",
+    "contrib/auth/middleware.pyi",
+    "contrib/auth/mixins.pyi",
+    "contrib/auth/models.pyi",
+    "contrib/auth/password_validation.pyi",
+    "contrib/auth/tokens.pyi",
+    "contrib/auth/urls.pyi",
+    "contrib/auth/validators.pyi",
+    "contrib/auth/views.pyi",
+    "contrib/contenttypes/admin.pyi",
+    "contrib/contenttypes/checks.pyi",
+    "contrib/contenttypes/fields.pyi",
+    "contrib/contenttypes/forms.pyi",
+    "contrib/contenttypes/management/__init__.pyi",
+    "contrib/contenttypes/management/commands/remove_stale_contenttypes.pyi",
+    "contrib/contenttypes/models.pyi",
+    "contrib/contenttypes/views.pyi",
+    "contrib/flatpages/admin.pyi",
+    "contrib/flatpages/apps.pyi",
+    "contrib/flatpages/forms.pyi",
+    "contrib/flatpages/middleware.pyi",
+    "contrib/flatpages/models.pyi",
+    "contrib/flatpages/sitemaps.pyi",
+    "contrib/flatpages/templatetags/flatpages.pyi",
+    "contrib/flatpages/urls.pyi",
+    "contrib/gis/__init__.pyi",
+    "contrib/gis/admin/__init__.pyi",
+    "contrib/gis/admin/options.pyi",
+    "contrib/gis/apps.pyi",
+    "contrib/gis/db/backends/base/adapter.pyi",
+    "contrib/gis/db/backends/base/features.pyi",
+    "contrib/gis/db/backends/base/operations.pyi",
+    "contrib/gis/db/backends/mysql/base.pyi",
+    "contrib/gis/db/backends/mysql/features.pyi",
+    "contrib/gis/db/backends/mysql/introspection.pyi",
+    "contrib/gis/db/backends/mysql/operations.pyi",
+    "contrib/gis/db/backends/mysql/schema.pyi",
+    "contrib/gis/db/backends/oracle/adapter.pyi",
+    "contrib/gis/db/backends/oracle/base.pyi",
+    "contrib/gis/db/backends/oracle/features.pyi",
+    "contrib/gis/db/backends/oracle/introspection.pyi",
+    "contrib/gis/db/backends/oracle/models.pyi",
+    "contrib/gis/db/backends/oracle/operations.pyi",
+    "contrib/gis/db/backends/oracle/schema.pyi",
+    "contrib/gis/db/backends/postgis/adapter.pyi",
+    "contrib/gis/db/backends/postgis/base.pyi",
+    "contrib/gis/db/backends/postgis/features.pyi",
+    "contrib/gis/db/backends/postgis/introspection.pyi",
+    "contrib/gis/db/backends/postgis/models.pyi",
+    "contrib/gis/db/backends/postgis/operations.pyi",
+    "contrib/gis/db/backends/postgis/schema.pyi",
+    "contrib/gis/db/backends/spatialite/adapter.pyi",
+    "contrib/gis/db/backends/spatialite/base.pyi",
+    "contrib/gis/db/backends/spatialite/client.pyi",
+    "contrib/gis/db/backends/spatialite/features.pyi",
+    "contrib/gis/db/backends/spatialite/introspection.pyi",
+    "contrib/gis/db/backends/spatialite/models.pyi",
+    "contrib/gis/db/backends/spatialite/operations.pyi",
+    "contrib/gis/db/backends/spatialite/schema.pyi",
+    "contrib/gis/db/backends/utils.pyi",
+    "contrib/gis/db/models/__init__.pyi",
+    "contrib/gis/db/models/aggregates.pyi",
+    "contrib/gis/db/models/fields.pyi",
+    "contrib/gis/db/models/functions.pyi",
+    "contrib/gis/db/models/lookups.pyi",
+    "contrib/gis/db/models/proxy.pyi",
+    "contrib/gis/db/models/sql/__init__.pyi",
+    "contrib/gis/db/models/sql/conversion.pyi",
+    "contrib/gis/feeds.pyi",
+    "contrib/gis/forms/__init__.pyi",
+    "contrib/gis/forms/fields.pyi",
+    "contrib/gis/forms/widgets.pyi",
+    "contrib/gis/gdal/__init__.pyi",
+    "contrib/gis/gdal/base.pyi",
+    "contrib/gis/gdal/datasource.pyi",
+    "contrib/gis/gdal/driver.pyi",
+    "contrib/gis/gdal/envelope.pyi",
+    "contrib/gis/gdal/feature.pyi",
+    "contrib/gis/gdal/field.pyi",
+    "contrib/gis/gdal/geometries.pyi",
+    "contrib/gis/gdal/geomtype.pyi",
+    "contrib/gis/gdal/layer.pyi",
+    "contrib/gis/gdal/libgdal.pyi",
+    "contrib/gis/gdal/prototypes/ds.pyi",
+    "contrib/gis/gdal/prototypes/errcheck.pyi",
+    "contrib/gis/gdal/prototypes/generation.pyi",
+    "contrib/gis/gdal/prototypes/geom.pyi",
+    "contrib/gis/gdal/prototypes/raster.pyi",
+    "contrib/gis/gdal/raster/band.pyi",
+    "contrib/gis/gdal/raster/base.pyi",
+    "contrib/gis/gdal/raster/const.pyi",
+    "contrib/gis/gdal/raster/source.pyi",
+    "contrib/gis/gdal/srs.pyi",
+    "contrib/gis/geometry.pyi",
+    "contrib/gis/geos/__init__.pyi",
+    "contrib/gis/geos/base.pyi",
+    "contrib/gis/geos/collections.pyi",
+    "contrib/gis/geos/coordseq.pyi",
+    "contrib/gis/geos/factory.pyi",
+    "contrib/gis/geos/geometry.pyi",
+    "contrib/gis/geos/io.pyi",
+    "contrib/gis/geos/libgeos.pyi",
+    "contrib/gis/geos/linestring.pyi",
+    "contrib/gis/geos/mutable_list.pyi",
+    "contrib/gis/geos/point.pyi",
+    "contrib/gis/geos/polygon.pyi",
+    "contrib/gis/geos/prepared.pyi",
+    "contrib/gis/geos/prototypes/__init__.pyi",
+    "contrib/gis/geos/prototypes/coordseq.pyi",
+    "contrib/gis/geos/prototypes/geom.pyi",
+    "contrib/gis/geos/prototypes/io.pyi",
+    "contrib/gis/geos/prototypes/misc.pyi",
+    "contrib/gis/geos/prototypes/predicates.pyi",
+    "contrib/gis/geos/prototypes/prepared.pyi",
+    "contrib/gis/geos/prototypes/threadsafe.pyi",
+    "contrib/gis/geos/prototypes/topology.pyi",
+    "contrib/gis/measure.pyi",
+    "contrib/gis/ptr.pyi",
+    "contrib/gis/serializers/geojson.pyi",
+    "contrib/gis/shortcuts.pyi",
+    "contrib/gis/sitemaps/__init__.pyi",
+    "contrib/gis/sitemaps/kml.pyi",
+    "contrib/gis/sitemaps/views.pyi",
+    "contrib/gis/utils/__init__.pyi",
+    "contrib/gis/utils/layermapping.pyi",
+    "contrib/gis/utils/ogrinfo.pyi",
+    "contrib/gis/utils/ogrinspect.pyi",
+    "contrib/gis/views.pyi",
+    "contrib/humanize/apps.pyi",
+    "contrib/humanize/templatetags/humanize.pyi",
+    "contrib/messages/__init__.pyi",
+    "contrib/messages/api.pyi",
+    "contrib/messages/apps.pyi",
+    "contrib/messages/constants.pyi",
+    "contrib/messages/context_processors.pyi",
+    "contrib/messages/middleware.pyi",
+    "contrib/messages/storage/base.pyi",
+    "contrib/messages/storage/cookie.pyi",
+    "contrib/messages/storage/fallback.pyi",
+    "contrib/messages/storage/session.pyi",
+    "contrib/messages/views.pyi",
+    "contrib/postgres/aggregates/__init__.pyi",
+    "contrib/postgres/aggregates/general.pyi",
+    "contrib/postgres/aggregates/mixins.pyi",
+    "contrib/postgres/aggregates/statistics.pyi",
+    "contrib/postgres/apps.pyi",
+    "contrib/postgres/constraints.pyi",
+    "contrib/postgres/expressions.pyi",
+    "contrib/postgres/fields/__init__.pyi",
+    "contrib/postgres/fields/array.pyi",
+    "contrib/postgres/fields/hstore.pyi",
+    "contrib/postgres/fields/jsonb.pyi",
+    "contrib/postgres/fields/ranges.pyi",
+    "contrib/postgres/functions.pyi",
+    "contrib/postgres/indexes.pyi",
+    "contrib/postgres/lookups.pyi",
+    "contrib/postgres/operations.pyi",
+    "contrib/postgres/search.pyi",
+    "contrib/postgres/serializers.pyi",
+    "contrib/postgres/signals.pyi",
+    "contrib/postgres/utils.pyi",
+    "contrib/postgres/validators.pyi",
+    "contrib/redirects/admin.pyi",
+    "contrib/redirects/apps.pyi",
+    "contrib/redirects/middleware.pyi",
+    "contrib/redirects/models.pyi",
+    "contrib/sessions/apps.pyi",
+    "contrib/sessions/backends/base.pyi",
+    "contrib/sessions/backends/cache.pyi",
+    "contrib/sessions/backends/cached_db.pyi",
+    "contrib/sessions/backends/db.pyi",
+    "contrib/sessions/backends/file.pyi",
+    "contrib/sessions/backends/signed_cookies.pyi",
+    "contrib/sessions/base_session.pyi",
+    "contrib/sessions/exceptions.pyi",
+    "contrib/sessions/management/commands/clearsessions.pyi",
+    "contrib/sessions/middleware.pyi",
+    "contrib/sessions/models.pyi",
+    "contrib/sessions/serializers.pyi",
+    "contrib/sitemaps/__init__.pyi",
+    "contrib/sitemaps/apps.pyi",
+    "contrib/sitemaps/views.pyi",
+    "contrib/sites/admin.pyi",
+    "contrib/sites/management.pyi",
+    "contrib/sites/managers.pyi",
+    "contrib/sites/models.pyi",
+    "contrib/sites/requests.pyi",
+    "contrib/staticfiles/apps.pyi",
+    "contrib/staticfiles/checks.pyi",
+    "contrib/staticfiles/finders.pyi",
+    "contrib/staticfiles/handlers.pyi",
+    "contrib/staticfiles/management/commands/collectstatic.pyi",
+    "contrib/staticfiles/management/commands/findstatic.pyi",
+    "contrib/staticfiles/storage.pyi",
+    "contrib/staticfiles/urls.pyi",
+    "contrib/staticfiles/utils.pyi",
+    "contrib/staticfiles/views.pyi",
+    "contrib/syndication/apps.pyi",
+    "contrib/syndication/views.pyi",
+    "core/cache/__init__.pyi",
+    "core/cache/backends/base.pyi",
+    "core/cache/backends/db.pyi",
+    "core/cache/backends/filebased.pyi",
+    "core/cache/backends/locmem.pyi",
+    "core/cache/backends/memcached.pyi",
+    "core/cache/utils.pyi",
+    "core/checks/__init__.pyi",
+    "core/checks/async_checks.pyi",
+    "core/checks/caches.pyi",
+    "core/checks/database.pyi",
+    "core/checks/messages.pyi",
+    "core/checks/model_checks.pyi",
+    "core/checks/registry.pyi",
+    "core/checks/security/base.pyi",
+    "core/checks/security/csrf.pyi",
+    "core/checks/security/sessions.pyi",
+    "core/checks/templates.pyi",
+    "core/checks/translation.pyi",
+    "core/checks/urls.pyi",
+    "core/exceptions.pyi",
+    "core/files/base.pyi",
+    "core/files/images.pyi",
+    "core/files/locks.pyi",
+    "core/files/move.pyi",
+    "core/files/temp.pyi",
+    "core/files/uploadedfile.pyi",
+    "core/files/uploadhandler.pyi",
+    "core/files/utils.pyi",
+    "core/handlers/base.pyi",
+    "core/handlers/exception.pyi",
+    "core/handlers/wsgi.pyi",
+    "core/mail/__init__.pyi",
+    "core/mail/backends/base.pyi",
+    "core/mail/backends/console.pyi",
+    "core/mail/backends/filebased.pyi",
+    "core/mail/backends/locmem.pyi",
+    "core/mail/backends/smtp.pyi",
+    "core/mail/message.pyi",
+    "core/management/__init__.pyi",
+    "core/management/base.pyi",
+    "core/management/color.pyi",
+    "core/management/commands/check.pyi",
+    "core/management/commands/compilemessages.pyi",
+    "core/management/commands/createcachetable.pyi",
+    "core/management/commands/dbshell.pyi",
+    "core/management/commands/diffsettings.pyi",
+    "core/management/commands/dumpdata.pyi",
+    "core/management/commands/flush.pyi",
+    "core/management/commands/inspectdb.pyi",
+    "core/management/commands/loaddata.pyi",
+    "core/management/commands/makemessages.pyi",
+    "core/management/commands/makemigrations.pyi",
+    "core/management/commands/migrate.pyi",
+    "core/management/commands/runserver.pyi",
+    "core/management/commands/sendtestemail.pyi",
+    "core/management/commands/shell.pyi",
+    "core/management/commands/showmigrations.pyi",
+    "core/management/commands/sqlflush.pyi",
+    "core/management/commands/sqlmigrate.pyi",
+    "core/management/commands/sqlsequencereset.pyi",
+    "core/management/commands/squashmigrations.pyi",
+    "core/management/commands/startapp.pyi",
+    "core/management/commands/startproject.pyi",
+    "core/management/commands/test.pyi",
+    "core/management/sql.pyi",
+    "core/management/templates.pyi",
+    "core/management/utils.pyi",
+    "core/paginator.pyi",
+    "core/serializers/__init__.pyi",
+    "core/serializers/base.pyi",
+    "core/serializers/json.pyi",
+    "core/serializers/python.pyi",
+    "core/serializers/pyyaml.pyi",
+    "core/serializers/xml_serializer.pyi",
+    "core/servers/basehttp.pyi",
+    "core/signals.pyi",
+    "core/signing.pyi",
+    "core/validators.pyi",
+    "db/__init__.pyi",
+    "db/backends/base/base.pyi",
+    "db/backends/base/client.pyi",
+    "db/backends/base/creation.pyi",
+    "db/backends/base/features.pyi",
+    "db/backends/base/introspection.pyi",
+    "db/backends/base/operations.pyi",
+    "db/backends/base/schema.pyi",
+    "db/backends/base/validation.pyi",
+    "db/backends/ddl_references.pyi",
+    "db/backends/dummy/base.pyi",
+    "db/backends/dummy/features.pyi",
+    "db/backends/mysql/base.pyi",
+    "db/backends/mysql/client.pyi",
+    "db/backends/mysql/compiler.pyi",
+    "db/backends/mysql/creation.pyi",
+    "db/backends/mysql/features.pyi",
+    "db/backends/mysql/introspection.pyi",
+    "db/backends/mysql/operations.pyi",
+    "db/backends/mysql/schema.pyi",
+    "db/backends/mysql/validation.pyi",
+    "db/backends/oracle/base.pyi",
+    "db/backends/oracle/client.pyi",
+    "db/backends/oracle/creation.pyi",
+    "db/backends/oracle/features.pyi",
+    "db/backends/oracle/functions.pyi",
+    "db/backends/oracle/introspection.pyi",
+    "db/backends/oracle/operations.pyi",
+    "db/backends/oracle/schema.pyi",
+    "db/backends/oracle/utils.pyi",
+    "db/backends/oracle/validation.pyi",
+    "db/backends/postgresql/base.pyi",
+    "db/backends/postgresql/client.pyi",
+    "db/backends/postgresql/creation.pyi",
+    "db/backends/postgresql/features.pyi",
+    "db/backends/postgresql/introspection.pyi",
+    "db/backends/postgresql/operations.pyi",
+    "db/backends/postgresql/schema.pyi",
+    "db/backends/signals.pyi",
+    "db/backends/sqlite3/base.pyi",
+    "db/backends/sqlite3/client.pyi",
+    "db/backends/sqlite3/creation.pyi",
+    "db/backends/sqlite3/features.pyi",
+    "db/backends/sqlite3/introspection.pyi",
+    "db/backends/sqlite3/operations.pyi",
+    "db/backends/sqlite3/schema.pyi",
+    "db/backends/utils.pyi",
+    "db/migrations/__init__.pyi",
+    "db/migrations/autodetector.pyi",
+    "db/migrations/exceptions.pyi",
+    "db/migrations/executor.pyi",
+    "db/migrations/graph.pyi",
+    "db/migrations/loader.pyi",
+    "db/migrations/migration.pyi",
+    "db/migrations/operations/__init__.pyi",
+    "db/migrations/operations/base.pyi",
+    "db/migrations/operations/fields.pyi",
+    "db/migrations/operations/models.pyi",
+    "db/migrations/operations/special.pyi",
+    "db/migrations/optimizer.pyi",
+    "db/migrations/questioner.pyi",
+    "db/migrations/recorder.pyi",
+    "db/migrations/serializer.pyi",
+    "db/migrations/state.pyi",
+    "db/migrations/utils.pyi",
+    "db/migrations/writer.pyi",
+    "db/models/__init__.pyi",
+    "db/models/aggregates.pyi",
+    "db/models/constraints.pyi",
+    "db/models/deletion.pyi",
+    "db/models/expressions.pyi",
+    "db/models/functions/__init__.pyi",
+    "db/models/functions/comparison.pyi",
+    "db/models/functions/datetime.pyi",
+    "db/models/functions/math.pyi",
+    "db/models/functions/mixins.pyi",
+    "db/models/functions/text.pyi",
+    "db/models/functions/window.pyi",
+    "db/models/indexes.pyi",
+    "db/models/lookups.pyi",
+    "db/models/signals.pyi",
+    "db/models/sql/__init__.pyi",
+    "db/models/sql/compiler.pyi",
+    "db/models/sql/constants.pyi",
+    "db/models/sql/datastructures.pyi",
+    "db/models/sql/query.pyi",
+    "db/models/sql/subqueries.pyi",
+    "db/models/sql/where.pyi",
+    "db/models/utils.pyi",
+    "db/transaction.pyi",
+    "db/utils.pyi",
+    "dispatch/dispatcher.pyi",
+    "forms/__init__.pyi",
+    "forms/boundfield.pyi",
+    "forms/fields.pyi",
+    "forms/forms.pyi",
+    "forms/formsets.pyi",
+    "forms/models.pyi",
+    "forms/renderers.pyi",
+    "forms/utils.pyi",
+    "forms/widgets.pyi",
+    "http/__init__.pyi",
+    "http/cookie.pyi",
+    "http/multipartparser.pyi",
+    "http/request.pyi",
+    "http/response.pyi",
+    "middleware/cache.pyi",
+    "middleware/clickjacking.pyi",
+    "middleware/common.pyi",
+    "middleware/csrf.pyi",
+    "middleware/gzip.pyi",
+    "middleware/http.pyi",
+    "middleware/locale.pyi",
+    "middleware/security.pyi",
+    "shortcuts.pyi",
+    "template/__init__.pyi",
+    "template/backends/base.pyi",
+    "template/backends/django.pyi",
+    "template/backends/dummy.pyi",
+    "template/backends/jinja2.pyi",
+    "template/backends/utils.pyi",
+    "template/base.pyi",
+    "template/context.pyi",
+    "template/context_processors.pyi",
+    "template/defaultfilters.pyi",
+    "template/defaulttags.pyi",
+    "template/engine.pyi",
+    "template/exceptions.pyi",
+    "template/library.pyi",
+    "template/loader.pyi",
+    "template/loader_tags.pyi",
+    "template/loaders/base.pyi",
+    "template/loaders/cached.pyi",
+    "template/loaders/filesystem.pyi",
+    "template/loaders/locmem.pyi",
+    "template/response.pyi",
+    "template/smartif.pyi",
+    "template/utils.pyi",
+    "templatetags/cache.pyi",
+    "templatetags/i18n.pyi",
+    "templatetags/l10n.pyi",
+    "templatetags/static.pyi",
+    "templatetags/tz.pyi",
+    "test/__init__.pyi",
+    "test/client.pyi",
+    "test/html.pyi",
+    "test/runner.pyi",
+    "test/selenium.pyi",
+    "test/signals.pyi",
+    "test/testcases.pyi",
+    "test/utils.pyi",
+    "urls/__init__.pyi",
+    "urls/base.pyi",
+    "urls/conf.pyi",
+    "urls/converters.pyi",
+    "urls/resolvers.pyi",
+    "utils/_os.pyi",
+    "utils/archive.pyi",
+    "utils/asyncio.pyi",
+    "utils/autoreload.pyi",
+    "utils/cache.pyi",
+    "utils/connection.pyi",
+    "utils/crypto.pyi",
+    "utils/datastructures.pyi",
+    "utils/dateformat.pyi",
+    "utils/dateparse.pyi",
+    "utils/deconstruct.pyi",
+    "utils/decorators.pyi",
+    "utils/deprecation.pyi",
+    "utils/encoding.pyi",
+    "utils/feedgenerator.pyi",
+    "utils/formats.pyi",
+    "utils/functional.pyi",
+    "utils/html.pyi",
+    "utils/http.pyi",
+    "utils/inspect.pyi",
+    "utils/ipv6.pyi",
+    "utils/log.pyi",
+    "utils/lorem_ipsum.pyi",
+    "utils/module_loading.pyi",
+    "utils/numberformat.pyi",
+    "utils/regex_helper.pyi",
+    "utils/safestring.pyi",
+    "utils/termcolors.pyi",
+    "utils/text.pyi",
+    "utils/timesince.pyi",
+    "utils/timezone.pyi",
+    "utils/translation/__init__.pyi",
+    "utils/translation/reloader.pyi",
+    "utils/translation/template.pyi",
+    "utils/translation/trans_null.pyi",
+    "utils/translation/trans_real.pyi",
+    "utils/tree.pyi",
+    "utils/version.pyi",
+    "utils/xmlutils.pyi",
+    "views/decorators/cache.pyi",
+    "views/decorators/clickjacking.pyi",
+    "views/decorators/csrf.pyi",
+    "views/decorators/debug.pyi",
+    "views/decorators/gzip.pyi",
+    "views/decorators/http.pyi",
+    "views/decorators/vary.pyi",
+    "views/generic/__init__.pyi",
+    "views/generic/base.pyi",
+    "views/generic/dates.pyi",
+    "views/generic/detail.pyi",
+    "views/generic/edit.pyi",
+    "views/generic/list.pyi",
+    "views/static.pyi"
+  ]
 }

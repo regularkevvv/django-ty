@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the experimental native Django declarations from pinned inputs.
+"""Reproduce the packaged native Django declarations from pinned inputs.
 
 The native root is django-types 0.24.0's django-stubs directory. The legacy root
 is Django-ty 0.7.0's python/django_ty/stubs/django directory. Both complete input
@@ -45,6 +45,8 @@ def reproduce(native: Path, legacy: Path) -> dict[str, bytes]:
         result[name] = trees["legacy"][name]
     for name in receipt["remove"]:
         del result[name]
+    for name in receipt.get("modern_static", []):
+        result[name] = trees["legacy"][name]
     for name, adapter in receipt["adapters"].items():
         original = result[name]
         if hashlib.sha256(original).hexdigest() != adapter["before_sha256"]:

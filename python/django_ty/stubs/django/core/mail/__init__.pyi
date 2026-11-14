@@ -1,50 +1,90 @@
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from typing import Any
 
+from django.utils.functional import _StrOrPromise
+
+from .backends.base import BaseEmailBackend
+from .exceptions import InvalidMailer as InvalidMailer
+from .exceptions import MailerDoesNotExist as MailerDoesNotExist
+from .handler import MailersHandler
 from .message import DEFAULT_ATTACHMENT_MIME_TYPE as DEFAULT_ATTACHMENT_MIME_TYPE
 from .message import BadHeaderError as BadHeaderError
+from .message import EmailAlternative as EmailAlternative
+from .message import EmailAttachment as EmailAttachment
 from .message import EmailMessage as EmailMessage
 from .message import EmailMultiAlternatives as EmailMultiAlternatives
 from .message import SafeMIMEMultipart as SafeMIMEMultipart
 from .message import SafeMIMEText as SafeMIMEText
 from .message import forbid_multi_line_headers as forbid_multi_line_headers
+from .message import make_msgid as make_msgid
 from .utils import DNS_NAME as DNS_NAME
 from .utils import CachedDnsName as CachedDnsName
 
-def get_connection(
-    backend: str | None = ..., fail_silently: bool = ..., **kwds: Any
-) -> Any: ...
+mailers: MailersHandler
+
+def get_connection(backend: str | None = None, *, fail_silently: bool = False, **kwds: Any) -> BaseEmailBackend: ...
 def send_mail(
-    subject: str,
-    message: str,
+    subject: _StrOrPromise,
+    message: _StrOrPromise,
     from_email: str | None,
-    recipient_list: list[str],
-    fail_silently: bool = ...,
-    auth_user: str | None = ...,
-    auth_password: str | None = ...,
-    connection: Any | None = ...,
-    html_message: str | None = ...,
+    recipient_list: Sequence[str],
+    *,
+    fail_silently: bool = False,
+    auth_user: str | None = None,
+    auth_password: str | None = None,
+    connection: BaseEmailBackend | None = None,
+    html_message: str | None = None,
+    using: str | None = None,
 ) -> int: ...
 def send_mass_mail(
-    datatuple: Sequence[tuple[str, str, str | None, Sequence[str]]],
-    fail_silently: bool = ...,
-    auth_user: str | None = ...,
-    auth_password: str | None = ...,
-    connection: Any | None = ...,
+    datatuple: Iterable[tuple[str, str, str | None, list[str]]],
+    *,
+    fail_silently: bool = False,
+    auth_user: str | None = None,
+    auth_password: str | None = None,
+    connection: BaseEmailBackend | None = None,
+    using: str | None = None,
 ) -> int: ...
 def mail_admins(
-    subject: str,
-    message: str,
-    fail_silently: bool = ...,
-    connection: Any | None = ...,
-    html_message: str | None = ...,
+    subject: _StrOrPromise,
+    message: _StrOrPromise,
+    *,
+    fail_silently: bool = False,
+    connection: BaseEmailBackend | None = None,
+    html_message: str | None = None,
+    using: str | None = None,
 ) -> None: ...
 def mail_managers(
-    subject: str,
-    message: str,
-    fail_silently: bool = ...,
-    connection: Any | None = ...,
-    html_message: str | None = ...,
+    subject: _StrOrPromise,
+    message: _StrOrPromise,
+    *,
+    fail_silently: bool = False,
+    connection: BaseEmailBackend | None = None,
+    html_message: str | None = None,
+    using: str | None = None,
 ) -> None: ...
 
-outbox: list[EmailMessage] = ...
+outbox: list[EmailMessage | EmailMultiAlternatives]
+
+__all__ = [
+    "DEFAULT_ATTACHMENT_MIME_TYPE",
+    "DNS_NAME",
+    "BadHeaderError",
+    "CachedDnsName",
+    "EmailAlternative",
+    "EmailAttachment",
+    "EmailMessage",
+    "EmailMultiAlternatives",
+    "InvalidMailer",
+    "MailerDoesNotExist",
+    "SafeMIMEMultipart",
+    "SafeMIMEText",
+    "forbid_multi_line_headers",
+    "get_connection",
+    "mail_admins",
+    "mail_managers",
+    "mailers",
+    "make_msgid",
+    "send_mail",
+    "send_mass_mail",
+]

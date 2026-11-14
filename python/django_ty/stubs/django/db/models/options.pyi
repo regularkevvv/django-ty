@@ -128,3 +128,10 @@ class Options(Generic[_M]):
     def get_fields(
         self, include_parents: bool = ..., include_hidden: bool = ...
     ) -> list[Field[Any, Any] | ForeignObjectRel]: ...
+
+# Modern declaration dependencies retained alongside native ORM generics.
+_OptionTogetherT: TypeAlias = _ListOrTuple[_ListOrTuple[str] | str] | set[tuple[str, ...]]  # noqa: PYI047
+
+from typing import TypeAlias
+
+from django.utils.datastructures import _ListOrTuple

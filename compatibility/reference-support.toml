@@ -43,3 +43,12 @@ python = ["3.11", "3.12", "3.13", "3.14"]
 django_full = ["6.1"]
 django_partial = ["6.0", "5.2"]
 source = "https://github.com/typeddjango/django-stubs/blob/c7816bcf4cb8ec8706acb5b671ca62131b345ef7/README.md"
+
+[reference."6.1.2"]
+commit = "fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2"
+mypy_min = "1.13"
+mypy_max_exclusive = "2.5"
+python = ["3.11", "3.12", "3.13", "3.14"]
+django_full = ["6.1"]
+django_partial = ["6.0", "5.2"]
+source = "https://github.com/typeddjango/django-stubs/blob/fa03b48b8cdfe336065f5ad8eb51fbcc40c6b1d2/README.md"

@@ -1,21 +1,19 @@
 from collections.abc import Callable
-from typing import Any, TypeVar
+from typing import Any
 
 from django.middleware.csrf import CsrfViewMiddleware
+from typing_extensions import TypeVar
 
-_F = TypeVar("_F", bound=Callable[..., Any])
-
-def csrf_protect(__view: _F) -> _F: ...
+csrf_protect: Callable[[_F], _F]
 
 class _EnsureCsrfToken(CsrfViewMiddleware): ...
 
-def requires_csrf_token(__view: _F) -> _F: ...
+requires_csrf_token: Callable[[_F], _F]
 
-class _EnsureCsrfCookie(CsrfViewMiddleware):
-    get_response: None  # pyright: ignore[reportIncompatibleVariableOverride]
-    def process_view(
-        self, request: Any, callback: Any, callback_args: Any, callback_kwargs: Any
-    ) -> Any: ...
+class _EnsureCsrfCookie(CsrfViewMiddleware): ...
 
-def ensure_csrf_cookie(__view: _F) -> _F: ...
+ensure_csrf_cookie: Callable[[_F], _F]
+
+_F = TypeVar("_F", bound=Callable[..., Any])
+
 def csrf_exempt(view_func: _F) -> _F: ...

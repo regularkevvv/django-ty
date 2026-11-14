@@ -1,43 +1,67 @@
-from collections.abc import Callable
-from typing import Any, TypeAlias
+from collections.abc import Callable, Iterable, Sequence
+from typing import Any, Protocol, overload, type_check_only
 
 from django.apps.config import AppConfig
 from django.core.checks.messages import CheckMessage
+from typing_extensions import TypeVar
 
 class Tags:
-    admin: str = ...
-    caches: str = ...
-    compatibility: str = ...
-    database: str = ...
-    models: str = ...
-    security: str = ...
-    signals: str = ...
-    templates: str = ...
-    translation: str = ...
-    urls: str = ...
+    admin: str
+    async_support: str
+    caches: str
+    commands: str
+    compatibility: str
+    database: str
+    files: str
+    mail: str
+    models: str
+    security: str
+    signals: str
+    sites: str
+    staticfiles: str
+    templates: str
+    translation: str
+    urls: str
 
-_CheckCallable: TypeAlias = Callable[..., list[CheckMessage]]
+@type_check_only
+class _CheckCallable(Protocol):
+    def __call__(
+        self,
+        *,
+        app_configs: Sequence[AppConfig] | None,
+        databases: Sequence[str] | None,
+        **kwargs: Any,
+    ) -> Iterable[CheckMessage]: ...
+
+_C = TypeVar("_C", bound=_CheckCallable)
+
+@type_check_only
+class _ProcessedCheckCallable(Protocol[_C]):
+    tags: Sequence[str]
+    __call__: _C
 
 class CheckRegistry:
-    registered_checks: set[Callable[..., Any]] = ...
-    deployment_checks: set[Callable[..., Any]] = ...
+    registered_checks: set[_ProcessedCheckCallable[_CheckCallable]]
+    deployment_checks: set[_ProcessedCheckCallable[_CheckCallable]]
     def __init__(self) -> None: ...
+    @overload
+    def register(self, check: _C, *tags: str, **kwargs: Any) -> _ProcessedCheckCallable[_C]: ...
+    @overload
     def register(
-        self, check: _CheckCallable | str | None = ..., *tags: str, **kwargs: Any
-    ) -> Callable[..., Any]: ...
+        self, check: str | None = None, *tags: str, **kwargs: Any
+    ) -> Callable[[_C], _ProcessedCheckCallable[_C]]: ...
     def run_checks(
         self,
-        app_configs: list[AppConfig] | None = ...,
-        tags: list[str] | None = ...,
-        include_deployment_checks: bool = ...,
+        app_configs: Sequence[AppConfig] | None = None,
+        tags: Sequence[str] | None = None,
+        include_deployment_checks: bool = False,
+        databases: Sequence[str] | None = None,
     ) -> list[CheckMessage]: ...
-    def tag_exists(self, tag: str, include_deployment_checks: bool = ...) -> bool: ...
-    def tags_available(self, deployment_checks: bool = ...) -> set[str]: ...
-    def get_checks(
-        self, include_deployment_checks: bool = ...
-    ) -> list[Callable[..., Any]]: ...
+    def tag_exists(self, tag: str, include_deployment_checks: bool = False) -> bool: ...
+    def tags_available(self, deployment_checks: bool = False) -> set[str]: ...
+    def get_checks(self, include_deployment_checks: bool = False) -> list[_ProcessedCheckCallable[_CheckCallable]]: ...
 
-registry: Any
-register: Any
-run_checks: Any
-tag_exists: Any
+registry: CheckRegistry = ...
+register = registry.register
+run_checks = registry.run_checks
+tag_exists = registry.tag_exists

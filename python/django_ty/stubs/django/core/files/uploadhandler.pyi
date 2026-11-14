@@ -1,54 +1,54 @@
-# Stubs for django.core.files.uploadhandler (Python 3.5)
-
 from typing import IO, Any
 
 from django.core.files.uploadedfile import TemporaryUploadedFile, UploadedFile
 from django.http.request import HttpRequest, QueryDict
 from django.utils.datastructures import MultiValueDict
+from typing_extensions import override
 
 class UploadFileException(Exception): ...
 
 class StopUpload(UploadFileException):
-    connection_reset: bool = ...
-    def __init__(self, connection_reset: bool = ...) -> None: ...
+    connection_reset: bool
+    def __init__(self, connection_reset: bool = False) -> None: ...
 
 class SkipFile(UploadFileException): ...
 class StopFutureHandlers(UploadFileException): ...
 
 class FileUploadHandler:
-    chunk_size: int = ...
-    file_name: str | None = ...
-    content_type: str | None = ...
-    content_length: int | None = ...
-    charset: str | None = ...
-    content_type_extra: dict[str, str] | None = ...
-    request: HttpRequest | None = ...
-    field_name: str = ...
-    def __init__(self, request: HttpRequest | None = ...) -> None: ...
+    chunk_size: int
+    file_name: str | None
+    content_type: str | None
+    content_length: int | None
+    charset: str | None
+    content_type_extra: dict[str, bytes] | None
+    request: HttpRequest | None
+    field_name: str
+    def __init__(self, request: HttpRequest | None = None) -> None: ...
     def handle_raw_input(
         self,
         input_data: IO[bytes],
         META: dict[str, str],
         content_length: int,
         boundary: str,
-        encoding: str | None = ...,
-    ) -> tuple[QueryDict, MultiValueDict[str, UploadedFile]] | None: ...
+        encoding: str | None = None,
+    ) -> tuple[QueryDict, MultiValueDict[str, UploadedFile[Any]]] | None: ...
     def new_file(
         self,
         field_name: str,
         file_name: str,
         content_type: str,
         content_length: int | None,
-        charset: str | None = ...,
-        content_type_extra: dict[str, str] | None = ...,
+        charset: str | None = None,
+        content_type_extra: dict[str, bytes] | None = None,
     ) -> None: ...
     def receive_data_chunk(self, raw_data: bytes, start: int) -> bytes | None: ...
-    def file_complete(self, file_size: int) -> UploadedFile | None: ...
+    def file_complete(self, file_size: int) -> UploadedFile[Any] | None: ...
     def upload_complete(self) -> None: ...
+    def upload_interrupted(self) -> None: ...
 
 class TemporaryFileUploadHandler(FileUploadHandler):
-    def __init__(self, request: HttpRequest | None = ...) -> None: ...
-    file: TemporaryUploadedFile = ...
+    file: TemporaryUploadedFile
+    @override
     def new_file(
         self,
         field_name: str,
@@ -56,22 +56,28 @@ class TemporaryFileUploadHandler(FileUploadHandler):
         content_type: str,
         content_length: int | None,
         charset: str | None = ...,
-        content_type_extra: dict[str, str] | None = ...,
+        content_type_extra: dict[str, bytes] | None = ...,
     ) -> None: ...
+    @override
     def receive_data_chunk(self, raw_data: bytes, start: int) -> bytes | None: ...
-    def file_complete(self, file_size: int) -> UploadedFile | None: ...
+    @override
+    def file_complete(self, file_size: int) -> UploadedFile[Any] | None: ...
+    @override
+    def upload_interrupted(self) -> None: ...
 
 class MemoryFileUploadHandler(FileUploadHandler):
-    activated: bool = ...
-    file: IO[bytes] = ...
+    activated: bool
+    file: IO[bytes]
+    @override
     def handle_raw_input(
         self,
         input_data: IO[bytes],
         META: dict[str, str],
         content_length: int,
         boundary: str,
-        encoding: str | None = ...,
-    ) -> tuple[QueryDict, MultiValueDict[str, UploadedFile]] | None: ...
+        encoding: str | None = None,
+    ) -> tuple[QueryDict, MultiValueDict[str, UploadedFile[Any]]] | None: ...
+    @override
     def new_file(
         self,
         field_name: str,
@@ -79,9 +85,22 @@ class MemoryFileUploadHandler(FileUploadHandler):
         content_type: str,
         content_length: int | None,
         charset: str | None = ...,
-        content_type_extra: dict[str, str] | None = ...,
+        content_type_extra: dict[str, bytes] | None = ...,
     ) -> None: ...
+    @override
     def receive_data_chunk(self, raw_data: bytes, start: int) -> bytes | None: ...
-    def file_complete(self, file_size: int) -> UploadedFile | None: ...
+    @override
+    def file_complete(self, file_size: int) -> UploadedFile[Any] | None: ...
 
 def load_handler(path: str, *args: Any, **kwargs: Any) -> FileUploadHandler: ...
+
+__all__ = [
+    "FileUploadHandler",
+    "MemoryFileUploadHandler",
+    "SkipFile",
+    "StopFutureHandlers",
+    "StopUpload",
+    "TemporaryFileUploadHandler",
+    "UploadFileException",
+    "load_handler",
+]
