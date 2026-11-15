@@ -42,7 +42,7 @@ python = "3.13"
 django = "6.1.3"
 mypy = "2.4.1"
 ty_extended = "0.90.0"
-ty_extended_commit = "503f4228e69946d4c652e8a5485916a850b7bd16"
+ty_extended_commit = "f7ca0be081133f0430d03098f7faa931ec281cd2"
 django_ty = "0.8.0"
 minimum_cases_per_feature = 2
 

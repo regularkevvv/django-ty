@@ -15,7 +15,7 @@
   "candidate": {
     "django_ty": "0.8.0",
     "ty_extended": "0.90.0",
-    "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+    "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
   },
   "corpus": {
     "sha256": "136f7125836d82881686907f671124efb250a6ee11db8cbdd5ecfe70fd8f9791",
@@ -44,7 +44,7 @@
         "django_ty": "0.8.0",
         "django": "5.0.14",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 82.8,
@@ -1464,7 +1464,7 @@
         "django_ty": "0.8.0",
         "django": "5.0.14",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 82.8,
@@ -2884,7 +2884,7 @@
         "django_ty": "0.8.0",
         "django": "5.0.14",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 82.8,
@@ -4304,7 +4304,7 @@
         "django_ty": "0.8.0",
         "django": "5.1.15",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 84.5,
@@ -5692,7 +5692,7 @@
         "django_ty": "0.8.0",
         "django": "5.1.15",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 84.5,
@@ -7080,7 +7080,7 @@
         "django_ty": "0.8.0",
         "django": "5.1.15",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 84.5,
@@ -8468,7 +8468,7 @@
         "django_ty": "0.8.0",
         "django": "5.1.15",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 84.5,
@@ -9856,7 +9856,7 @@
         "django_ty": "0.8.0",
         "django": "5.2.19",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -11169,7 +11169,7 @@
         "django_ty": "0.8.0",
         "django": "5.2.19",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -12482,7 +12482,7 @@
         "django_ty": "0.8.0",
         "django": "5.2.19",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -13795,7 +13795,7 @@
         "django_ty": "0.8.0",
         "django": "5.2.19",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -15108,7 +15108,7 @@
         "django_ty": "0.8.0",
         "django": "5.2.19",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -16421,7 +16421,7 @@
         "django_ty": "0.8.0",
         "django": "6.0.10",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -17734,7 +17734,7 @@
         "django_ty": "0.8.0",
         "django": "6.0.10",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -19047,7 +19047,7 @@
         "django_ty": "0.8.0",
         "django": "6.0.10",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -20360,7 +20360,7 @@
         "django_ty": "0.8.0",
         "django": "6.1.1",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -21673,7 +21673,7 @@
         "django_ty": "0.8.0",
         "django": "6.1.1",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -22986,7 +22986,7 @@
         "django_ty": "0.8.0",
         "django": "6.1.1",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -24299,7 +24299,7 @@
         "django_ty": "0.8.0",
         "django": "6.1.3",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -25612,7 +25612,7 @@
         "django_ty": "0.8.0",
         "django": "6.1.3",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
@@ -26925,7 +26925,7 @@
         "django_ty": "0.8.0",
         "django": "6.1.3",
         "ty_extended": "0.90.0",
-        "ty_extended_commit": "503f4228e69946d4c652e8a5485916a850b7bd16"
+        "ty_extended_commit": "f7ca0be081133f0430d03098f7faa931ec281cd2"
       },
       "scores": {
         "feature_balanced_percent": 92.7,
