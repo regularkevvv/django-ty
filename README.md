@@ -6,7 +6,7 @@ Official Ty checks ordinary Python and Django fields; django-ty adds constructor
 ## Install and check
 
 ```sh
-uv add django-ty
+uv add django-ty "ty-extended>=0.91.0,<1.0"
 ```
 
 Enable installed plugin discovery:
@@ -17,7 +17,7 @@ auto-discover = true
 ```
 
 ```sh
-uv run ty-extended check .
+uv run tyx check .
 ```
 
 Select a settings module when it cannot be inferred:
@@ -27,25 +27,27 @@ uv run python -m django_ty --settings-module project.settings check .
 ```
 
 The module launcher finds the installed executable even when it is absent from `PATH`.
+These command and editor examples use `tyx`, available since ty-extended 0.91.0.
+The `ty-extended` command remains available for compatibility, including with 0.90.
 
 ## Editors
 
-Start `ty-extended server` and enable workspace diagnostics so closed model modules contribute reverse relations and cross-module queryset information.
+Start `tyx server` and enable workspace diagnostics so closed model modules contribute reverse relations and cross-module queryset information.
 
 For the official VS Code extension, use a trusted workspace:
 
 ```json
 {
-  "ty.path": ["/absolute/project/.venv/bin/ty-extended"],
+  "ty.path": ["/absolute/project/.venv/bin/tyx"],
   "ty.diagnosticMode": "workspace"
 }
 ```
 
-On Windows, use `.venv/Scripts/ty-extended.exe`. For Neovim 0.11 or later:
+On Windows, use `.venv/Scripts/tyx.exe`. For Neovim 0.11 or later:
 
 ```lua
 vim.lsp.config("ty", {
-  cmd = { "/absolute/project/.venv/bin/ty-extended", "server" },
+  cmd = { "/absolute/project/.venv/bin/tyx", "server" },
   settings = { ty = { diagnosticMode = "workspace" } },
 })
 vim.lsp.enable("ty")
@@ -65,7 +67,7 @@ Django-ty 0.8 requires `ty-extended>=0.90.0,<1.0`, Django `>=5.0,<6.2` and Pytho
 
 The [Django/Python matrix](docs/DJANGO-VERSIONS.md) records tested combinations and the versions of each comparator. [Ty compatibility](https://github.com/regularkevvv/ty-extended/blob/main/docs/compatibility.md) records the independently qualified checker groups. Future upstream releases need compatibility checks before being described as tested.
 
-Versions through django-ty 0.5 used a distribution that owned the `ty` command. Remove old django-ty and ty-extended packages before installing the current stack, reinstall official `ty`, and change plugin-enabled commands and editor launchers to `ty-extended`.
+Versions through django-ty 0.5 used a distribution that owned the `ty` command. Remove old django-ty and ty-extended packages before installing the current stack, reinstall official `ty`, and change plugin-enabled commands and editor launchers to `tyx`.
 
 ## Performance and correctness
 
