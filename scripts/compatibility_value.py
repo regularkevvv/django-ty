@@ -8,12 +8,7 @@ from pathlib import Path
 
 import tomllib
 
-
-MAP_PATH = (
-    Path(__file__).resolve().parents[1]
-    / "compatibility"
-    / "django-stubs-6.1.1.toml"
-)
+MAP_PATH = Path(__file__).resolve().parents[1] / "compatibility" / "conformance.toml"
 
 
 def conformance_value(key: str, path: Path = MAP_PATH) -> str:

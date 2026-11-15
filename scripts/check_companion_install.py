@@ -273,7 +273,7 @@ def main() -> None:
     finally:
         (out / "acceptance.json").write_text(json.dumps(report, indent=2) + "\n")
     print(
-        "Installed Django companion: discovery, module, empty PATH, CLI controls and LSP passed"
+        "Installed Django plugin: discovery, module, empty PATH, CLI controls and LSP passed"
     )
 
 

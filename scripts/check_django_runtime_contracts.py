@@ -77,6 +77,9 @@ def check_database(database: Path) -> dict:
         else:
             raise AssertionError(f"{name}: invalid input was accepted")
 
+    from django.db.models import CharField
+
+    equal("metadata-known-field", isinstance(Book._meta.get_field("title"), CharField), True)
     from django.db.models.expressions import DatabaseDefault
     defaulted = DatabaseDefaultKey()
     equal("state-database-default", isinstance(defaulted.pk, DatabaseDefault), True)

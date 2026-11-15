@@ -1,88 +1,31 @@
 import enum
-import sys
-from enum import IntEnum
-if sys.version_info >= (3, 11):
-    from enum import EnumType, StrEnum
-    from enum import property as enum_property
-else:
-    from enum import EnumMeta as EnumType
-    from builtins import property as enum_property
-    class StrEnum(str, enum.Enum): ...
-from typing import Any, Literal, overload, type_check_only
+from collections.abc import Sequence
+from typing import Any, TypeAlias, TypeVar
 
-from _typeshed import ConvertibleToInt
-from _typeshed import Self as MetaclassSelf  # noqa: TID251
-from django.utils.functional import _StrOrPromise
-from typing_extensions import override
+_EnumMemberT = TypeVar("_EnumMemberT")
 
-class ChoicesType(EnumType):
-    __empty__: _StrOrPromise
-    def __new__(
-        metacls: type[MetaclassSelf], classname: str, bases: tuple[type, ...], classdict: enum._EnumDict, **kwds: Any
-    ) -> MetaclassSelf: ...
+class ChoicesMeta(enum.EnumMeta):
+    names: list[str] = ...
+    labels: list[str] = ...
+    def __contains__(self, item: Any) -> bool: ...
     @property
-    def names(self) -> list[str]: ...
+    def values(self: type[_EnumMemberT]) -> Sequence[_EnumMemberT]: ...
     @property
-    def choices(self) -> list[tuple[Any, _StrOrPromise]]: ...
-    @property
-    def labels(self) -> list[_StrOrPromise]: ...
-    @property
-    def values(self) -> list[Any]: ...
-    if sys.version_info < (3, 12):
-        @override
-        def __contains__(self, member: Any) -> bool: ...
+    def choices(self: type[_EnumMemberT]) -> Sequence[tuple[_EnumMemberT, str]]: ...
 
-class Choices(enum.Enum, metaclass=ChoicesType):  # type: ignore[misc]
-    _label_: _StrOrPromise
-    do_not_call_in_templates: Literal[True]
+ChoicesType: TypeAlias = ChoicesMeta
 
-    @enum_property
-    def label(self) -> _StrOrPromise: ...
-    @enum_property
-    @override
+class Choices(enum.Enum, metaclass=ChoicesMeta):
+    def __str__(self) -> Any: ...
+    @property
+    def label(self) -> str: ...
+    @property
     def value(self) -> Any: ...
 
-# fake, to keep simulate class properties
-@type_check_only
-class _IntegerChoicesType(ChoicesType):
+class IntegerChoices(int, Choices):
     @property
-    @override
-    def choices(self) -> list[tuple[int, _StrOrPromise]]: ...
-    @property
-    @override
-    def values(self) -> list[int]: ...
-
-# In reality, the `__init__` overloads provided below should also support
-# all the arguments of `int.__new__`/`str.__new__` (e.g. `base`, `encoding`).
-# They are omitted on purpose to avoid having convoluted stubs for these enums:
-class IntegerChoices(Choices, IntEnum, metaclass=_IntegerChoicesType):  # type: ignore[misc]
-    _value_: int
-    @overload
-    def __init__(self, x: ConvertibleToInt) -> None: ...
-    @overload
-    def __init__(self, x: ConvertibleToInt, label: _StrOrPromise) -> None: ...
-    @enum_property
-    @override
     def value(self) -> int: ...
 
-# fake, to keep simulate class properties
-@type_check_only
-class _TextChoicesType(ChoicesType):
+class TextChoices(str, Choices):
     @property
-    @override
-    def choices(self) -> list[tuple[str, _StrOrPromise]]: ...
-    @property
-    @override
-    def values(self) -> list[str]: ...
-
-class TextChoices(Choices, StrEnum, metaclass=_TextChoicesType):  # type: ignore[misc]
-    _value_: str
-    @overload
-    def __init__(self, object: str) -> None: ...
-    @overload
-    def __init__(self, object: str, label: _StrOrPromise) -> None: ...
-    @enum_property
-    @override
     def value(self) -> str: ...
-
-__all__ = ["Choices", "IntegerChoices", "TextChoices"]

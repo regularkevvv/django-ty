@@ -4,14 +4,14 @@
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor
 import json
 import os
-from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 from typing import Any
 
 try:
@@ -21,7 +21,7 @@ except ModuleNotFoundError:
 
 ROOT = Path(__file__).resolve().parents[1]
 MATRIX_PATH = ROOT / "compatibility/django-versions.toml"
-MAP_PATH = ROOT / "compatibility/django-stubs-6.1.1.toml"
+MAP_PATH = ROOT / "compatibility/conformance.toml"
 RESULTS_PATH = ROOT / "compatibility/django-versions.json"
 DOCUMENT_PATH = ROOT / "docs/DJANGO-VERSIONS.md"
 PYPROJECT_PATH = ROOT / "pyproject.toml"
@@ -310,7 +310,7 @@ def render_document(results: dict[str, Any]) -> str:
         "",
         "Each row checks the installed wheel against expectations reviewed from Django's official documentation. The mypy/django-stubs run uses reviewed supported combinations as a comparison, and every reviewed disagreement must have a successful independent Django runtime proof. Python combinations follow [Django's compatibility table](https://docs.djangoproject.com/en/6.1/faq/install/#what-python-version-can-i-use-with-django). Nine QueryDict assignment cases are also compared independently with each installed Django runtime.",
         "",
-        "The wheel serves one reviewed django-stubs 6.1.1 static tree. These results cover the listed corpus and runtime cases, not every version-specific API addition or removal.",
+        "The wheel serves one reviewed native ORM and modern static declaration tree. These results cover the listed corpus and runtime cases, not every version-specific API addition or removal.",
         "",
         "## Matrix",
         "",
@@ -416,7 +416,11 @@ def main() -> int:
     )
     parser.add_argument("--wheel", type=Path)
     parser.add_argument("--reuse", action="store_true")
-    parser.add_argument("--clean-environments", action="store_true", help="Remove successful per-pair environments immediately")
+    parser.add_argument(
+        "--clean-environments",
+        action="store_true",
+        help="Remove successful per-pair environments immediately",
+    )
     parser.add_argument("--only", action="append", default=[])
     parser.add_argument("--jobs", type=int, default=2)
     mode = parser.add_mutually_exclusive_group(required=True)

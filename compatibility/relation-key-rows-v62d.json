@@ -1,0 +1,108 @@
+{
+  "status": "Source-qualified relation/default-row fixes in a separate checkout; integration with the newer performance branch, complete official-contract receipt and installed/release qualification remain pending.",
+  "base_commit": "e65b382462a85eacabd71dd1aee7ec9ce44da97a",
+  "official_ty": "0.0.101",
+  "django": "6.1.3",
+  "qualification": {
+    "passed": false,
+    "steps": [
+      {
+        "step": "types",
+        "exit": 0,
+        "seconds": 0.45196129102259874
+      },
+      {
+        "step": "runtime",
+        "exit": 0,
+        "seconds": 0.6867787500377744
+      },
+      {
+        "step": "end-to-end",
+        "exit": 0,
+        "seconds": 1.2695065001025796
+      },
+      {
+        "step": "units",
+        "exit": 1,
+        "seconds": 5.017417166847736
+      }
+    ],
+    "plugin_sha256": "d77b0bfe2e9e4eb972239d9c59d4bc3915971fae22b6c23ceb7dd53626aad274",
+    "passed_except_stale_official_receipt": true,
+    "passing_unit_tests": 69,
+    "unit_tests": 70,
+    "runtime_cases": 31,
+    "end_to_end_cases_per_mode": 52
+  },
+  "runtime": {
+    "django": "6.1.3",
+    "cases": {
+      "object_constructor_sets_text_key": true,
+      "raw_constructor_keeps_text_key": true,
+      "stored_text_key": true,
+      "stored_uuid_key": true,
+      "stored_to_field_key": true,
+      "filter_by_text_key": true,
+      "filter_by_to_field_key": true,
+      "values_returns_raw_keys": true,
+      "values_list_returns_raw_keys": true,
+      "values_traverses_relation": true,
+      "nullable_join_returns_none": true,
+      "default_values_uses_concrete_attribute_names": true,
+      "default_values_omits_pk_alias": true,
+      "default_values_omits_relation_alias": true,
+      "default_values_list_preserves_declaration_order": true,
+      "default_values_list_flat_uses_first_column": true,
+      "default_values_list_named_uses_attribute_names": true,
+      "default_custom_pk_row_has_no_extra_alias": true,
+      "default_inherited_row_includes_parent_pointer": true,
+      "abstract_fields_follow_implicit_key": true,
+      "proxy_rows_match_concrete_parent": true,
+      "explicit_parent_link_replaces_generated_link": true,
+      "explicit_parent_link_column_names": true,
+      "explicit_parent_link_keeps_declared_order": true,
+      "late_parent_link_named_columns": true,
+      "filter_accepts_model_subclass": true,
+      "assignment_accepts_model_subclass": true,
+      "integer_relation_constructor_rejected": true,
+      "integer_relation_assignment_rejected": true,
+      "unrelated_model_filter_rejected": true,
+      "unrelated_model_assignment_rejected": true
+    },
+    "passed": true
+  },
+  "end_to_end": {
+    "passed": true,
+    "plugin_sha256": "d77b0bfe2e9e4eb972239d9c59d4bc3915971fae22b6c23ceb7dd53626aad274",
+    "companion_sha256": "1115e86f2b1c0c53f3a8788674436c361c463cdaee352498b844c6ec2ace2a1f",
+    "project_cleaned": true,
+    "provider_preserved": true
+  },
+  "end_to_end_cases_per_projection_mode": 52,
+  "source_sha256": {
+    "python/django_ty/monty.py": "d77b0bfe2e9e4eb972239d9c59d4bc3915971fae22b6c23ceb7dd53626aad274",
+    "python/django_ty/_monty_types.pyi": "dbb16aaae35c68152c1f70c4e0858e8806e3dafc059d931418c02d31383e3b09",
+    "python/django_ty/ty-plugin.json": "33887e56cc16562270bc9613fda909b363fba2384950f0a36496c46ef995098e",
+    "python/django_ty/ty-plugin-monty.json": "33887e56cc16562270bc9613fda909b363fba2384950f0a36496c46ef995098e",
+    "scripts/check_relation_runtime.py": "b83c08b225e1bd61c8291123588a9298c1e1a3ecaeb30e37ed93af52085c8eef",
+    "scripts/check_relation_types.py": "31d223889eff676766f420d928425d1193c50909c80afa92ae047cd68365dc41",
+    "tests/test_relation_runtime.py": "b905517d809db75b47fb02ab294fe81ca54ff4730961a5b608758edc46671729",
+    "tests/test_class_indexes.py": "6e60ee4dfe39b71a70366f3ff03cca551d3149c361eba3a41afb89ce69b4a2c3",
+    "tests/fixtures/relation_keys/checks.py": "83fa51900f257c6a307fc86559661adb6d42d5994d7edf024f33b30ae75ce774",
+    "tests/fixtures/relation_keys/mypy.ini": "6caa59859ebc5dc429339e2f08ecd7c5d17c6054b65c7f69d33d8374dc9101c1",
+    "tests/fixtures/relation_keys/settings.py": "4991248ded6437fe6ca1785a424c2ef0fb957c94a97608bb52976d74a99b12c1",
+    "tests/fixtures/relation_keys/primaryapp/models.py": "7d3ac64acd224bd98c1aba95a70c57f68ee654cdc16ff81ccd7b4ae3ec16aa5c",
+    "tests/fixtures/relation_keys/primaryapp/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "red_before_fix": {
+    "default_row_cases_failed": 6,
+    "additional_explicit_parent_link_cases_failed": 2,
+    "all_previous_36_relation_cases_passed": true
+  },
+  "coverage": [
+    "Custom string, UUID, inherited and to_field relation keys; object constructor/assignment vs raw-key lookup behavior.",
+    "Default values and values_list columns use physical attnames, omit pk/relation aliases, preserve declaration order and support flat/named rows.",
+    "Concrete parent links, abstract and proxy inheritance, explicit parent links and their declaration positions."
+  ],
+  "acceptance": false
+}

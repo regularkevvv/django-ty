@@ -17,7 +17,7 @@ use crate::fields::{
 use crate::settings::{SettingsIndex, settings_index};
 use crate::types::{
     annotation, canonical_type_expression, expression, manager_virtual_type_name, member,
-    queryset_virtual_type_name, values_list_row_virtual_type_name, values_row_virtual_type_name,
+    model_manager_type, values_list_row_virtual_type_name, values_row_virtual_type_name,
     virtual_field,
 };
 
@@ -75,7 +75,11 @@ pub fn build_index_response(request: &BuildProjectIndexRequest) -> ProjectIndexR
             manager_queryset.and_then(|name| queryset_classes.get(name)),
         ));
         if !derives_from_model_class(class) {
-            contributions.extend(inherited_model_contributions(class, &fields));
+            contributions.extend(inherited_model_contributions(
+                class,
+                &fields,
+                manager_queryset.is_some(),
+            ));
         }
         models.insert(
             class.qualified_name.clone(),
@@ -162,6 +166,7 @@ pub fn build_index_response(request: &BuildProjectIndexRequest) -> ProjectIndexR
                 &target,
                 &reverse_name,
                 kind,
+                manager_queryset.is_some(),
                 conflict_key,
                 field.source.clone(),
             ));
@@ -247,8 +252,9 @@ fn conventional_settings_model_name(raw: &str) -> Option<String> {
 fn inherited_model_contributions(
     class: &ty_plugin_sdk::protocol::ClassSummary,
     fields: &ty_plugin_sdk::serde_json::Map<String, Value>,
+    custom_queryset: bool,
 ) -> Vec<Contribution> {
-    let mut contributions = default_model_members(&class.qualified_name)
+    let mut contributions = default_model_members(&class.qualified_name, custom_queryset)
         .into_iter()
         .map(|member| Contribution {
             source: class.source.clone(),
@@ -568,27 +574,7 @@ pub fn model_virtual_types(
     fields: &ty_plugin_sdk::serde_json::Map<String, Value>,
     manager_queryset: Option<&&ty_plugin_sdk::protocol::ClassSummary>,
 ) -> Vec<VirtualTypeDefinition> {
-    vec![
-        VirtualTypeDefinition {
-            name: manager_virtual_type_name(model_name),
-            shape: VirtualTypeShape::Class {
-                bases: vec![expression(format!("{MANAGER_BASE}[{model_name}]"))],
-                members: manager_queryset
-                    .map(|queryset| queryset_manager_members(queryset))
-                    .unwrap_or_default(),
-            },
-            metadata: Default::default(),
-        },
-        VirtualTypeDefinition {
-            name: queryset_virtual_type_name(model_name),
-            shape: VirtualTypeShape::Class {
-                bases: vec![expression(format!(
-                    "{QUERYSET_BASE}[{model_name}, {model_name}]"
-                ))],
-                members: Vec::new(),
-            },
-            metadata: Default::default(),
-        },
+    let mut definitions = vec![
         VirtualTypeDefinition {
             name: values_row_virtual_type_name(model_name),
             shape: VirtualTypeShape::TypedDict {
@@ -604,7 +590,18 @@ pub fn model_virtual_types(
             },
             metadata: Default::default(),
         },
-    ]
+    ];
+    if let Some(queryset) = manager_queryset {
+        definitions.push(VirtualTypeDefinition {
+            name: manager_virtual_type_name(model_name),
+            shape: VirtualTypeShape::Class {
+                bases: vec![expression(format!("{MANAGER_BASE}[{model_name}]"))],
+                members: queryset_manager_members(queryset),
+            },
+            metadata: Default::default(),
+        });
+    }
+    definitions
 }
 
 fn project_queryset_classes(
@@ -788,13 +785,14 @@ fn reverse_contribution(
     target_model: &str,
     reverse_name: &str,
     kind: RelationKind,
+    custom_queryset: bool,
     conflict_key: String,
     source: SymbolSource,
 ) -> Contribution {
     let return_type = match kind {
         RelationKind::OneToOne => annotation(source_model.to_string()),
         RelationKind::ForeignKey | RelationKind::ManyToMany => {
-            annotation(manager_virtual_type_name(source_model))
+            model_manager_type(source_model, custom_queryset)
         }
     };
     Contribution {
@@ -832,8 +830,11 @@ pub fn default_model_fields(primary_key_default: Option<&str>) -> Vec<FieldPatch
     ]
 }
 
-pub fn default_model_members(model_name: &str) -> Vec<ty_plugin_sdk::protocol::MemberPatch> {
-    let manager = annotation(manager_virtual_type_name(model_name));
+pub fn default_model_members(
+    model_name: &str,
+    custom_queryset: bool,
+) -> Vec<ty_plugin_sdk::protocol::MemberPatch> {
+    let manager = model_manager_type(model_name, custom_queryset);
     vec![
         member("objects", manager.clone()),
         member("_default_manager", manager),

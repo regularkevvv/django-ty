@@ -19,7 +19,7 @@ def main():
     source_path = package / "monty.py"
     manifest = json.loads(manifest_path.read_text())
     if manifest["runtime"] != {"kind": "monty", "artifact": "monty.py"}:
-        raise RuntimeError("The packaged plugin must use the Monty companion")
+        raise RuntimeError("The packaged plugin must declare its Monty runtime")
     version = re.search(
         r'^version = "([^"]+)"', (root / "pyproject.toml").read_text(), re.MULTILINE
     ).group(1)

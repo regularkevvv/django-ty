@@ -1,9 +1,7 @@
 # django-ty
 
-`django-ty` adds Django ORM semantics through the **ty-extended Monty companion**.
-The companion delegates to unchanged official Astral ty; it is not a fork of the checker.
-Django's hooks and static API ship in one universal Python wheel. Consumers do not
-build Rust, install WASM artifacts or run a Python worker.
+Django ORM support for [ty-extended](https://github.com/regularkevvv/ty-extended).
+Official Ty checks ordinary Python and Django fields; django-ty adds constructor, relation, query result and model-state checks. Plugins use the Python subset supported by Monty. The package ships one universal Python wheel and runs without building Rust or starting a Python plugin worker.
 
 ## Install and check
 
@@ -11,7 +9,7 @@ build Rust, install WASM artifacts or run a Python worker.
 uv add django-ty
 ```
 
-Enable installed plugin discovery in your project:
+Enable installed plugin discovery:
 
 ```toml
 [tool.ty.plugins]
@@ -22,23 +20,19 @@ auto-discover = true
 uv run ty-extended check .
 ```
 
-For an explicit Django settings module:
+Select a settings module when it cannot be inferred:
 
 ```sh
 uv run python -m django_ty --settings-module project.settings check .
 ```
 
-The module launcher resolves the installed companion directly, including when its
-executable is absent from `PATH`. No installer command, `.ty` directory or file copy is required.
+The module launcher finds the installed executable even when it is absent from `PATH`.
 
 ## Editors
 
-Start `ty-extended server` and enable **workspace diagnostics**. Django's project
-index needs closed model modules to provide reverse relations and cross-module
-queryset annotations. `openFilesOnly` limits those facts in both the former checker
-and the companion.
+Start `ty-extended server` and enable workspace diagnostics so closed model modules contribute reverse relations and cross-module queryset information.
 
-For the official VS Code extension, use a trusted workspace and configure:
+For the official VS Code extension, use a trusted workspace:
 
 ```json
 {
@@ -47,7 +41,7 @@ For the official VS Code extension, use a trusted workspace and configure:
 }
 ```
 
-On Windows, select `.venv/Scripts/ty-extended.exe`. With Neovim 0.11 or later:
+On Windows, use `.venv/Scripts/ty-extended.exe`. For Neovim 0.11 or later:
 
 ```lua
 vim.lsp.config("ty", {
@@ -57,97 +51,42 @@ vim.lsp.config("ty", {
 vim.lsp.enable("ty")
 ```
 
-## Performance
+## Django behavior
 
-Django-ty 0.7 uses class-specific project indexes, bounded class batches and
-read-only lookups in companion 0.89. Model relations within a split `models` package resolve across
-sibling modules. See [the performance comparison](https://github.com/regularkevvv/ty-extended/blob/main/docs/performance.md)
-for fresh-process MyPy and bare-ty benchmarks with ORM and ordinary Python error
-controls, and [the Monty guide](docs/MONTY.md#large-project-performance) for the
-installed large-project regression.
+The plugin checks model constructors, raw relation keys, custom primary keys, inherited fields, reverse relations, managers, query results, literal lookups and creation defaults. It infers `values()` dictionaries and `values_list()` rows, including lazy `.get()` results and no-argument field order. Model ID state follows construction, loading, saving, deletion, aliases and branches.
 
-On the recorded macOS workload with 7,082 Python files, 2,501 related models and
-100 ORM type assertions, the published 0.89 companion with the Django-ty 0.7
-candidate wheel takes a median **6.59 seconds**, down from
-**80.79 seconds** with Django-ty 0.6 and companion 0.87. MyPy with django-stubs takes
-**6.81 seconds** on the same files; bare official ty takes
-**0.27 seconds**. All five public-companion workloads meet the
-MyPy median ceiling. The largest Mac case is close to parity; smaller projects
-show larger advantages. These are five rotated fresh-process runs with exact ORM
-assertions, both negative controls and unchanged source bytes. The
-[qualification receipt](compatibility/companion-local-qualification.json) identifies
-the executables and every sample; Django's published wheel is verified separately.
+Native ORM declarations come from django-types 0.24.0. Reviewed modern Django declarations and adapters preserve newer APIs, including widgets, async pagination, validators and email attachments. The complete packaged declaration tree is reproducible from pinned inputs; hashes, module overlays and adapters are recorded in [the provider receipt](compatibility/native-types-vendor.json).
 
-## Versions and migration
+The package does not install django-stubs, django-stubs-ext or MyPy. `WithAnnotations` and other django-stubs-ext utilities remain outside the supported surface. Native field and queryset annotations use conventions such as `CharField[str]` and `QuerySet[Book]`; row-specific querysets use `ValuesQuerySet[Model, Row]`. See [the migration inventory](compatibility/native-types-migration.json).
 
-Django-ty 0.7.0 requires `ty-extended>=0.89.0,<0.90.0`. Companion versions are
-independent of official ty. Companion 0.89.0 was qualified against every ty release
-from 0.0.84 through 0.0.99; its dependency range is `ty>=0.0.84,<0.1`. Future versions
-within that range are accepted but need compatibility checks. An ordinary ty update
-within a compatible group does not require another Django-ty release.
+## Versions
 
-Django 5.0 through 6.1 and Python 3.10 or later are accepted. The
-[compatibility matrix](docs/DJANGO-VERSIONS.md) records 21 complete Django/Python
-pairs, each with 166 official-contract assertions, 83 independent runtime contracts
-and nine QueryDict cases. Django 6.1.3 on Python 3.15 has an additional contract and
-runtime qualification; the pinned mypy comparator does not declare support for that
-Python version. See [the Monty guide](docs/MONTY.md) for the evidence and reproduction commands.
+Django-ty 0.8 requires `ty-extended>=0.90.0,<1.0`, Django `>=5.0,<6.2` and Python `>=3.10`. The native integration requires `ty>=0.0.101,<0.1` and is qualified on every release from 0.0.101 through 0.0.104. ty-extended releases are independent of official Ty; ordinary Ty updates within a compatible group do not require a Django-ty release.
 
-Versions through 0.5.0 depended on a checker distribution that owned the `ty`
-namespace. Remove it before installing the new stack:
+The [Django/Python matrix](docs/DJANGO-VERSIONS.md) records tested combinations and the versions of each comparator. [Ty compatibility](https://github.com/regularkevvv/ty-extended/blob/main/docs/compatibility.md) records the independently qualified checker groups. Future upstream releases need compatibility checks before being described as tested.
 
-```sh
-uv remove django-ty
-uv add django-ty
-uv run ty --version
-uv run ty-extended --version
-```
+Versions through django-ty 0.5 used a distribution that owned the `ty` command. Remove old django-ty and ty-extended packages before installing the current stack, reinstall official `ty`, and change plugin-enabled commands and editor launchers to `ty-extended`.
 
-If you declared `ty-extended` separately, remove that old dependency too before
-adding Django-ty again. For pip environments, uninstall `django-ty` and `ty-extended`
-first, then install `django-ty` and reinstall official `ty`.
+## Performance and correctness
 
-Change plugin-enabled commands and editor launchers from `ty` to `ty-extended`.
-The `--runtime monty` option remains accepted; WASM selection is no longer supported.
+Native field inference avoids generating replacement declarations for every ordinary Django field. Scoped indexes, bounded batches, shared type factories and lazy row construction reduce the remaining plugin work. [Benchmarks](https://github.com/regularkevvv/ty-extended/blob/main/docs/performance.md) compare identical generated projects against native official Ty with django-types and MyPy with its Django plugin, retaining all samples and negative controls.
 
-## Coverage and qualification
+Django's documentation defines expected behavior. The installed framework independently checks reviewed disagreements; MyPy is a comparator. The [coverage map](docs/DJANGO-STUBS-COVERAGE.md) records 172 line-level contracts and their exact evidence. The separate modern API regression includes eight positive assertions and three intentional errors, plus runtime controls. These are measured contracts, not a claim about every Django API or application.
 
-The complete pinned Django static API is packaged in the wheel. No upstream
-`django-stubs`, `django-stubs-ext` or mypy-plugin distribution is installed.
-Django-ty covers model fields, relations, managers, queryset results, `values()`,
-`values_list()`, basic `annotate()`, literal lookups and model ID state across
-construction, loading, saving, deletion, aliases and branches. `WithAnnotations`
-and other `django-stubs-ext` utilities remain outside the product surface.
-
-Django documentation and the installed framework define expected behavior. Mypy
-is a comparison tool; reviewed disagreements have version-specific references and
-runtime evidence in the [disagreement audit](docs/MYPY-DISAGREEMENTS.md).
-The [coverage map](docs/DJANGO-STUBS-COVERAGE.md) is generated from the same checks.
-
-Installed-wheel CI tests automatic discovery, the module launcher, an empty `PATH`,
-positive and negative typing controls, real LSP configuration, field hover, unsaved
-errors, restoration and source preservation on Linux, macOS and Windows. A bounded
-7,082-file/2,501-model regression checks both valid and invalid assignments. These
-results qualify the recorded corpus and generated workload, not every private application.
+Installed-wheel checks cover discovery, the module launcher, an empty `PATH`, real editor sessions, hover, unsaved errors, restoration and source preservation. [Runtime and qualification instructions](docs/MONTY.md) describe reproduction and the release gates.
 
 ## Development
 
 ```sh
-python3 scripts/build-monty.py --check
+python scripts/build-monty.py --check
 bash scripts/build-wheel.sh
-uv run --no-project --python 3.11 python scripts/evaluate_django_stubs_coverage.py --check
-uv run --no-project --python 3.11 python -m unittest discover -s tests
+python scripts/audit_stub_imports.py
+python scripts/evaluate_django_stubs_coverage.py --check
+python -m unittest discover -s tests
 bash scripts/differential-conformance.sh --check
-uv run --no-project --python 3.11 python scripts/probe_django_versions.py --check --clean-environments
-bash scripts/e2e.sh
+python scripts/probe_django_versions.py --check --clean-environments
 ```
 
-The Rust crate is an independent development oracle. Its tests and 98% coverage gate
-remain in CI; it is not part of the consumer build. Native test artifacts are cleaned
-after each phase. The Python implementation also matches 152 native regression
-responses through CPython and Monty 1.5.0. Consumers use the companion's embedded
-runtime and do not depend on that separate development interpreter.
+The Python environment running SDK tests needs ty-extended installed. The historical Rust reference supplies regression requests. Current interpreter parity compares complete CPython and Monty responses; Django runtime contracts provide the independent semantic checks. Consumers use the packaged Python plugin in embedded Monty.
 
-## License
-
-MIT ([LICENSE](LICENSE)). Contributions are licensed under the same terms.
+MIT. [Third-party notices](THIRD_PARTY_NOTICES.md) cover the declaration providers.

@@ -21,7 +21,7 @@ class Category(models.Model):
     )
 
 
-class BookQuerySet(models.QuerySet["Book", "Book"]):
+class BookQuerySet(models.QuerySet["Book"]):
     pass
 
 

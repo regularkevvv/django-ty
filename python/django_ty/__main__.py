@@ -1,4 +1,4 @@
-"""Run the Monty companion with Django semantics, or print its configuration."""
+"""Run ty-extended with Django support, or print its configuration."""
 
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ def main() -> None:
         )
         return
     if not args.command or args.command[0] != "check":
-        parser.error("expected check followed by companion options and paths")
+        parser.error("expected check followed by ty-extended options and paths")
     executable = str(find_ty_extended_bin())
     command = [
         executable,
