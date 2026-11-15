@@ -12,7 +12,9 @@ For an explicit settings module:
 python -m django_ty --settings-module project.settings check .
 ```
 
-The launcher resolves the installed ty-extended executable directly. Configure editors to launch `ty-extended server` with workspace diagnostics so closed model modules remain available to the Django index.
+The launcher resolves the installed executable directly. Configure editors to launch `tyx server` with workspace diagnostics so closed model modules remain available to the Django index. The `tyx` command requires ty-extended 0.91.0 or later; `ty-extended server` remains compatible with 0.90.
+
+The [ty-extended 0.91.0 public receipt](https://github.com/regularkevvv/ty-extended/blob/main/docs/qualification/ty-extended-0.91.0.json) records installed CLI/editor checks through both commands and the 7,082-file, 2,501-model Django-ty 0.8.0 positive/negative controls.
 
 ## Declaration providers
 

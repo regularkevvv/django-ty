@@ -210,23 +210,47 @@ def checker_version(executable: Path) -> str:
 
 
 def normalize_ty_checker_version(
-    reported: str, expected_version: str, expected_commit: str
+    reported: str, expected_version: str, expected_commit: str | None
 ) -> str:
     parts = reported.split()
-    version = parts[1] if len(parts) >= 2 and parts[0] == "ty-extended" else ""
+    version = parts[1] if len(parts) >= 2 and parts[0] in {"tyx", "ty-extended"} else ""
     if version != expected_version and not version.startswith(f"{expected_version}+"):
         raise ConformanceError(
             f"candidate executable reports {reported!r}; expected ty-extended {expected_version}"
         )
 
-    # Release wheels may omit VCS metadata; validate it whenever it is present.
+    # Release wheels may omit VCS metadata; check it when a trusted commit is known.
     commit_match = re.search(r"\(([0-9a-f]{9,40})(?:\s|\))", reported)
-    if commit_match and not expected_commit.startswith(commit_match.group(1)):
+    if (
+        commit_match
+        and expected_commit is not None
+        and not expected_commit.startswith(commit_match.group(1))
+    ):
         raise ConformanceError(
             "candidate ty executable reports commit "
             f"{commit_match.group(1)}; expected {expected_commit}"
         )
     return f"ty-extended {expected_version}"
+
+
+def candidate_checker_identity(
+    reported: str, installed_version: str, baseline: dict, *, probe: bool
+) -> tuple[str, str | None]:
+    expected_version = installed_version if probe else baseline["ty_extended"]
+    if installed_version != expected_version:
+        raise ConformanceError(
+            f"candidate distribution is {installed_version}; expected {expected_version}"
+        )
+    # A probe of another release must not claim the pinned release's commit.
+    expected_commit = (
+        baseline["ty_extended_commit"]
+        if expected_version == baseline["ty_extended"]
+        else None
+    )
+    return (
+        normalize_ty_checker_version(reported, expected_version, expected_commit),
+        expected_commit,
+    )
 
 
 def python_executable(environment: Path) -> Path:
@@ -415,10 +439,11 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     for forbidden_distribution in ("django-stubs", "django-stubs-ext", "mypy"):
         require_distribution_absent(args.ty_python, forbidden_distribution)
     reported_ty_version = checker_version(args.ty_bin)
-    ty_version = normalize_ty_checker_version(
+    ty_version, ty_commit = candidate_checker_identity(
         reported_ty_version,
-        conformance["ty_extended"],
-        conformance["ty_extended_commit"],
+        candidate_versions["ty-extended"],
+        conformance,
+        probe=args.probe,
     )
 
     with tempfile.TemporaryDirectory(prefix="django-ty-mypy-cache-") as cache_dir:
@@ -625,7 +650,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             "django_ty": candidate_versions["django-ty"],
             "django": candidate_versions["Django"],
             "ty_extended": candidate_versions["ty-extended"],
-            "ty_extended_commit": conformance["ty_extended_commit"],
+            "ty_extended_commit": ty_commit,
         },
         "corpus": {
             "sha256": corpus_digest(PROJECT_ROOT),

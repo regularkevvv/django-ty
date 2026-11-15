@@ -30,7 +30,7 @@ cp -R "$ROOT/e2e/django5_fixture/." "$WORK_DIR/"
   cd "$WORK_DIR"
   uv init --no-package --no-readme --no-workspace --vcs none
   printf '\n[tool.ty.plugins]\nauto-discover = true\n' >> pyproject.toml
-  uv add "$DJANGO_TY_WHEEL"
+  uv add "$DJANGO_TY_WHEEL" "ty-extended==$TY_EXTENDED_VERSION"
 
   package_dir="$(uv run python -c 'import pathlib, django_ty; print(pathlib.Path(django_ty.__file__).parent)')"
   test -f "$package_dir/monty.py"
