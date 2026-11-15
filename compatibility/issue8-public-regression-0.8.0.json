@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "issue": "https://github.com/regularkevvv/django-ty/issues/8#issuecomment-6403672557",
+  "files": 7082,
+  "models": 2501,
+  "python_sources_identical": true,
+  "before_versions": {
+    "django-ty": "0.5.0",
+    "ty-extended": "0.84.5",
+    "Django": "6.1.3"
+  },
+  "before_stop": "memory-limit",
+  "before_guard_seconds": 5.073823165846989,
+  "before_sampled_peak_mib": 1049.953125,
+  "after_versions": {
+    "django-ty": "0.8.0",
+    "ty-extended": "0.90.0",
+    "Django": "6.1.3"
+  },
+  "single_positive_mean_seconds": 2.699541680359592,
+  "single_negative_mean_seconds": 2.673875958348314,
+  "default_positive_seconds": 2.4102031248621643,
+  "default_negative_seconds": 2.7891948339529335,
+  "after_max_sampled_peak_mib": 552.140625,
+  "ordinary_and_plugin_specific_controls_passed": true,
+  "raw_receipt": "issue8-public-regression-0.8.0.json.gz",
+  "raw_receipt_sha256": "36b6a1ace6d5cb9b1fa7bc16dcf92e653e0a8e7ef796a3fc9f312bc2d48ea7ca"
+}

@@ -114,6 +114,35 @@ def check(
     }
 
 
+def diagnostics_match(diagnostics, negative: bool, positive_lines: int) -> bool:
+    if not negative:
+        return diagnostics == []
+    if not isinstance(diagnostics, list) or len(diagnostics) != 2:
+        return False
+    expected = {
+        ("invalid-assignment", positive_lines + 1),
+        ("plugin-configuration", positive_lines + 2),
+    }
+    observed = set()
+    for item in diagnostics:
+        kind = item["check_name"]
+        location = item["location"]
+        key = (kind, location["positions"]["begin"]["line"])
+        if Path(location["path"]).name != "checks.py" or key not in expected:
+            return False
+        if kind == "plugin-configuration" and not all(
+            text in item["description"]
+            for text in (
+                "Unknown Django lookup",
+                "missing_name",
+                "django-ty.unknown-lookup",
+            )
+        ):
+            return False
+        observed.add(key)
+    return observed == expected
+
+
 def generate(args) -> tuple[Path, str]:
     root = args.output / "project"
     root.mkdir()
@@ -195,6 +224,7 @@ def main() -> int:
         "installation": installed,
         "timeout_seconds": args.timeout,
         "max_memory_mib": args.max_memory_mib,
+        "semantic_controls": ["ordinary-assignment", "django-unknown-lookup"],
         "runs": [],
     }
     report["workload_python_sha256"] = hashlib.sha256(
@@ -214,7 +244,9 @@ def main() -> int:
             if negative:
                 last = f"Item{args.models - 1:04}"
                 (root / "checks.py").write_text(
-                    positive + f"bad: int = {last}.objects.get(id=1).name\n"
+                    positive
+                    + f"bad: int = {last}.objects.get(id=1).name\n"
+                    + f"{last}.objects.create(missing_name=1)\n"
                 )
             output = args.output / ("negative" if negative else "positive")
             output.mkdir()
@@ -240,12 +272,8 @@ def main() -> int:
                     row["exit"] == int(negative)
                     and row["stopped"] is None
                     and row["source_preserved"]
-                    and (
-                        codes == ["invalid-assignment"]
-                        and diagnostics[0]["location"]["positions"]["begin"]["line"]
-                        == len(positive.splitlines()) + 1
-                        if negative
-                        else diagnostics == []
+                    and diagnostics_match(
+                        diagnostics, negative, len(positive.splitlines())
                     )
                 )
             except (ValueError, KeyError, TypeError) as error:

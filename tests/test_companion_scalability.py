@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.check_companion_scalability import check
+from scripts.check_companion_scalability import check, diagnostics_match
 
 
 @unittest.skipUnless(os.name == "posix", "requires POSIX process groups and RSS")
@@ -47,3 +47,42 @@ class ResourceGuardTest(unittest.TestCase):
         self.assertEqual(result["stopped"], "memory-limit")
         self.assertGreater(result["peak_process_tree_rss_kib"], 64 * 1024)
         self.assertEqual(result["exit"], -9)
+
+
+class SemanticGuardTest(unittest.TestCase):
+    def errors(self):
+        return [
+            {
+                "check_name": "invalid-assignment",
+                "description": "str is not int",
+                "location": {"path": "checks.py", "positions": {"begin": {"line": 4}}},
+            },
+            {
+                "check_name": "plugin-configuration",
+                "description": "Unknown Django lookup missing_name: django-ty.unknown-lookup",
+                "location": {"path": "checks.py", "positions": {"begin": {"line": 5}}},
+            },
+        ]
+
+    def test_both_ordinary_and_django_errors_are_required(self):
+        errors = self.errors()
+        self.assertTrue(diagnostics_match(errors, True, 3))
+        self.assertFalse(diagnostics_match(errors[:1], True, 3))
+        self.assertTrue(diagnostics_match([], False, 3))
+
+    def test_plugin_failure_cannot_stand_in_for_django_validation(self):
+        errors = self.errors()
+        errors[1]["description"] = "plugin crashed before checking models"
+        self.assertFalse(diagnostics_match(errors, True, 3))
+
+    def test_unrelated_source_error_cannot_satisfy_the_control(self):
+        errors = self.errors()
+        errors[1]["location"]["path"] = "models.py"
+        self.assertFalse(diagnostics_match(errors, True, 3))
+        errors = self.errors()
+        errors[1]["location"]["positions"]["begin"]["line"] = 6
+        self.assertFalse(diagnostics_match(errors, True, 3))
+
+    def test_extra_diagnostics_are_not_ignored(self):
+        errors = self.errors()
+        self.assertFalse(diagnostics_match(errors + errors[:1], True, 3))

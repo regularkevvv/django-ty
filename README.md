@@ -75,6 +75,8 @@ Django's documentation defines expected behavior. The installed framework indepe
 
 Installed-wheel checks cover discovery, the module launcher, an empty `PATH`, real editor sessions, hover, unsaved errors, restoration and source preservation. [Runtime and qualification instructions](docs/MONTY.md) describe reproduction and the release gates.
 
+The [issue #8 regression](docs/ISSUE8-REGRESSION.md) compares the exact reported releases with current public packages on 7,082 files and 2,501 models, with bounded memory/time and an additional Django-specific error control.
+
 ## Development
 
 ```sh
